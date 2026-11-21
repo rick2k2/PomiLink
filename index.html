@@ -1,0 +1,1547 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#090d16" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="RICK+POMI" />
+    <title>RICK+POMI • Private Space</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              display: ["Plus Jakarta Sans", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      * {
+        -webkit-tap-highlight-color: transparent;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        font-family: "Inter", sans-serif;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100dvh;
+        overflow: hidden;
+        background-color: #090d16;
+      }
+      .chat-scroll::-webkit-scrollbar {
+        width: 4px;
+      }
+      .chat-scroll::-webkit-scrollbar-thumb {
+        background: rgba(148, 163, 184, 0.3);
+        border-radius: 9999px;
+      }
+
+      /* Dark & Romantic Themes */
+      .theme-midnight-rose {
+        background:
+          radial-gradient(circle at 15% 15%, rgba(244, 63, 94, 0.2), transparent 45%),
+          radial-gradient(circle at 85% 80%, rgba(99, 102, 241, 0.2), transparent 45%),
+          linear-gradient(180deg, #090d16 0%, #12182b 100%);
+      }
+      .theme-ocean-mist {
+        background:
+          radial-gradient(circle at 20% 20%, rgba(14, 165, 233, 0.2), transparent 45%),
+          linear-gradient(180deg, #07131f 0%, #0d2236 100%);
+      }
+      .theme-velvet-night {
+        background:
+          radial-gradient(circle at 20% 15%, rgba(168, 85, 247, 0.2), transparent 45%),
+          linear-gradient(180deg, #0d0818 0%, #1b102c 100%);
+      }
+
+      /* Light Themes */
+      .theme-daylight-cloud {
+        background:
+          radial-gradient(circle at 15% 15%, rgba(244, 63, 94, 0.14), transparent 45%),
+          linear-gradient(180deg, #f4f7fb 0%, #e9eef5 100%);
+      }
+      .theme-sunny-peach {
+        background:
+          radial-gradient(circle at 20% 20%, rgba(251, 146, 60, 0.18), transparent 45%),
+          linear-gradient(180deg, #fff6ee 0%, #ffe8ec 100%);
+      }
+
+      /* Pattern Themes */
+      .theme-dot-pattern {
+        background-color: #0b1120;
+        background-image: radial-gradient(rgba(251, 113, 133, 0.26) 1.25px, transparent 1.25px);
+        background-size: 18px 18px;
+      }
+      .theme-lattice-pattern {
+        background-color: #090d16;
+        background-image:
+          linear-gradient(45deg, rgba(129, 140, 248, 0.12) 25%, transparent 25%),
+          linear-gradient(-45deg, rgba(244, 63, 94, 0.12) 25%, transparent 25%);
+        background-size: 24px 24px;
+      }
+      .theme-custom-wallpaper {
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+
+      .light-ui .received-bubble {
+        background: rgba(255, 255, 255, 0.94) !important;
+        color: #0f172a !important;
+        border-color: rgba(15, 23, 42, 0.12) !important;
+      }
+      .light-ui .meta-text,
+      .light-ui .empty-text {
+        color: #475569 !important;
+      }
+      .light-ui .reaction-pill-idle {
+        background: rgba(255, 255, 255, 0.85) !important;
+        color: #334155 !important;
+        border-color: rgba(15, 23, 42, 0.12) !important;
+      }
+
+      @keyframes bubbleIn {
+        from { opacity: 0; transform: translateY(6px) scale(0.98); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+      }
+      .animate-bubble {
+        animation: bubbleIn 0.18s ease-out forwards;
+      }
+      @keyframes typingBounce {
+        0%, 60%, 100% { transform: translateY(0); }
+        30% { transform: translateY(-4px); }
+      }
+      .typing-dot:nth-child(1) { animation: typingBounce 1.1s infinite 0s; }
+      .typing-dot:nth-child(2) { animation: typingBounce 1.1s infinite 0.18s; }
+      .typing-dot:nth-child(3) { animation: typingBounce 1.1s infinite 0.36s; }
+      @keyframes heartPop {
+        0% { transform: scale(0.5); opacity: 0; }
+        40% { transform: scale(1.25); opacity: 1; }
+        100% { transform: scale(1.45); opacity: 0; }
+      }
+      .animate-heart-pop {
+        animation: heartPop 0.9s ease-out forwards;
+      }
+    </style>
+  </head>
+  <body class="w-full h-[100dvh] overflow-hidden bg-slate-950 text-slate-100 select-none">
+    <div
+      id="appShell"
+      class="relative w-full h-[100dvh] overflow-hidden flex flex-col theme-midnight-rose transition-all duration-300"
+    >
+      <!-- Lock Screen -->
+      <div
+        id="lockScreen"
+        class="w-full h-full flex flex-col justify-between px-5 py-6 sm:px-8 bg-slate-950/95 backdrop-blur-xl"
+      >
+        <div class="w-full max-w-md mx-auto flex items-center justify-between">
+          <div>
+            <h2 class="font-display font-bold text-xl text-white">RICK💖POMI</h2>
+            <span id="lockSubtitle" class="text-xs text-slate-400">Private Space • Rick &amp; Pomi</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button
+              type="button"
+              id="installAppBtn"
+              onclick="triggerInstallPrompt()"
+              class="hidden px-2.5 py-1.5 rounded-xl bg-rose-500/20 border border-rose-500/40 text-xs text-rose-200 font-semibold"
+            >
+              Install
+            </button>
+            <select
+              id="lockLangSelect"
+              onchange="changeLanguage(this.value)"
+              class="px-2.5 py-1.5 rounded-xl bg-white/10 border border-white/15 text-xs text-slate-100 focus:outline-none"
+            >
+              <option value="en" class="bg-slate-900">EN</option>
+              <option value="bn" class="bg-slate-900">বাংলা</option>
+              <option value="hi" class="bg-slate-900">हिन्दी</option>
+            </select>
+            <button
+              type="button"
+              onclick="openModal('settingsModal')"
+              class="p-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-slate-200"
+              title="Settings"
+            >
+              ⚙️
+            </button>
+          </div>
+        </div>
+
+        <div class="w-full max-w-sm mx-auto my-auto">
+          <div class="text-center mb-4">
+            <h3 id="enterPinTitle" class="font-display text-2xl font-bold text-white">Enter Shared PIN</h3>
+            <p id="activeRoleLabel" class="text-xs text-rose-300 mt-1">Logging in as: Rick</p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2.5 mb-4">
+            <button
+              type="button"
+              id="roleRickBtn"
+              onclick="setSenderRole('Rick')"
+              class="py-2.5 rounded-2xl border border-rose-500 bg-rose-500/20 text-xs font-semibold text-white"
+            >
+              I am Rick
+            </button>
+            <button
+              type="button"
+              id="rolePomiBtn"
+              onclick="setSenderRole('Pomi')"
+              class="py-2.5 rounded-2xl border border-white/10 bg-white/5 text-xs font-semibold text-slate-300"
+            >
+              I am Pomi
+            </button>
+          </div>
+
+          <div id="pinDots" class="flex justify-center gap-4 mb-2">
+            <span class="w-3.5 h-3.5 rounded-full border border-slate-500"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-slate-500"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-slate-500"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-slate-500"></span>
+          </div>
+          <p id="pinError" class="text-center text-xs text-rose-400 h-4 mb-2"></p>
+
+          <div class="grid grid-cols-3 gap-2.5">
+            <button type="button" onclick="pressPin('1')" class="py-3.5 rounded-2xl bg-white/10 active:scale-95 font-bold text-base">1</button>
+            <button type="button" onclick="pressPin('2')" class="py-3.5 rounded-2xl bg-white/10 active:scale-95 font-bold text-base">2</button>
+            <button type="button" onclick="pressPin('3')" class="py-3.5 rounded-2xl bg-white/10 active:scale-95 font-bold text-base">3</button>
+            <button type="button" onclick="pressPin('4')" class="py-3.5 rounded-2xl bg-white/10 active:scale-95 font-bold text-base">4</button>
+            <button type="button" onclick="pressPin('5')" class="py-3.5 rounded-2xl bg-white/10 active:scale-95 font-bold text-base">5</button>
+            <button type="button" onclick="pressPin('6')" class="py-3.5 rounded-2xl bg-white/10 active:scale-95 font-bold text-base">6</button>
+            <button type="button" onclick="pressPin('7')" class="py-3.5 rounded-2xl bg-white/10 active:scale-95 font-bold text-base">7</button>
+            <button type="button" onclick="pressPin('8')" class="py-3.5 rounded-2xl bg-white/10 active:scale-95 font-bold text-base">8</button>
+            <button type="button" onclick="pressPin('9')" class="py-3.5 rounded-2xl bg-white/10 active:scale-95 font-bold text-base">9</button>
+            <button type="button" onclick="clearPin()" class="py-3.5 rounded-2xl bg-white/5 text-xs text-slate-400">Clear</button>
+            <button type="button" onclick="pressPin('0')" class="py-3.5 rounded-2xl bg-white/10 active:scale-95 font-bold text-base">0</button>
+            <button type="button" onclick="backPin()" class="py-3.5 rounded-2xl bg-white/5 text-xs text-slate-300">Del</button>
+          </div>
+
+          <div class="mt-4 flex flex-col items-center gap-1.5">
+            <p id="defaultPinNote" class="text-center text-xs text-slate-400">
+              Default PIN: <strong class="text-rose-300">1234</strong>
+            </p>
+            <button
+              type="button"
+              onclick="unlockApp()"
+              class="px-4 py-1.5 rounded-full bg-rose-500/20 border border-rose-500/40 text-xs font-semibold text-rose-200"
+            >
+              Enter Chat Directly →
+            </button>
+          </div>
+        </div>
+
+        <p class="text-center text-[11px] font-mono text-slate-500">
+          from app developer <span class="text-rose-400">&lt;/&gt;@rick saha 2026</span>
+        </p>
+      </div>
+
+      <!-- Chat Screen -->
+      <div id="chatScreen" class="hidden flex-col w-full h-full">
+        <header class="px-3.5 py-2.5 bg-slate-950/85 backdrop-blur-xl border-b border-white/10 flex items-center justify-between shrink-0">
+          <div class="w-full max-w-4xl mx-auto flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <div class="relative shrink-0">
+                <div
+                  id="partnerAvatar"
+                  class="w-10 h-10 rounded-full bg-gradient-to-tr from-rose-500 to-indigo-500 flex items-center justify-center font-bold text-sm text-white overflow-hidden"
+                >
+                  P
+                </div>
+                <span
+                  id="partnerDot"
+                  class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-slate-500 ring-2 ring-slate-950"
+                ></span>
+              </div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-1.5">
+                  <h1 id="partnerTitle" class="font-display font-bold text-sm sm:text-base text-white truncate">
+                    Pomi
+                  </h1>
+                  <span
+                    id="partnerOnlineText"
+                    class="text-[10px] px-1.5 py-0.5 rounded-full bg-white/10 text-slate-300 shrink-0"
+                  >
+                    Offline
+                  </span>
+                </div>
+                <p id="youAreText" class="text-[11px] text-slate-400 truncate">
+                  You: Rick • Live
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button
+                type="button"
+                onclick="sendLoveBurst()"
+                title="Heart"
+                class="px-2.5 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-400 text-xs"
+              >
+                ❤️
+              </button>
+              <button
+                type="button"
+                onclick="switchSenderRole()"
+                title="Switch Role"
+                class="px-2.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-xs text-rose-300 font-medium"
+              >
+                Switch
+              </button>
+              <button
+                type="button"
+                onclick="openModal('settingsModal')"
+                title="Settings"
+                class="px-2.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-slate-100 text-xs"
+              >
+                ⚙️
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <!-- Notification Strip -->
+        <div
+          id="notifStrip"
+          class="px-3.5 py-1 bg-indigo-950/60 border-b border-white/5 shrink-0"
+        >
+          <div class="w-full max-w-4xl mx-auto flex items-center justify-between text-[11px]">
+            <span id="notifStatusLabel" class="text-indigo-200">🔔 Notifications: Checking...</span>
+            <button
+              type="button"
+              onclick="requestNotificationPermission()"
+              class="underline text-rose-300 font-medium"
+            >
+              Allow / Test
+            </button>
+          </div>
+        </div>
+
+        <!-- Pinned Message Banner -->
+        <div
+          id="pinnedBanner"
+          class="hidden px-3.5 py-1.5 bg-rose-500/15 border-b border-rose-500/30 shrink-0"
+        >
+          <div class="w-full max-w-4xl mx-auto flex items-center justify-between gap-2 text-xs">
+            <button
+              type="button"
+              onclick="scrollToPinned()"
+              class="flex items-center gap-1.5 min-w-0 text-left flex-1"
+            >
+              <span>📌</span>
+              <span id="pinnedPreviewText" class="text-slate-100 truncate"></span>
+            </button>
+            <button
+              type="button"
+              onclick="unpinMessage()"
+              class="px-2 py-0.5 rounded bg-white/10 text-[10px] text-slate-200 shrink-0"
+            >
+              Unpin
+            </button>
+          </div>
+        </div>
+
+        <!-- Error Banner -->
+        <div
+          id="dbErrorBanner"
+          class="hidden px-3 py-1.5 bg-rose-500/20 border-b border-rose-500/40 text-xs text-rose-200 text-center shrink-0"
+        ></div>
+
+        <!-- Messages List -->
+        <main id="messagesBox" class="flex-1 overflow-y-auto px-3.5 py-2.5 chat-scroll">
+          <div id="messagesInner" class="w-full max-w-4xl mx-auto space-y-2.5"></div>
+        </main>
+
+        <!-- Typing Indicator -->
+        <div
+          id="typingBar"
+          class="hidden px-3.5 py-1 text-xs text-rose-300 shrink-0"
+        >
+          <div class="w-full max-w-4xl mx-auto flex items-center gap-1.5">
+            <div class="flex gap-1 bg-white/10 px-2 py-1 rounded-full">
+              <span class="typing-dot w-1.5 h-1.5 rounded-full bg-rose-400"></span>
+              <span class="typing-dot w-1.5 h-1.5 rounded-full bg-rose-400"></span>
+              <span class="typing-dot w-1.5 h-1.5 rounded-full bg-rose-400"></span>
+            </div>
+            <span id="typingLabel" class="text-xs">Pomi is typing...</span>
+          </div>
+        </div>
+
+        <!-- Voice Recording Banner -->
+        <div
+          id="recordingBar"
+          class="hidden px-3.5 py-2 bg-rose-500/20 border-t border-rose-500/30 shrink-0"
+        >
+          <div class="w-full max-w-4xl mx-auto flex items-center justify-between text-xs text-rose-200">
+            <span id="recordingTimer">Recording... 0:00</span>
+            <div class="flex items-center gap-1.5">
+              <button type="button" onclick="cancelVoiceRecording()" class="px-2 py-1 rounded bg-white/10">Cancel</button>
+              <button type="button" onclick="stopAndSendVoice()" class="px-2.5 py-1 rounded bg-rose-500 text-white font-semibold">Send</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input Bar -->
+        <form
+          onsubmit="sendTextMessage(event)"
+          class="p-2.5 bg-slate-950/85 backdrop-blur-xl border-t border-white/10 shrink-0"
+        >
+          <div class="w-full max-w-4xl mx-auto flex items-center gap-1.5">
+            <input
+              type="file"
+              id="photoInput"
+              accept="image/*"
+              class="hidden"
+              onchange="handlePhotoSelect(event)"
+            />
+            <button
+              type="button"
+              onclick="document.getElementById('photoInput').click()"
+              title="Photo"
+              class="px-3 py-2 rounded-full bg-white/10 hover:bg-white/15 text-indigo-300 text-xs shrink-0"
+            >
+              🖼️
+            </button>
+
+            <button
+              type="button"
+              onclick="toggleVoiceRecording()"
+              title="Voice"
+              class="px-3 py-2 rounded-full bg-white/10 hover:bg-white/15 text-rose-300 text-xs shrink-0"
+            >
+              🎤
+            </button>
+
+            <input
+              id="msgInput"
+              type="text"
+              autocomplete="off"
+              oninput="notifyTyping()"
+              placeholder="Message"
+              class="flex-1 min-w-0 bg-white/10 text-white placeholder-slate-400 text-sm px-4 py-2 rounded-full border border-white/10 focus:outline-none focus:border-rose-400"
+            />
+
+            <button
+              type="submit"
+              class="px-4 py-2 rounded-full bg-gradient-to-r from-rose-500 to-indigo-500 text-white text-xs font-semibold shrink-0"
+            >
+              Send
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Love Burst Overlay -->
+      <div
+        id="loveBurstOverlay"
+        class="pointer-events-none hidden fixed inset-0 z-50 flex items-center justify-center bg-rose-950/20"
+      >
+        <div class="animate-heart-pop flex flex-col items-center">
+          <span class="text-7xl">❤️</span>
+          <span id="loveBurstLabel" class="mt-2 px-3 py-1 rounded-full bg-slate-950/80 text-xs text-rose-200">
+            Sent ❤️
+          </span>
+        </div>
+      </div>
+
+      <!-- DP Modal -->
+      <div id="dpModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="w-full max-w-sm bg-slate-900 border border-white/15 rounded-2xl p-4 space-y-3">
+          <div class="flex items-center justify-between border-b border-white/10 pb-2">
+            <h3 class="font-bold text-sm text-white">Profile Photos (Rick &amp; Pomi)</h3>
+            <button type="button" onclick="closeModal('dpModal')" class="text-xs text-slate-400 hover:text-white">Close</button>
+          </div>
+          <input type="file" id="dpFileInput" accept="image/*" class="hidden" onchange="handleDpUpload(event)" />
+          <div class="grid grid-cols-2 gap-3 text-center">
+            <div class="p-3 rounded-2xl bg-white/5 border border-white/10 flex flex-col items-center gap-2">
+              <div id="rickDpPreview" class="w-16 h-16 rounded-full bg-rose-500/20 border border-rose-400/40 flex items-center justify-center font-bold text-lg text-white overflow-hidden">
+                R
+              </div>
+              <span class="text-xs font-semibold text-white">Rick DP</span>
+              <button type="button" onclick="pickDpFor('Rick')" class="w-full py-1.5 rounded-xl bg-rose-500/25 border border-rose-500/40 text-xs font-semibold text-rose-200">
+                Change DP
+              </button>
+              <button type="button" onclick="resetDpFor('Rick')" class="text-[11px] text-slate-400 hover:text-white">
+                Remove
+              </button>
+            </div>
+            <div class="p-3 rounded-2xl bg-white/5 border border-white/10 flex flex-col items-center gap-2">
+              <div id="pomiDpPreview" class="w-16 h-16 rounded-full bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center font-bold text-lg text-white overflow-hidden">
+                P
+              </div>
+              <span class="text-xs font-semibold text-white">Pomi DP</span>
+              <button type="button" onclick="pickDpFor('Pomi')" class="w-full py-1.5 rounded-xl bg-indigo-500/25 border border-indigo-500/40 text-xs font-semibold text-indigo-200">
+                Change DP
+              </button>
+              <button type="button" onclick="resetDpFor('Pomi')" class="text-[11px] text-slate-400 hover:text-white">
+                Remove
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Modal -->
+      <div id="settingsModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="w-full max-w-sm bg-slate-900 border border-white/15 rounded-2xl p-4 space-y-2.5 max-h-[88dvh] overflow-y-auto chat-scroll">
+          <div class="flex items-center justify-between border-b border-white/10 pb-2">
+            <h3 class="font-display font-bold text-sm text-white">Settings</h3>
+            <button type="button" onclick="closeModal('settingsModal')" class="text-xs text-slate-400 hover:text-white">
+              Close
+            </button>
+          </div>
+          <button type="button" onclick="closeModal('settingsModal'); openModal('dpModal');" class="w-full py-2.5 px-3 rounded-xl bg-rose-500/15 border border-rose-400/30 text-xs font-semibold text-rose-200 text-left">
+            🖼️ Profile Photo / DP (Rick &amp; Pomi)
+          </button>
+          <button type="button" id="modalInstallBtn" onclick="triggerInstallPrompt()" class="w-full py-2.5 px-3 rounded-xl bg-emerald-500/20 border border-emerald-400/40 text-xs font-semibold text-emerald-200 text-left">
+            📲 Install on Home Screen
+          </button>
+          <div class="space-y-1">
+            <label class="text-xs text-slate-300 block">Language / ভাষা / भाषा</label>
+            <select id="chatLangSelect" onchange="changeLanguage(this.value)" class="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/15 text-xs text-white">
+              <option value="en" class="bg-slate-900">English</option>
+              <option value="bn" class="bg-slate-900">বাংলা (Bengali)</option>
+              <option value="hi" class="bg-slate-900">हिन्दी (Hindi)</option>
+            </select>
+          </div>
+          <button type="button" onclick="requestNotificationPermission()" class="w-full py-2.5 px-3 rounded-xl bg-indigo-500/20 border border-indigo-400/30 text-xs font-medium text-indigo-200 text-left">
+            🔔 Enable &amp; Test Notifications
+          </button>
+          <button type="button" onclick="closeModal('settingsModal'); openModal('themeModal');" class="w-full py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-white text-left">
+            🎨 Themes &amp; Wallpaper
+          </button>
+          <button type="button" onclick="closeModal('settingsModal'); openModal('pinModal');" class="w-full py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-white text-left">
+            🔑 Change Shared PIN
+          </button>
+          <button type="button" onclick="closeModal('settingsModal'); lockScreenNow();" class="w-full py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-slate-200 text-left">
+            🔒 Lock Chat
+          </button>
+          <button type="button" id="clearChatBtn" onclick="clearAllChatMessages()" class="w-full py-2.5 px-3 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-xs font-semibold text-rose-200 text-left">
+            🗑️ Clear All Chat
+          </button>
+        </div>
+      </div>
+
+      <!-- Change PIN Modal -->
+      <div id="pinModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="w-full max-w-sm bg-slate-900 border border-white/15 rounded-2xl p-4 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <h3 class="font-bold text-sm text-white">Change Shared PIN</h3>
+            <button type="button" onclick="closeModal('pinModal')" class="text-xs text-slate-400">Close</button>
+          </div>
+          <input id="currentPinField" type="password" inputmode="numeric" maxlength="4" placeholder="Current 4-digit PIN" class="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white" />
+          <input id="newPinField" type="password" inputmode="numeric" maxlength="4" placeholder="New 4-digit PIN" class="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white" />
+          <p id="pinChangeMsg" class="text-xs text-rose-400 h-4"></p>
+          <button type="button" onclick="saveNewSharedPin()" class="w-full py-2 rounded-xl bg-rose-500 text-xs font-semibold text-white">Save PIN</button>
+        </div>
+      </div>
+
+      <!-- Theme Modal -->
+      <div id="themeModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="w-full max-w-sm bg-slate-900 border border-white/15 rounded-2xl p-4 space-y-3 max-h-[86dvh] overflow-y-auto chat-scroll">
+          <div class="flex items-center justify-between">
+            <h3 class="font-bold text-sm text-white">Themes &amp; Wallpaper</h3>
+            <button type="button" onclick="closeModal('themeModal')" class="text-xs text-slate-400">Close</button>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" onclick="applyTheme('theme-midnight-rose')" class="p-2 rounded-xl border border-rose-500/40 bg-rose-500/10 text-xs text-white text-left">Midnight Rose</button>
+            <button type="button" onclick="applyTheme('theme-ocean-mist')" class="p-2 rounded-xl border border-sky-500/40 bg-sky-500/10 text-xs text-white text-left">Ocean Mist</button>
+            <button type="button" onclick="applyTheme('theme-velvet-night')" class="p-2 rounded-xl border border-purple-500/40 bg-purple-500/10 text-xs text-white text-left">Velvet Night</button>
+            <button type="button" onclick="applyTheme('theme-daylight-cloud')" class="p-2 rounded-xl border border-slate-300/40 bg-slate-100 text-xs font-semibold text-slate-900 text-left">Daylight Light</button>
+            <button type="button" onclick="applyTheme('theme-sunny-peach')" class="p-2 rounded-xl border border-orange-300/40 bg-orange-100 text-xs font-semibold text-slate-900 text-left">Sunny Light</button>
+            <button type="button" onclick="applyTheme('theme-dot-pattern')" class="p-2 rounded-xl border border-rose-400/30 bg-white/5 text-xs text-white text-left">Dot Pattern</button>
+            <button type="button" onclick="applyTheme('theme-lattice-pattern')" class="p-2 rounded-xl border border-indigo-400/30 bg-white/5 text-xs text-white text-left col-span-2">Lattice Pattern</button>
+          </div>
+          <input type="file" id="wallpaperInput" accept="image/*" class="hidden" onchange="handleWallpaperUpload(event)" />
+          <button type="button" onclick="document.getElementById('wallpaperInput').click()" class="w-full py-2 rounded-xl bg-rose-500/20 border border-rose-400/40 text-xs font-semibold text-rose-200">
+            Upload Custom Wallpaper
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const FIREBASE_CONFIG = {
+        apiKey: "AIzaSyCV5HFjgSkevOhDiXjHgrC-YG90gqqOztQ",
+        databaseURL: "https://rick-pomi-chat-default-rtdb.firebaseio.com"
+      };
+
+      const ROOM_ID = "rick_pomi_private_room";
+      const STORAGE_KEY = "rimi_messages_v9";
+      const PIN_KEY = "rimi_shared_pin_v9";
+      const THEME_KEY = "rimi_theme_v9";
+      const WALLPAPER_KEY = "rimi_wallpaper_v9";
+      const PINNED_MSG_KEY = "rimi_pinned_msg_v9";
+      const LANG_KEY = "rimi_lang_v9";
+      const DP_KEY = "rimi_profiles_dp_v9";
+
+      const I18N = {
+        en: {
+          enterPin: "Enter Shared PIN",
+          loggingAs: "Logging in as: ",
+          defaultPin: "Default PIN: ",
+          online: "● Online",
+          offline: "Offline",
+          placeholder: "Message",
+          emptyChat: "No messages yet.",
+          typing: " is typing...",
+          clearChat: "🗑️ Clear All Chat",
+          confirmClear: "Delete all messages in this chat?"
+        },
+        bn: {
+          enterPin: "শেয়ার্ড PIN দিন",
+          loggingAs: "লগইন হচ্ছে: ",
+          defaultPin: "ডিফল্ট PIN: ",
+          online: "● অনলাইন",
+          offline: "অফলাইন",
+          placeholder: "মেসেজ লিখুন...",
+          emptyChat: "এখনো কোনো মেসেজ নেই।",
+          typing: " টাইপ করছে...",
+          clearChat: "🗑️ সব চ্যাট মুছুন",
+          confirmClear: "আপনি কি সব মেসেজ মুছে ফেলতে চান?"
+        },
+        hi: {
+          enterPin: "शेयर किया गया PIN डालें",
+          loggingAs: "लॉगिन: ",
+          defaultPin: "डिफ़ॉल्ट PIN: ",
+          online: "● ऑनलाइन",
+          offline: "ऑफ़लाइन",
+          placeholder: "मैसेज लिखें...",
+          emptyChat: "अभी कोई मैसेज नहीं है।",
+          typing: " टाइप कर रहा/रही है...",
+          clearChat: "🗑️ पूरी चैट साफ़ करें",
+          confirmClear: "क्या आप सभी मैसेज हटाना चाहते हैं?"
+        }
+      };
+
+      const QUICK_EMOJIS = [
+        { key: "heart", emoji: "❤️" },
+        { key: "haha", emoji: "😂" },
+        { key: "sad", emoji: "😢" },
+        { key: "love", emoji: "🥰" },
+        { key: "like", emoji: "👍" }
+      ];
+
+      const ALL_THEMES = [
+        "theme-midnight-rose",
+        "theme-ocean-mist",
+        "theme-velvet-night",
+        "theme-daylight-cloud",
+        "theme-sunny-peach",
+        "theme-dot-pattern",
+        "theme-lattice-pattern",
+        "theme-custom-wallpaper"
+      ];
+
+      const LIGHT_THEMES = ["theme-daylight-cloud", "theme-sunny-peach"];
+
+      let currentLang = localStorage.getItem(LANG_KEY) || "en";
+      let sharedPin = localStorage.getItem(PIN_KEY) || "1234";
+      let pinnedMsgId = localStorage.getItem(PINNED_MSG_KEY) || null;
+      let profilesDp = JSON.parse(localStorage.getItem(DP_KEY) || "{}");
+      let targetDpRole = "Rick";
+
+      let pinBuffer = "";
+      let senderRole = "Rick";
+      let messagesMap = {};
+      let seenMsgIds = new Set();
+      let isFirstSnapshot = true;
+      let lastPartnerOnline = false;
+
+      let db = null;
+      let msgRef = null;
+      let burstRef = null;
+      let typingRef = null;
+      let pinRef = null;
+      let pinnedMsgRef = null;
+      let dpRef = null;
+      let presenceInterval = null;
+      let typingTimeout = null;
+      let isUnlocked = false;
+
+      let mediaRecorder = null;
+      let audioChunks = [];
+      let recTimerInterval = null;
+      let recSeconds = 0;
+
+      function getPartnerName() {
+        return senderRole === "Rick" ? "Pomi" : "Rick";
+      }
+
+      function t(key) {
+        return (I18N[currentLang] && I18N[currentLang][key]) || I18N.en[key];
+      }
+
+      function renderPinDots() {
+        try {
+          const dots = document.querySelectorAll("#pinDots span");
+          dots.forEach((dot, idx) => {
+            dot.className =
+              idx < pinBuffer.length
+                ? "w-3.5 h-3.5 rounded-full bg-rose-500 border border-rose-400"
+                : "w-3.5 h-3.5 rounded-full border border-slate-500";
+          });
+        } catch (e) {}
+      }
+
+      function unlockApp() {
+        isUnlocked = true;
+        pinBuffer = "";
+        renderPinDots();
+        const lockEl = document.getElementById("lockScreen");
+        const chatEl = document.getElementById("chatScreen");
+        if (lockEl) {
+          lockEl.classList.add("hidden");
+          lockEl.style.display = "none";
+        }
+        if (chatEl) {
+          chatEl.classList.remove("hidden");
+          chatEl.classList.add("flex");
+          chatEl.style.display = "flex";
+        }
+        try {
+          refreshNotifStatusUI();
+          initFirebaseSync();
+        } catch (e) {}
+      }
+
+      function pressPin(digit) {
+        try {
+          if (pinBuffer.length >= 4) return;
+          pinBuffer += String(digit);
+          const errEl = document.getElementById("pinError");
+          if (errEl) errEl.textContent = "";
+          renderPinDots();
+
+          if (pinBuffer.length === 4) {
+            if (pinBuffer === sharedPin || pinBuffer === "1234") {
+              unlockApp();
+            } else {
+              if (errEl) errEl.textContent = "Wrong PIN! Try " + sharedPin;
+              pinBuffer = "";
+              setTimeout(renderPinDots, 150);
+            }
+          }
+        } catch (e) {
+          unlockApp();
+        }
+      }
+
+      function backPin() {
+        pinBuffer = pinBuffer.slice(0, -1);
+        renderPinDots();
+      }
+
+      function clearPin() {
+        pinBuffer = "";
+        renderPinDots();
+      }
+
+      function lockScreenNow() {
+        isUnlocked = false;
+        const lockEl = document.getElementById("lockScreen");
+        const chatEl = document.getElementById("chatScreen");
+        if (chatEl) {
+          chatEl.classList.add("hidden");
+          chatEl.classList.remove("flex");
+          chatEl.style.display = "none";
+        }
+        if (lockEl) {
+          lockEl.classList.remove("hidden");
+          lockEl.style.display = "flex";
+        }
+      }
+
+      function renderAvatarBox(el, name, dpDataUrl) {
+        if (!el) return;
+        if (dpDataUrl) {
+          el.innerHTML = `<img src="${dpDataUrl}" alt="${name} DP" class="w-full h-full object-cover" />`;
+        } else {
+          el.textContent = (name || "?").charAt(0);
+        }
+      }
+
+      function refreshProfileAvatars() {
+        try {
+          const partner = getPartnerName();
+          renderAvatarBox(document.getElementById("partnerAvatar"), partner, profilesDp[partner]);
+          renderAvatarBox(document.getElementById("rickDpPreview"), "Rick", profilesDp.Rick);
+          renderAvatarBox(document.getElementById("pomiDpPreview"), "Pomi", profilesDp.Pomi);
+        } catch (e) {}
+      }
+
+      function pickDpFor(role) {
+        targetDpRole = role;
+        document.getElementById("dpFileInput").click();
+      }
+
+      function handleDpUpload(e) {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement("canvas");
+            const size = 256;
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext("2d");
+            const minSide = Math.min(img.width, img.height);
+            const sx = (img.width - minSide) / 2;
+            const sy = (img.height - minSide) / 2;
+            ctx.drawImage(img, sx, sy, minSide, minSide, 0, 0, size, size);
+            const dpUrl = canvas.toDataURL("image/jpeg", 0.78);
+
+            profilesDp[targetDpRole] = dpUrl;
+            localStorage.setItem(DP_KEY, JSON.stringify(profilesDp));
+            refreshProfileAvatars();
+            if (dpRef) dpRef.child(targetDpRole).set(dpUrl);
+          };
+          img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+        e.target.value = "";
+      }
+
+      function resetDpFor(role) {
+        delete profilesDp[role];
+        localStorage.setItem(DP_KEY, JSON.stringify(profilesDp));
+        refreshProfileAvatars();
+        if (dpRef) dpRef.child(role).remove();
+      }
+
+      function playChime() {
+        try {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (!AudioCtx) return;
+          const ctx = new AudioCtx();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(780, ctx.currentTime);
+          gain.gain.setValueAtTime(0.08, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.25);
+        } catch (e) {}
+      }
+
+      function refreshNotifStatusUI() {
+        try {
+          const label = document.getElementById("notifStatusLabel");
+          if (!label) return;
+          if (!("Notification" in window)) {
+            label.textContent = "🔔 Notifications unsupported";
+            return;
+          }
+          if (Notification.permission === "granted") {
+            label.textContent = "🔔 Notifications: ON";
+          } else if (Notification.permission === "denied") {
+            label.textContent = "🔕 Notifications Blocked";
+          } else {
+            label.textContent = "🔔 Notifications: Tap Allow";
+          }
+        } catch (e) {}
+      }
+
+      function requestNotificationPermission() {
+        if (!("Notification" in window)) {
+          alert("Notifications not supported on this device.");
+          return;
+        }
+        Notification.requestPermission().then((perm) => {
+          refreshNotifStatusUI();
+          if (perm === "granted") {
+            showSystemAlert("RICK💖POMI", "Notifications active!");
+          } else {
+            alert("Browser settings theke Notification allow korun.");
+          }
+        });
+      }
+
+      function showSystemAlert(title, body) {
+        playChime();
+        if (navigator.vibrate) navigator.vibrate([120, 60, 120]);
+        if (!("Notification" in window) || Notification.permission !== "granted") return;
+        try {
+          new Notification(title, { body });
+        } catch (e) {}
+      }
+
+      function changeLanguage(lang) {
+        try {
+          currentLang = lang;
+          localStorage.setItem(LANG_KEY, lang);
+          document.getElementById("lockLangSelect").value = lang;
+          document.getElementById("chatLangSelect").value = lang;
+          document.getElementById("enterPinTitle").textContent = t("enterPin");
+          document.getElementById("activeRoleLabel").textContent = t("loggingAs") + senderRole;
+          document.getElementById("defaultPinNote").innerHTML =
+            t("defaultPin") + '<strong class="text-rose-300">' + sharedPin + "</strong>";
+          document.getElementById("msgInput").placeholder = t("placeholder");
+          document.getElementById("clearChatBtn").textContent = t("clearChat");
+          setPartnerOnlineUI(lastPartnerOnline);
+          renderMessages();
+        } catch (e) {}
+      }
+
+      let deferredInstallPrompt = null;
+      window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        deferredInstallPrompt = e;
+        const btn = document.getElementById("installAppBtn");
+        if (btn) btn.classList.remove("hidden");
+      });
+
+      async function triggerInstallPrompt() {
+        if (deferredInstallPrompt) {
+          deferredInstallPrompt.prompt();
+          await deferredInstallPrompt.userChoice;
+          deferredInstallPrompt = null;
+        } else {
+          alert("Browser menu (⋮ or Share) -> 'Add to Home Screen' / 'Install App' tap korun.");
+        }
+      }
+
+      function showDbError(text) {
+        const banner = document.getElementById("dbErrorBanner");
+        if (!banner) return;
+        if (!text) {
+          banner.classList.add("hidden");
+          return;
+        }
+        banner.textContent = text;
+        banner.classList.remove("hidden");
+      }
+
+      function applyTheme(themeClass, customImageUrl = null) {
+        try {
+          const shell = document.getElementById("appShell");
+          if (!shell) return;
+          shell.classList.remove(...ALL_THEMES, "light-ui");
+          shell.classList.add(themeClass);
+
+          const savedWp = customImageUrl || localStorage.getItem(WALLPAPER_KEY);
+          if (themeClass === "theme-custom-wallpaper" && savedWp) {
+            shell.style.backgroundImage = `url("${savedWp}")`;
+          } else {
+            shell.style.backgroundImage = "";
+          }
+
+          if (LIGHT_THEMES.includes(themeClass)) {
+            shell.classList.add("light-ui");
+          }
+
+          localStorage.setItem(THEME_KEY, themeClass);
+          closeModal("themeModal");
+        } catch (e) {}
+      }
+
+      function handleWallpaperUpload(e) {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement("canvas");
+            const maxW = 900;
+            const scale = Math.min(1, maxW / img.width);
+            canvas.width = img.width * scale;
+            canvas.height = img.height * scale;
+            canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+            const dataUrl = canvas.toDataURL("image/jpeg", 0.75);
+            localStorage.setItem(WALLPAPER_KEY, dataUrl);
+            applyTheme("theme-custom-wallpaper", dataUrl);
+          };
+          img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+        e.target.value = "";
+      }
+
+      function updatePartnerHeaderUI() {
+        try {
+          const partner = getPartnerName();
+          document.getElementById("partnerTitle").textContent = partner;
+          refreshProfileAvatars();
+          document.getElementById("youAreText").textContent =
+            "You: " + senderRole + (db ? " • Live" : " • Local");
+        } catch (e) {}
+      }
+
+      function setPartnerOnlineUI(isOnline) {
+        try {
+          lastPartnerOnline = isOnline;
+          const dot = document.getElementById("partnerDot");
+          const badge = document.getElementById("partnerOnlineText");
+          if (isOnline) {
+            dot.className = "absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-slate-950";
+            badge.className = "text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 shrink-0";
+            badge.textContent = t("online");
+          } else {
+            dot.className = "absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-slate-500 ring-2 ring-slate-950";
+            badge.className = "text-[10px] px-1.5 py-0.5 rounded-full bg-white/10 text-slate-300 shrink-0";
+            badge.textContent = t("offline");
+          }
+        } catch (e) {}
+      }
+
+      function setSenderRole(role) {
+        senderRole = role;
+        document.getElementById("activeRoleLabel").textContent = t("loggingAs") + role;
+        const rBtn = document.getElementById("roleRickBtn");
+        const pBtn = document.getElementById("rolePomiBtn");
+        if (role === "Rick") {
+          rBtn.className = "py-2.5 rounded-2xl border border-rose-500 bg-rose-500/20 text-xs font-semibold text-white";
+          pBtn.className = "py-2.5 rounded-2xl border border-white/10 bg-white/5 text-xs font-semibold text-slate-300";
+        } else {
+          pBtn.className = "py-2.5 rounded-2xl border border-rose-500 bg-rose-500/20 text-xs font-semibold text-white";
+          rBtn.className = "py-2.5 rounded-2xl border border-white/10 bg-white/5 text-xs font-semibold text-slate-300";
+        }
+        updatePartnerHeaderUI();
+        if (isUnlocked) {
+          startPresenceAndTypingSync();
+          renderMessages();
+        }
+      }
+
+      function switchSenderRole() {
+        setSenderRole(senderRole === "Rick" ? "Pomi" : "Rick");
+      }
+
+      function openModal(id) {
+        if (id === "pinModal") {
+          document.getElementById("currentPinField").value = "";
+          document.getElementById("newPinField").value = "";
+          document.getElementById("pinChangeMsg").textContent = "";
+        }
+        if (id === "dpModal") {
+          refreshProfileAvatars();
+        }
+        const el = document.getElementById(id);
+        if (el) el.classList.remove("hidden");
+      }
+
+      function closeModal(id) {
+        const el = document.getElementById(id);
+        if (el) el.classList.add("hidden");
+      }
+
+      function saveNewSharedPin() {
+        const cur = document.getElementById("currentPinField").value.trim();
+        const next = document.getElementById("newPinField").value.trim();
+        const msg = document.getElementById("pinChangeMsg");
+
+        if (cur !== sharedPin) {
+          msg.textContent = "Wrong current PIN";
+          return;
+        }
+        if (!/^\d{4}$/.test(next)) {
+          msg.textContent = "Enter 4 digits";
+          return;
+        }
+
+        sharedPin = next;
+        localStorage.setItem(PIN_KEY, sharedPin);
+        document.getElementById("defaultPinNote").innerHTML =
+          t("defaultPin") + '<strong class="text-rose-300">' + sharedPin + "</strong>";
+        if (pinRef) pinRef.set(sharedPin);
+        closeModal("pinModal");
+      }
+
+      function deleteSingleMessage(msgId) {
+        if (pinnedMsgId === msgId) unpinMessage();
+        if (msgRef) {
+          msgRef.child(msgId).remove();
+        } else {
+          delete messagesMap[msgId];
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(messagesMap));
+          renderMessages();
+        }
+      }
+
+      function clearAllChatMessages() {
+        if (!confirm(t("confirmClear"))) return;
+        unpinMessage();
+        if (msgRef) {
+          msgRef.remove();
+        } else {
+          messagesMap = {};
+          localStorage.setItem(STORAGE_KEY, "{}");
+          renderMessages();
+        }
+        closeModal("settingsModal");
+      }
+
+      function showLoveBurst(sender) {
+        const overlay = document.getElementById("loveBurstOverlay");
+        document.getElementById("loveBurstLabel").textContent = sender + " ❤️";
+        overlay.classList.remove("hidden");
+        playChime();
+        if (navigator.vibrate) navigator.vibrate([70, 35, 70]);
+        setTimeout(() => overlay.classList.add("hidden"), 900);
+      }
+
+      function sendLoveBurst() {
+        showLoveBurst(senderRole);
+        if (burstRef) burstRef.set({ sender: senderRole, ts: Date.now() });
+      }
+
+      function pinMessage(msgId) {
+        pinnedMsgId = msgId;
+        localStorage.setItem(PINNED_MSG_KEY, pinnedMsgId);
+        if (pinnedMsgRef) pinnedMsgRef.set(pinnedMsgId);
+        renderPinnedBanner();
+      }
+
+      function unpinMessage() {
+        pinnedMsgId = null;
+        localStorage.removeItem(PINNED_MSG_KEY);
+        if (pinnedMsgRef) pinnedMsgRef.set(null);
+        renderPinnedBanner();
+      }
+
+      function scrollToPinned() {
+        if (!pinnedMsgId) return;
+        const el = document.getElementById("msg_row_" + pinnedMsgId);
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+
+      function renderPinnedBanner() {
+        const banner = document.getElementById("pinnedBanner");
+        const msg = pinnedMsgId ? messagesMap[pinnedMsgId] : null;
+        if (!msg) {
+          banner.classList.add("hidden");
+          return;
+        }
+        let preview = msg.text || "";
+        if (msg.type === "image") preview = "📷 Photo";
+        else if (msg.type === "audio") preview = "🎤 Voice";
+        document.getElementById("pinnedPreviewText").textContent = `${msg.sender}: ${preview}`;
+        banner.classList.remove("hidden");
+      }
+
+      function toggleReaction(msgId, emojiKey) {
+        const msg = messagesMap[msgId];
+        if (!msg) return;
+        const reactions = msg.reactions && typeof msg.reactions === "object" ? { ...msg.reactions } : {};
+        const users = Array.isArray(reactions[emojiKey]) ? [...reactions[emojiKey]] : [];
+        const idx = users.indexOf(senderRole);
+        if (idx >= 0) users.splice(idx, 1);
+        else users.push(senderRole);
+
+        if (users.length === 0) delete reactions[emojiKey];
+        else reactions[emojiKey] = users;
+
+        if (msgRef) {
+          msgRef.child(msgId).child("reactions").set(Object.keys(reactions).length ? reactions : null);
+        } else {
+          messagesMap[msgId].reactions = reactions;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(messagesMap));
+          renderMessages();
+        }
+      }
+
+      function renderMessages() {
+        const inner = document.getElementById("messagesInner");
+        if (!inner) return;
+        inner.innerHTML = "";
+        renderPinnedBanner();
+
+        const entries = Object.entries(messagesMap).sort(
+          (a, b) => (a[1].ts || 0) - (b[1].ts || 0)
+        );
+
+        if (entries.length === 0) {
+          const empty = document.createElement("div");
+          empty.className = "empty-text text-center text-xs text-slate-400 my-8";
+          empty.textContent = t("emptyChat");
+          inner.appendChild(empty);
+          return;
+        }
+
+        entries.forEach(([id, m]) => {
+          const mine = m.sender === senderRole;
+          const isPinned = pinnedMsgId === id;
+          const reactions = m.reactions && typeof m.reactions === "object" ? m.reactions : {};
+
+          const wrap = document.createElement("div");
+          wrap.id = "msg_row_" + id;
+          wrap.className = "animate-bubble flex flex-col " + (mine ? "items-end" : "items-start");
+
+          const metaRow = document.createElement("div");
+          metaRow.className = "flex items-center gap-2 mb-0.5 px-1";
+
+          const meta = document.createElement("span");
+          meta.className = "meta-text text-[10px] text-slate-400";
+          meta.textContent = m.sender + " • " + (m.time || "") + (isPinned ? " • 📌" : "");
+
+          const pinBtn = document.createElement("button");
+          pinBtn.type = "button";
+          pinBtn.onclick = () => (isPinned ? unpinMessage() : pinMessage(id));
+          pinBtn.className = "meta-text text-[10px] text-rose-400";
+          pinBtn.textContent = isPinned ? "Unpin" : "Pin";
+
+          const delBtn = document.createElement("button");
+          delBtn.type = "button";
+          delBtn.onclick = () => deleteSingleMessage(id);
+          delBtn.className = "meta-text text-[10px] text-slate-400 hover:text-rose-400";
+          delBtn.textContent = "Delete";
+
+          metaRow.appendChild(meta);
+          metaRow.appendChild(pinBtn);
+          metaRow.appendChild(delBtn);
+
+          const bubble = document.createElement("div");
+          bubble.className = mine
+            ? "max-w-[82%] px-3.5 py-2 rounded-2xl rounded-br-sm bg-gradient-to-r from-rose-500 to-indigo-500 text-white text-sm break-words"
+            : "received-bubble max-w-[82%] px-3.5 py-2 rounded-2xl rounded-bl-sm bg-white/10 border border-white/10 text-slate-100 text-sm break-words";
+          bubble.ondblclick = () => toggleReaction(id, "heart");
+
+          if (m.type === "image" && m.mediaUrl) {
+            const img = document.createElement("img");
+            img.src = m.mediaUrl;
+            img.alt = "Photo";
+            img.className = "max-h-52 rounded-xl object-cover";
+            bubble.appendChild(img);
+          } else if (m.type === "audio" && m.mediaUrl) {
+            const audio = document.createElement("audio");
+            audio.controls = true;
+            audio.src = m.mediaUrl;
+            audio.className = "h-8 max-w-[200px]";
+            bubble.appendChild(audio);
+          } else {
+            bubble.textContent = m.text || "";
+          }
+
+          const reactionBar = document.createElement("div");
+          reactionBar.className =
+            "flex items-center gap-1 mt-1 flex-wrap " + (mine ? "justify-end" : "justify-start");
+
+          QUICK_EMOJIS.forEach(({ key, emoji }) => {
+            const users = Array.isArray(reactions[key]) ? reactions[key] : [];
+            const count = users.length;
+            const activeByMe = users.includes(senderRole);
+
+            const pill = document.createElement("button");
+            pill.type = "button";
+            pill.onclick = () => toggleReaction(id, key);
+            pill.className =
+              "px-1.5 py-0.5 rounded-full text-[11px] border transition " +
+              (activeByMe
+                ? "bg-rose-500/25 border-rose-500/50 text-rose-200 font-semibold"
+                : "reaction-pill-idle bg-white/5 border-white/10 text-slate-300");
+            pill.textContent = count > 0 ? `${emoji} ${count}` : emoji;
+            reactionBar.appendChild(pill);
+          });
+
+          wrap.appendChild(metaRow);
+          wrap.appendChild(bubble);
+          wrap.appendChild(reactionBar);
+          inner.appendChild(wrap);
+        });
+
+        const box = document.getElementById("messagesBox");
+        if (box) box.scrollTop = box.scrollHeight;
+      }
+
+      function pushMessageItem(item) {
+        if (msgRef) {
+          msgRef.push(item).catch((err) => {
+            showDbError("Firebase write error: " + err.message);
+          });
+        } else {
+          const id = "m_" + Date.now();
+          messagesMap[id] = item;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(messagesMap));
+          renderMessages();
+        }
+      }
+
+      function sendTextMessage(e) {
+        e.preventDefault();
+        const input = document.getElementById("msgInput");
+        const text = input.value.trim();
+        if (!text) return;
+
+        const now = new Date();
+        pushMessageItem({
+          sender: senderRole,
+          type: "text",
+          text,
+          ts: Date.now(),
+          time: now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+          reactions: {}
+        });
+        input.value = "";
+        if (typingRef) typingRef.child(senderRole).set(false);
+      }
+
+      function handlePhotoSelect(e) {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement("canvas");
+            const maxW = 720;
+            const scale = Math.min(1, maxW / img.width);
+            canvas.width = img.width * scale;
+            canvas.height = img.height * scale;
+            canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+            const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.72);
+
+            const now = new Date();
+            pushMessageItem({
+              sender: senderRole,
+              type: "image",
+              mediaUrl: compressedDataUrl,
+              ts: Date.now(),
+              time: now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+              reactions: {}
+            });
+          };
+          img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+        e.target.value = "";
+      }
+
+      async function toggleVoiceRecording() {
+        if (mediaRecorder && mediaRecorder.state === "recording") {
+          stopAndSendVoice();
+          return;
+        }
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          audioChunks = [];
+          mediaRecorder = new MediaRecorder(stream);
+          mediaRecorder.ondataavailable = (ev) => {
+            if (ev.data.size > 0) audioChunks.push(ev.data);
+          };
+          mediaRecorder.onstop = () => {
+            stream.getTracks().forEach((t) => t.stop());
+            if (audioChunks.length === 0) return;
+            const blob = new Blob(audioChunks, { type: "audio/webm" });
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              const now = new Date();
+              pushMessageItem({
+                sender: senderRole,
+                type: "audio",
+                mediaUrl: reader.result,
+                ts: Date.now(),
+                time: now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+                reactions: {}
+              });
+            };
+            reader.readAsDataURL(blob);
+          };
+
+          mediaRecorder.start();
+          recSeconds = 0;
+          document.getElementById("recordingBar").classList.remove("hidden");
+          document.getElementById("recordingTimer").textContent = "Recording... 0:00";
+          recTimerInterval = setInterval(() => {
+            recSeconds++;
+            const mins = Math.floor(recSeconds / 60);
+            const secs = String(recSeconds % 60).padStart(2, "0");
+            document.getElementById("recordingTimer").textContent = "Recording... " + mins + ":" + secs;
+            if (recSeconds >= 30) stopAndSendVoice();
+          }, 1000);
+        } catch (err) {
+          alert("Microphone permission unavailable.");
+        }
+      }
+
+      function stopAndSendVoice() {
+        clearInterval(recTimerInterval);
+        document.getElementById("recordingBar").classList.add("hidden");
+        if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
+      }
+
+      function cancelVoiceRecording() {
+        clearInterval(recTimerInterval);
+        audioChunks = [];
+        document.getElementById("recordingBar").classList.add("hidden");
+        if (mediaRecorder && mediaRecorder.state === "recording") {
+          mediaRecorder.onstop = () => {};
+          mediaRecorder.stop();
+        }
+      }
+
+      function notifyTyping() {
+        if (!typingRef) return;
+        typingRef.child(senderRole).set(true);
+        clearTimeout(typingTimeout);
+        typingTimeout = setTimeout(() => typingRef.child(senderRole).set(false), 1800);
+      }
+
+      function startPresenceAndTypingSync() {
+        if (!db) return;
+        if (presenceInterval) clearInterval(presenceInterval);
+
+        const partner = getPartnerName();
+        const myPresenceRef = db.ref("rooms/" + ROOM_ID + "/presence/" + senderRole);
+        const partnerPresenceRef = db.ref("rooms/" + ROOM_ID + "/presence/" + partner);
+
+        const pushAlive = () => {
+          myPresenceRef.set({ online: true, lastSeen: Date.now() });
+          myPresenceRef.onDisconnect().set({ online: false, lastSeen: Date.now() });
+        };
+
+        pushAlive();
+        presenceInterval = setInterval(pushAlive, 12000);
+
+        partnerPresenceRef.off();
+        partnerPresenceRef.on("value", (snap) => {
+          const data = snap.val();
+          const active =
+            Boolean(data && data.online) && Date.now() - (data.lastSeen || 0) < 30000;
+          setPartnerOnlineUI(active);
+        });
+
+        typingRef = db.ref("rooms/" + ROOM_ID + "/typing");
+        typingRef.off();
+        typingRef.child(partner).on("value", (snap) => {
+          const isTyping = Boolean(snap.val());
+          const bar = document.getElementById("typingBar");
+          document.getElementById("typingLabel").textContent = partner + t("typing");
+          if (isTyping) bar.classList.remove("hidden");
+          else bar.classList.add("hidden");
+        });
+      }
+
+      function initFirebaseSync() {
+        if (
+          FIREBASE_CONFIG.apiKey &&
+          FIREBASE_CONFIG.databaseURL &&
+          typeof firebase !== "undefined"
+        ) {
+          try {
+            if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+            db = firebase.database();
+            updatePartnerHeaderUI();
+
+            dpRef = db.ref("rooms/" + ROOM_ID + "/profilesDp");
+            dpRef.on("value", (snap) => {
+              const remoteDp = snap.val() || {};
+              profilesDp = { ...profilesDp, ...remoteDp };
+              if (!remoteDp.Rick) delete profilesDp.Rick;
+              if (!remoteDp.Pomi) delete profilesDp.Pomi;
+              localStorage.setItem(DP_KEY, JSON.stringify(profilesDp));
+              refreshProfileAvatars();
+            });
+
+            pinRef = db.ref("rooms/" + ROOM_ID + "/sharedPin");
+            pinRef.on("value", (snap) => {
+              const remotePin = snap.val();
+              if (remotePin && /^\d{4}$/.test(String(remotePin))) {
+                sharedPin = String(remotePin);
+                localStorage.setItem(PIN_KEY, sharedPin);
+              }
+            });
+
+            pinnedMsgRef = db.ref("rooms/" + ROOM_ID + "/pinnedMsgId");
+            pinnedMsgRef.on("value", (snap) => {
+              pinnedMsgId = snap.val() || null;
+              if (pinnedMsgId) localStorage.setItem(PINNED_MSG_KEY, pinnedMsgId);
+              else localStorage.removeItem(PINNED_MSG_KEY);
+              renderPinnedBanner();
+              renderMessages();
+            });
+
+            msgRef = db.ref("rooms/" + ROOM_ID + "/messages");
+            msgRef.off();
+            msgRef.on(
+              "value",
+              (snap) => {
+                showDbError("");
+                const nextMap = snap.val() || {};
+                const keys = Object.keys(nextMap);
+
+                if (!isFirstSnapshot) {
+                  keys.forEach((id) => {
+                    if (!seenMsgIds.has(id)) {
+                      const m = nextMap[id];
+                      if (m && m.sender !== senderRole) {
+                        const preview =
+                          m.type === "image"
+                            ? "📷 Photo"
+                            : m.type === "audio"
+                            ? "🎤 Voice message"
+                            : m.text || "New message";
+                        showSystemAlert(m.sender, preview);
+                      }
+                    }
+                  });
+                }
+                seenMsgIds = new Set(keys);
+                isFirstSnapshot = false;
+                messagesMap = nextMap;
+                renderMessages();
+              },
+              (err) => {
+                showDbError("Firebase error: " + err.message);
+              }
+            );
+
+            burstRef = db.ref("rooms/" + ROOM_ID + "/loveBurst");
+            burstRef.off();
+            burstRef.on("value", (snap) => {
+              const b = snap.val();
+              if (b && b.sender !== senderRole && Date.now() - (b.ts || 0) < 3000) {
+                showLoveBurst(b.sender);
+              }
+            });
+
+            startPresenceAndTypingSync();
+            return;
+          } catch (err) {
+            showDbError("Firebase error: " + err.message);
+          }
+        }
+
+        updatePartnerHeaderUI();
+        messagesMap = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+        renderMessages();
+      }
+
+      try {
+        const savedTheme = localStorage.getItem(THEME_KEY);
+        if (savedTheme) applyTheme(savedTheme);
+        changeLanguage(currentLang);
+        refreshProfileAvatars();
+        refreshNotifStatusUI();
+      } catch (e) {}
+    </script>
+  </body>
+</html>
