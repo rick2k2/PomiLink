@@ -15,6 +15,7 @@
     <meta name="apple-mobile-web-app-title" content="PomiLink" />
     <title>PomiLink</title>
 
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -24,6 +25,7 @@
     />
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
 
     <script>
       tailwind.config = {
@@ -345,11 +347,1412 @@
       .animate-heart-pop {
         animation: heartPop 0.9s ease-out forwards;
       }
+
+      @keyframes doggyFloat {
+        0%,
+        100% {
+          transform: translateY(0px) rotate(0deg);
+        }
+        50% {
+          transform: translateY(-6px) rotate(2deg);
+        }
+      }
+      @keyframes doggyLaugh {
+        0%,
+        100% {
+          transform: scale(1) rotate(0deg);
+        }
+        25% {
+          transform: scale(1.12) rotate(-6deg);
+        }
+        75% {
+          transform: scale(1.12) rotate(6deg);
+        }
+      }
+      @keyframes doggyCry {
+        0%,
+        100% {
+          transform: translateY(2px) scale(0.96);
+        }
+        50% {
+          transform: translateY(6px) scale(0.93) rotate(-3deg);
+        }
+      }
+      @keyframes doggyEat {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        30% {
+          transform: scale(1.15) translateY(-4px);
+        }
+        60% {
+          transform: scale(0.96) translateY(2px);
+        }
+      }
+      @keyframes doggyPlay {
+        0%,
+        100% {
+          transform: translate(0, 0) rotate(0deg);
+        }
+        25% {
+          transform: translate(-8px, -10px) rotate(-10deg);
+        }
+        50% {
+          transform: translate(6px, -6px) rotate(8deg);
+        }
+        75% {
+          transform: translate(-4px, -12px) rotate(-6deg);
+        }
+      }
+      .doggy-idle {
+        animation: doggyFloat 2.8s ease-in-out infinite;
+      }
+      .doggy-laugh {
+        animation: doggyLaugh 0.55s ease-in-out 2;
+      }
+      .doggy-cry {
+        animation: doggyCry 0.7s ease-in-out 2;
+      }
+      .doggy-eat {
+        animation: doggyEat 0.5s ease-in-out 2;
+      }
+      .doggy-play {
+        animation: doggyPlay 0.65s ease-in-out 2;
+      }
+
+      /* === Pomi's Pet (Dog & Cat Rooms) Scoped Styles === */
+      .pet-room-shell *,
+      .pet-room-shell *::before,
+      .pet-room-shell *::after {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      /* Cozy pastel day & night room themes */
+      .room-day {
+        background: linear-gradient(
+          180deg,
+          #fff5eb 0%,
+          #ffe8d6 58%,
+          #f3d5b5 58%,
+          #e6ccb2 100%
+        );
+        transition: background 0.6s ease;
+      }
+
+      .room-night {
+        background: linear-gradient(
+          180deg,
+          #1e1b4b 0%,
+          #312e81 58%,
+          #1e293b 58%,
+          #0f172a 100%
+        );
+        transition: background 0.6s ease;
+      }
+
+      /* Responsive Doggy Stage Container - Guaranteed 100% visible on any mobile screen */
+      .doggy-stage {
+        flex: 1 1 auto;
+        min-height: 0;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      #doggyWrapper {
+        width: min(56vw, 34dvh, 250px);
+        height: min(56vw, 34dvh, 250px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        cursor: pointer;
+        z-index: 20;
+        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      #doggyWrapper:active {
+        transform: scale(0.95);
+      }
+
+      /* Doggy Animations */
+      @keyframes idleBreath {
+        0%,
+        100% {
+          transform: translateY(0px) scaleY(1);
+        }
+        50% {
+          transform: translateY(-4px) scaleY(1.02);
+        }
+      }
+
+      @keyframes tailWag {
+        0%,
+        100% {
+          transform: rotate(-16deg);
+        }
+        50% {
+          transform: rotate(22deg);
+        }
+      }
+
+      @keyframes tailWagFast {
+        0%,
+        100% {
+          transform: rotate(-28deg);
+        }
+        50% {
+          transform: rotate(32deg);
+        }
+      }
+
+      @keyframes earFlop {
+        0%,
+        100% {
+          transform: rotate(0deg);
+        }
+        50% {
+          transform: rotate(6deg);
+        }
+      }
+
+      @keyframes blinkAnim {
+        0%,
+        92%,
+        100% {
+          transform: scaleY(1);
+        }
+        95% {
+          transform: scaleY(0.08);
+        }
+      }
+
+      @keyframes jumpTrick {
+        0% {
+          transform: translateY(0) rotate(0deg) scale(1);
+        }
+        30% {
+          transform: translateY(-65px) rotate(180deg) scale(1.08);
+        }
+        65% {
+          transform: translateY(-75px) rotate(360deg) scale(1.08);
+        }
+        85% {
+          transform: translateY(5px) rotate(360deg) scale(0.94, 1.05);
+        }
+        100% {
+          transform: translateY(0) rotate(360deg) scale(1);
+        }
+      }
+
+      @keyframes danceGroove {
+        0%,
+        100% {
+          transform: translateX(0) rotate(0deg) translateY(0);
+        }
+        25% {
+          transform: translateX(-16px) rotate(-10deg) translateY(-10px);
+        }
+        50% {
+          transform: translateX(0) rotate(0deg) translateY(0);
+        }
+        75% {
+          transform: translateX(16px) rotate(10deg) translateY(-10px);
+        }
+      }
+
+      @keyframes fetchDash {
+        0% {
+          transform: translateX(0) scaleX(1);
+        }
+        25% {
+          transform: translateX(65px) translateY(-18px) rotate(8deg);
+        }
+        55% {
+          transform: translateX(-60px) translateY(-22px) rotate(-8deg);
+        }
+        80% {
+          transform: translateX(10px) translateY(-6px);
+        }
+        100% {
+          transform: translateX(0) rotate(0deg);
+        }
+      }
+
+      @keyframes eatNom {
+        0%,
+        100% {
+          transform: translateY(0) rotate(0deg);
+        }
+        25% {
+          transform: translateY(8px) rotate(6deg) scale(1.03);
+        }
+        50% {
+          transform: translateY(-3px) rotate(-4deg);
+        }
+        75% {
+          transform: translateY(8px) rotate(6deg) scale(1.03);
+        }
+      }
+
+      @keyframes barkPop {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        35% {
+          transform: scale(1.1) translateY(-8px);
+        }
+        70% {
+          transform: scale(0.97) translateY(2px);
+        }
+      }
+
+      @keyframes sleepBob {
+        0%,
+        100% {
+          transform: translateY(10px) scale(1.03, 0.94);
+        }
+        50% {
+          transform: translateY(13px) scale(1.05, 0.91);
+        }
+      }
+
+      .anim-idle {
+        animation: idleBreath 2.6s ease-in-out infinite;
+      }
+      .anim-jump {
+        animation: jumpTrick 0.95s cubic-bezier(0.28, 0.84, 0.42, 1);
+      }
+      .anim-dance {
+        animation: danceGroove 0.7s ease-in-out 3;
+      }
+      .anim-fetch {
+        animation: fetchDash 1.15s ease-in-out;
+      }
+      .anim-eat {
+        animation: eatNom 0.45s ease-in-out 3;
+      }
+      .anim-bark {
+        animation: barkPop 0.42s ease-out 2;
+      }
+      .anim-sleep {
+        animation: sleepBob 3.2s ease-in-out infinite;
+      }
+
+      #dogTail {
+        transform-origin: 48px 132px;
+        animation: tailWag 1.1s ease-in-out infinite;
+      }
+
+      .fast-wag #dogTail {
+        animation: tailWagFast 0.25s ease-in-out infinite !important;
+      }
+
+      #leftEar {
+        transform-origin: 68px 54px;
+        animation: earFlop 3s ease-in-out infinite;
+      }
+
+      #rightEar {
+        transform-origin: 132px 54px;
+        animation: earFlop 3s ease-in-out infinite reverse;
+      }
+
+      .eyes-open {
+        transform-origin: 100px 76px;
+        animation: blinkAnim 4s infinite;
+      }
+
+      /* Floating particles (Hearts, Zzz, Stars, Music Notes, Ball, Bone) */
+      @keyframes floatUpFade {
+        0% {
+          opacity: 0;
+          transform: translateY(10px) scale(0.6);
+        }
+        25% {
+          opacity: 1;
+          transform: translateY(-15px) scale(1.1);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-85px) scale(0.9);
+        }
+      }
+
+      @keyframes ballArc {
+        0% {
+          transform: translate(-110px, 40px) scale(0.7) rotate(0deg);
+          opacity: 1;
+        }
+        45% {
+          transform: translate(20px, -95px) scale(1.1) rotate(220deg);
+          opacity: 1;
+        }
+        80% {
+          transform: translate(95px, 25px) scale(0.95) rotate(420deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(0px, 15px) scale(0.4) rotate(540deg);
+          opacity: 0;
+        }
+      }
+
+      @keyframes boneToss {
+        0% {
+          transform: translate(95px, 35px) rotate(0deg) scale(0.8);
+          opacity: 1;
+        }
+        50% {
+          transform: translate(15px, -55px) rotate(180deg) scale(1.15);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(0px, 12px) rotate(360deg) scale(0.3);
+          opacity: 0;
+        }
+      }
+
+      .particle {
+        position: absolute;
+        pointer-events: none;
+        font-size: 1.5rem;
+        z-index: 35;
+        animation: floatUpFade 1.3s ease-out forwards;
+      }
+
+      .ball-fly {
+        position: absolute;
+        font-size: 1.9rem;
+        z-index: 30;
+        pointer-events: none;
+        animation: ballArc 1.1s cubic-bezier(0.25, 0.8, 0.45, 1) forwards;
+      }
+
+      .bone-fly {
+        position: absolute;
+        font-size: 1.9rem;
+        z-index: 30;
+        pointer-events: none;
+        animation: boneToss 0.85s ease-in-out forwards;
+      }
+
+      /* Bubble button styling */
+      .action-btn {
+        transition:
+          transform 0.12s ease,
+          box-shadow 0.12s ease;
+      }
+      .action-btn:active {
+        transform: translateY(2px) scale(0.95);
+      }
+
+      /* Cat Room Theme & Cat Animations */
+      .cat-room-day {
+        background: linear-gradient(
+          180deg,
+          #fff0f6 0%,
+          #ffe3ec 58%,
+          #fbcfe8 58%,
+          #f9a8d4 100%
+        );
+        transition: background 0.6s ease;
+      }
+      .cat-room-night {
+        background: linear-gradient(
+          180deg,
+          #1a103c 0%,
+          #2e1065 58%,
+          #1e1b4b 58%,
+          #090d16 100%
+        );
+        transition: background 0.6s ease;
+      }
+      #catWrapper {
+        width: min(56vw, 34dvh, 250px);
+        height: min(56vw, 34dvh, 250px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        cursor: pointer;
+        z-index: 10;
+        transition: transform 0.2s ease;
+      }
+      #catWrapper:active {
+        transform: scale(0.95);
+      }
+      @keyframes catTailSway {
+        0%,
+        100% {
+          transform: rotate(-10deg);
+        }
+        50% {
+          transform: rotate(14deg);
+        }
+      }
+      .cat-tail-anim {
+        transform-origin: 48px 142px;
+        animation: catTailSway 1.7s ease-in-out infinite;
+      }
     </style>
   </head>
   <body
     class="w-full h-[100dvh] overflow-hidden bg-[#0b0f19] text-slate-100 select-none"
   >
+    <!-- Pomi's Pet: Favourite Pet Chooser & Name Modal -->
+    <div
+      id="petChoiceModal"
+      class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4"
+    >
+      <div
+        class="w-full max-w-sm glass-modal border border-white/15 rounded-3xl p-5 space-y-4 text-center shadow-2xl"
+      >
+        <div
+          class="flex items-center justify-between border-b border-white/10 pb-2.5"
+        >
+          <h3 class="font-display font-bold text-base text-white">
+            🐾 Pomi's Pet
+          </h3>
+          <button
+            type="button"
+            onclick="closeModal('petChoiceModal')"
+            class="px-2.5 py-1 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] text-xs text-slate-300"
+          >
+            Close
+          </button>
+        </div>
+
+        <p class="text-sm font-bold text-amber-200">
+          Which is your favourite pet — Dog or Cat?
+        </p>
+
+        <div class="grid grid-cols-2 gap-3">
+          <button
+            type="button"
+            onclick="openPetRoom('dog')"
+            class="p-4 rounded-2xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-300/40 flex flex-col items-center gap-1.5 transition active:scale-95"
+          >
+            <span class="text-4xl">🐶</span>
+            <span class="text-sm font-extrabold text-white">Dog</span>
+            <span
+              id="choiceDogNamePreview"
+              class="text-[11px] font-semibold text-amber-200 truncate max-w-full"
+              >Tommy</span
+            >
+          </button>
+
+          <button
+            type="button"
+            onclick="openPetRoom('cat')"
+            class="p-4 rounded-2xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-300/40 flex flex-col items-center gap-1.5 transition active:scale-95"
+          >
+            <span class="text-4xl">🐱</span>
+            <span class="text-sm font-extrabold text-white">Cat</span>
+            <span
+              id="choiceCatNamePreview"
+              class="text-[11px] font-semibold text-rose-200 truncate max-w-full"
+              >Mimi</span
+            >
+          </button>
+        </div>
+
+        <!-- Custom Pet Naming Section -->
+        <div class="text-left space-y-2 pt-2 border-t border-white/10">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-bold text-amber-200"
+              >✏️ Set Pet Name</label
+            >
+            <div class="flex gap-1 text-[10px]">
+              <button
+                type="button"
+                id="nameTargetDogBtn"
+                onclick="setPetNameTarget('dog')"
+                class="px-2 py-0.5 rounded-lg bg-amber-500/30 border border-amber-300/50 text-amber-100 font-bold"
+              >
+                Dog
+              </button>
+              <button
+                type="button"
+                id="nameTargetCatBtn"
+                onclick="setPetNameTarget('cat')"
+                class="px-2 py-0.5 rounded-lg bg-white/[0.06] border border-white/10 text-slate-300 font-semibold"
+              >
+                Cat
+              </button>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <input
+              id="favPetNameInput"
+              type="text"
+              maxlength="24"
+              placeholder="Enter pet name..."
+              class="flex-1 min-w-0 px-3.5 py-2 rounded-2xl bg-white/[0.07] border border-white/15 text-xs text-white focus:outline-none focus:border-amber-400/60"
+            />
+            <button
+              type="button"
+              onclick="savePetNameFromModal()"
+              class="px-4 py-2 rounded-2xl bg-gradient-to-r from-amber-500 to-rose-500 text-xs font-bold text-white shadow shrink-0"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dedicated Interactive DOG Room (from dog.html) -->
+    <div
+      id="petDogRoom"
+      class="pet-room-shell hidden fixed inset-0 z-50 room-day flex flex-col justify-between h-[100dvh] w-full overflow-hidden"
+    >
+      <header class="w-full px-3 pt-2.5 pb-1.5 z-30 shrink-0">
+        <div
+          class="max-w-md mx-auto bg-white/90 backdrop-blur-md rounded-2xl px-3.5 py-2 shadow-md border border-amber-200/80"
+        >
+          <div class="flex items-center justify-between gap-2 mb-1.5">
+            <div class="flex items-center gap-2 min-w-0">
+              <button
+                type="button"
+                onclick="closePetRooms()"
+                class="px-2.5 py-1 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 text-xs font-bold border border-amber-300 shrink-0"
+              >
+                ← Chat
+              </button>
+              <div class="min-w-0">
+                <h1
+                  id="dogNameTitle"
+                  class="text-sm sm:text-base font-bold text-amber-950 leading-tight truncate"
+                >
+                  Tommy (Cutie Pup)
+                </h1>
+                <p
+                  id="dogMoodLabel"
+                  class="text-[11px] font-medium text-amber-700 leading-none truncate"
+                >
+                  Happy &amp; Ready to Play!
+                </p>
+              </div>
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button
+                type="button"
+                onclick="openPetChoiceFromRoom('dog')"
+                class="px-2 py-1 rounded-xl bg-rose-100 hover:bg-rose-200 text-rose-900 text-[11px] font-bold border border-rose-300"
+              >
+                🐱 Cat / Name
+              </button>
+              <button
+                type="button"
+                id="dogSoundToggleBtn"
+                onclick="toggleDogSound()"
+                class="px-2.5 py-1 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-semibold border border-amber-300"
+              >
+                🔊
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2.5 text-[11px] font-semibold">
+            <div>
+              <div class="flex justify-between text-rose-700 mb-0.5">
+                <span>❤️ Love / খুশি</span>
+                <span id="dogHappyValText">85%</span>
+              </div>
+              <div
+                class="w-full h-2 bg-rose-100 rounded-full overflow-hidden border border-rose-200"
+              >
+                <div
+                  id="dogHappyBar"
+                  class="h-full bg-gradient-to-r from-rose-400 to-pink-500 rounded-full transition-all duration-300"
+                  style="width: 85%"
+                ></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-amber-800 mb-0.5">
+                <span>⚡ Energy / শক্তি</span>
+                <span id="dogEnergyValText">80%</span>
+              </div>
+              <div
+                class="w-full h-2 bg-amber-100 rounded-full overflow-hidden border border-amber-200"
+              >
+                <div
+                  id="dogEnergyBar"
+                  class="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all duration-300"
+                  style="width: 80%"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main id="dogStageArea" class="doggy-stage px-3">
+        <div
+          id="dogRoomWindow"
+          class="absolute top-3 left-5 w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-sky-200 border-4 border-amber-100 shadow-inner overflow-hidden opacity-90 pointer-events-none"
+        >
+          <div
+            id="dogWindowSky"
+            class="w-full h-full bg-gradient-to-b from-sky-300 to-sky-100 relative"
+          >
+            <div
+              id="dogSunMoon"
+              class="w-5 h-5 rounded-full bg-amber-300 absolute top-2 right-2 shadow"
+            ></div>
+            <div
+              class="w-full h-1 bg-amber-100 absolute top-1/2 -translate-y-1/2"
+            ></div>
+            <div
+              class="h-full w-1 bg-amber-100 absolute left-1/2 -translate-x-1/2"
+            ></div>
+          </div>
+        </div>
+
+        <div
+          id="dogNightLampGlow"
+          class="hidden absolute top-4 right-5 px-3 py-1 rounded-full bg-indigo-900/80 border border-indigo-400/40 text-amber-200 text-xs font-semibold shadow-lg pointer-events-none"
+        >
+          🌙 Sleepy Mode • Tap Wake!
+        </div>
+
+        <div
+          id="dogSpeechBubble"
+          class="opacity-0 scale-90 transition-all duration-200 absolute top-3 sm:top-5 z-30 bg-white text-amber-950 font-bold text-xs sm:text-sm px-3.5 py-1.5 rounded-2xl shadow-lg border-2 border-amber-300 pointer-events-none"
+        >
+          Woof! ❤️
+        </div>
+
+        <div
+          class="absolute bottom-3 w-52 sm:w-64 h-12 rounded-[100%] bg-rose-300/45 border-2 border-rose-300/60 pointer-events-none"
+        ></div>
+
+        <div
+          id="doggyWrapper"
+          class="anim-idle"
+          onclick="handleDirectDogTap()"
+          title="Tap me!"
+        >
+          <div
+            class="absolute bottom-2 w-32 h-5 rounded-full bg-amber-950/15 blur-[2px]"
+          ></div>
+          <svg
+            id="puppySvg"
+            viewBox="0 0 200 200"
+            class="w-full h-full overflow-visible drop-shadow-md"
+          >
+            <path
+              id="dogTail"
+              d="M 48 132 Q 20 110 28 88 Q 36 82 42 96 Q 44 114 55 126 Z"
+              fill="#c68642"
+              stroke="#7c4a1e"
+              stroke-width="3"
+              stroke-linejoin="round"
+            />
+            <ellipse
+              cx="66"
+              cy="164"
+              rx="15"
+              ry="11"
+              fill="#b57434"
+              stroke="#7c4a1e"
+              stroke-width="3"
+            />
+            <ellipse
+              cx="134"
+              cy="164"
+              rx="15"
+              ry="11"
+              fill="#b57434"
+              stroke="#7c4a1e"
+              stroke-width="3"
+            />
+            <path
+              d="M 58 112 C 48 145, 56 172, 100 172 C 144 172, 152 145, 142 112 Z"
+              fill="#d99b52"
+              stroke="#7c4a1e"
+              stroke-width="3.2"
+            />
+            <ellipse cx="100" cy="144" rx="24" ry="22" fill="#fff3e0" />
+            <path
+              d="M 67 108 Q 100 120 133 108 L 136 117 Q 100 129 64 117 Z"
+              fill="#f43f5e"
+              stroke="#881337"
+              stroke-width="2.5"
+            />
+            <circle
+              cx="100"
+              cy="123"
+              r="6.5"
+              fill="#fbbf24"
+              stroke="#92400e"
+              stroke-width="2"
+            />
+            <rect
+              x="74"
+              y="138"
+              width="18"
+              height="34"
+              rx="9"
+              fill="#e0a45e"
+              stroke="#7c4a1e"
+              stroke-width="3"
+            />
+            <rect
+              x="108"
+              y="138"
+              width="18"
+              height="34"
+              rx="9"
+              fill="#e0a45e"
+              stroke="#7c4a1e"
+              stroke-width="3"
+            />
+            <path
+              d="M 79 166 L 79 171 M 86 166 L 86 171 M 114 166 L 114 171 M 121 166 L 121 171"
+              stroke="#7c4a1e"
+              stroke-width="2.2"
+              stroke-linecap="round"
+            />
+            <path
+              id="leftEar"
+              d="M 66 52 C 36 54, 30 96, 48 104 C 60 108, 66 86, 68 70 Z"
+              fill="#8d5524"
+              stroke="#5c3310"
+              stroke-width="3"
+              stroke-linejoin="round"
+            />
+            <path
+              id="rightEar"
+              d="M 134 52 C 164 54, 170 96, 152 104 C 140 108, 134 86, 132 70 Z"
+              fill="#8d5524"
+              stroke="#5c3310"
+              stroke-width="3"
+              stroke-linejoin="round"
+            />
+            <rect
+              x="56"
+              y="38"
+              width="88"
+              height="76"
+              rx="38"
+              fill="#e0a45e"
+              stroke="#7c4a1e"
+              stroke-width="3.2"
+            />
+            <ellipse
+              cx="122"
+              cy="54"
+              rx="13"
+              ry="10"
+              transform="rotate(20 122 54)"
+              fill="#8d5524"
+              opacity="0.85"
+            />
+            <ellipse cx="100" cy="91" rx="28" ry="20" fill="#fff3e0" />
+            <ellipse
+              cx="70"
+              cy="87"
+              rx="7"
+              ry="4.5"
+              fill="#fb7185"
+              opacity="0.65"
+            />
+            <ellipse
+              cx="130"
+              cy="87"
+              rx="7"
+              ry="4.5"
+              fill="#fb7185"
+              opacity="0.65"
+            />
+            <g id="dogEyesNormal" class="eyes-open">
+              <circle cx="80" cy="74" r="7.5" fill="#291709" />
+              <circle cx="77.5" cy="71.5" r="2.6" fill="#ffffff" />
+              <circle cx="82" cy="76" r="1.2" fill="#ffffff" />
+              <circle cx="120" cy="74" r="7.5" fill="#291709" />
+              <circle cx="117.5" cy="71.5" r="2.6" fill="#ffffff" />
+              <circle cx="122" cy="76" r="1.2" fill="#ffffff" />
+            </g>
+            <g id="dogEyesHappy" class="hidden">
+              <path
+                d="M 72 76 Q 80 65 88 76"
+                fill="none"
+                stroke="#291709"
+                stroke-width="3.8"
+                stroke-linecap="round"
+              />
+              <path
+                d="M 112 76 Q 120 65 128 76"
+                fill="none"
+                stroke="#291709"
+                stroke-width="3.8"
+                stroke-linecap="round"
+              />
+            </g>
+            <g id="dogEyesSleep" class="hidden">
+              <path
+                d="M 72 74 Q 80 82 88 74"
+                fill="none"
+                stroke="#291709"
+                stroke-width="3.5"
+                stroke-linecap="round"
+              />
+              <path
+                d="M 112 74 Q 120 82 128 74"
+                fill="none"
+                stroke="#291709"
+                stroke-width="3.5"
+                stroke-linecap="round"
+              />
+            </g>
+            <ellipse cx="100" cy="84" rx="7.5" ry="5.5" fill="#291709" />
+            <ellipse
+              cx="98"
+              cy="82.5"
+              rx="2.5"
+              ry="1.3"
+              fill="#ffffff"
+              opacity="0.7"
+            />
+            <path
+              d="M 90 93 Q 95 99 100 93 Q 105 99 110 93"
+              fill="none"
+              stroke="#5c3310"
+              stroke-width="2.8"
+              stroke-linecap="round"
+            />
+            <path
+              id="dogTongue"
+              d="M 95 95 L 95 103 A 5 5 0 0 0 105 103 L 105 95 Z"
+              fill="#fb7185"
+              stroke="#be123c"
+              stroke-width="1.8"
+            />
+          </svg>
+        </div>
+
+        <div
+          class="absolute bottom-1 text-[11px] font-semibold text-amber-900/70 bg-white/70 px-2.5 py-0.5 rounded-full pointer-events-none"
+        >
+          👆 Tap Doggy or choose an action below!
+        </div>
+      </main>
+
+      <footer class="w-full px-2.5 pb-3 pt-1.5 z-30 shrink-0">
+        <div
+          class="max-w-md mx-auto bg-white/90 backdrop-blur-md rounded-3xl p-2.5 shadow-xl border border-amber-200/90"
+        >
+          <div class="grid grid-cols-4 gap-1.5 sm:gap-2">
+            <button
+              type="button"
+              onclick="doDogAction('pet')"
+              class="action-btn flex flex-col items-center justify-center py-2 px-1 rounded-2xl bg-gradient-to-b from-rose-100 to-rose-200 border border-rose-300 text-rose-900 shadow-sm"
+            >
+              <span class="text-xl sm:text-2xl leading-none mb-1">🥰</span>
+              <span class="text-[11px] font-bold leading-none">Pet / আদর</span>
+            </button>
+            <button
+              type="button"
+              onclick="doDogAction('feed')"
+              class="action-btn flex flex-col items-center justify-center py-2 px-1 rounded-2xl bg-gradient-to-b from-amber-100 to-amber-200 border border-amber-300 text-amber-950 shadow-sm"
+            >
+              <span class="text-xl sm:text-2xl leading-none mb-1">🦴</span>
+              <span class="text-[11px] font-bold leading-none"
+                >Feed / খাবার</span
+              >
+            </button>
+            <button
+              type="button"
+              onclick="doDogAction('fetch')"
+              class="action-btn flex flex-col items-center justify-center py-2 px-1 rounded-2xl bg-gradient-to-b from-emerald-100 to-emerald-200 border border-emerald-300 text-emerald-950 shadow-sm"
+            >
+              <span class="text-xl sm:text-2xl leading-none mb-1">🎾</span>
+              <span class="text-[11px] font-bold leading-none"
+                >Ball / খেলা</span
+              >
+            </button>
+            <button
+              type="button"
+              onclick="doDogAction('jump')"
+              class="action-btn flex flex-col items-center justify-center py-2 px-1 rounded-2xl bg-gradient-to-b from-sky-100 to-sky-200 border border-sky-300 text-sky-950 shadow-sm"
+            >
+              <span class="text-xl sm:text-2xl leading-none mb-1">🤸</span>
+              <span class="text-[11px] font-bold leading-none">Jump / লাফ</span>
+            </button>
+            <button
+              type="button"
+              onclick="doDogAction('dance')"
+              class="action-btn flex flex-col items-center justify-center py-2 px-1 rounded-2xl bg-gradient-to-b from-purple-100 to-purple-200 border border-purple-300 text-purple-950 shadow-sm"
+            >
+              <span class="text-xl sm:text-2xl leading-none mb-1">💃</span>
+              <span class="text-[11px] font-bold leading-none"
+                >Dance / নাচ</span
+              >
+            </button>
+            <button
+              type="button"
+              onclick="doDogAction('bark')"
+              class="action-btn flex flex-col items-center justify-center py-2 px-1 rounded-2xl bg-gradient-to-b from-orange-100 to-orange-200 border border-orange-300 text-orange-950 shadow-sm"
+            >
+              <span class="text-xl sm:text-2xl leading-none mb-1">🗣️</span>
+              <span class="text-[11px] font-bold leading-none">Bark / ডাক</span>
+            </button>
+            <button
+              type="button"
+              onclick="doDogAction('bath')"
+              class="action-btn flex flex-col items-center justify-center py-2 px-1 rounded-2xl bg-gradient-to-b from-cyan-100 to-cyan-200 border border-cyan-300 text-cyan-950 shadow-sm"
+            >
+              <span class="text-xl sm:text-2xl leading-none mb-1">🛁</span>
+              <span class="text-[11px] font-bold leading-none"
+                >Bath / স্নান</span
+              >
+            </button>
+            <button
+              type="button"
+              id="dogSleepBtn"
+              onclick="doDogAction('sleep')"
+              class="action-btn flex flex-col items-center justify-center py-2 px-1 rounded-2xl bg-gradient-to-b from-indigo-100 to-indigo-200 border border-indigo-300 text-indigo-950 shadow-sm"
+            >
+              <span
+                id="dogSleepBtnIcon"
+                class="text-xl sm:text-2xl leading-none mb-1"
+                >😴</span
+              >
+              <span
+                id="dogSleepBtnText"
+                class="text-[11px] font-bold leading-none"
+                >Sleep / ঘুম</span
+              >
+            </button>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Dedicated Interactive CAT Room -->
+    <div
+      id="petCatRoom"
+      class="pet-room-shell hidden fixed inset-0 z-50 cat-room-day flex flex-col justify-between h-[100dvh] w-full overflow-hidden"
+    >
+      <header class="w-full px-3 pt-2.5 pb-1.5 z-30 shrink-0">
+        <div
+          class="max-w-md mx-auto bg-white/90 backdrop-blur-md rounded-2xl px-3.5 py-2 shadow-md border border-pink-200/90"
+        >
+          <div class="flex items-center justify-between gap-2 mb-1.5">
+            <div class="flex items-center gap-2 min-w-0">
+              <button
+                type="button"
+                onclick="closePetRooms()"
+                class="px-2.5 py-1 rounded-xl bg-pink-100 hover:bg-pink-200 text-pink-950 text-xs font-bold border border-pink-300 shrink-0"
+              >
+                ← Chat
+              </button>
+              <div class="min-w-0">
+                <h1
+                  id="catNameTitle"
+                  class="text-sm sm:text-base font-bold text-pink-950 leading-tight truncate"
+                >
+                  Mimi (Cutie Cat)
+                </h1>
+                <p
+                  id="catMoodLabel"
+                  class="text-[11px] font-medium text-pink-700 leading-none truncate"
+                >
+                  Purring &amp; Ready to Play!
+                </p>
+              </div>
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button
+                type="button"
+                onclick="openPetChoiceFromRoom('cat')"
+                class="px-2 py-1 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 text-[11px] font-bold border border-amber-300"
+              >
+                🐶 Dog / Name
+              </button>
+              <button
+                type="button"
+                id="catSoundToggleBtn"
+                onclick="toggleCatSound()"
+                class="px-2.5 py-1 rounded-xl bg-pink-100 hover:bg-pink-200 text-pink-950 text-xs font-semibold border border-pink-300"
+              >
+                🔊
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2.5 text-[11px] font-semibold">
+            <div>
+              <div class="flex justify-between text-rose-700 mb-0.5">
+                <span>❤️ Love / খুশি</span>
+                <span id="catHappyValText">88%</span>
+              </div>
+              <div
+                class="w-full h-2 bg-rose-100 rounded-full overflow-hidden border border-rose-200"
+              >
+                <div
+                  id="catHappyBar"
+                  class="h-full bg-gradient-to-r from-rose-400 to-pink-500 rounded-full transition-all duration-300"
+                  style="width: 88%"
+                ></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-purple-800 mb-0.5">
+                <span>⚡ Energy / শক্তি</span>
+                <span id="catEnergyValText">82%</span>
+              </div>
+              <div
+                class="w-full h-2 bg-purple-100 rounded-full overflow-hidden border border-purple-200"
+              >
+                <div
+                  id="catEnergyBar"
+                  class="h-full bg-gradient-to-r from-purple-400 to-pink-500 rounded-full transition-all duration-300"
+                  style="width: 82%"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main id="catStageArea" class="doggy-stage px-3">
+        <div
+          id="catRoomWindow"
+          class="absolute top-3 left-5 w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-sky-200 border-4 border-pink-100 shadow-inner overflow-hidden opacity-90 pointer-events-none"
+        >
+          <div
+            id="catWindowSky"
+            class="w-full h-full bg-gradient-to-b from-sky-300 to-pink-100 relative"
+          >
+            <div
+              id="catSunMoon"
+              class="w-5 h-5 rounded-full bg-amber-300 absolute top-2 right-2 shadow"
+            ></div>
+            <div
+              class="w-full h-1 bg-pink-100 absolute top-1/2 -translate-y-1/2"
+            ></div>
+            <div
+              class="h-full w-1 bg-pink-100 absolute left-1/2 -translate-x-1/2"
+            ></div>
+          </div>
+        </div>
+
+        <div
+          id="catNightLampGlow"
+          class="hidden absolute top-4 right-5 px-3 py-1 rounded-full bg-indigo-950/85 border border-purple-400/40 text-pink-200 text-xs font-semibold shadow-lg pointer-events-none"
+        >
+          🌙 Cozy Cat Nap • Tap Wake!
+        </div>
+
+        <div
+          id="catSpeechBubble"
+          class="opacity-0 scale-90 transition-all duration-200 absolute top-3 sm:top-5 z-30 bg-white text-pink-950 font-bold text-xs sm:text-sm px-3.5 py-1.5 rounded-2xl shadow-lg border-2 border-pink-300 pointer-events-none"
+        >
+          Meow! 💖
+        </div>
+
+        <div
+          class="absolute bottom-3 w-52 sm:w-64 h-12 rounded-[100%] bg-pink-400/35 border-2 border-pink-300/60 pointer-events-none"
+        ></div>
+
+        <div
+          id="catWrapper"
+          class="anim-idle"
+          onclick="handleDirectCatTap()"
+          title="Tap kitty!"
+        >
+          <div
+            class="absolute bottom-2 w-32 h-5 rounded-full bg-pink-950/15 blur-[2px]"
+          ></div>
+          <svg
+            id="kittySvg"
+            viewBox="0 0 200 200"
+            class="w-full h-full overflow-visible drop-shadow-md"
+          >
+            <path
+              id="catTail"
+              class="cat-tail-anim"
+              d="M 52 142 C 20 132, 16 96, 38 86 C 50 80, 56 96, 44 104 C 34 110, 42 128, 58 134 Z"
+              fill="#f9a8d4"
+              stroke="#831843"
+              stroke-width="3"
+              stroke-linecap="round"
+            />
+            <ellipse
+              cx="70"
+              cy="164"
+              rx="14"
+              ry="10"
+              fill="#f472b6"
+              stroke="#831843"
+              stroke-width="3"
+            />
+            <ellipse
+              cx="130"
+              cy="164"
+              rx="14"
+              ry="10"
+              fill="#f472b6"
+              stroke="#831843"
+              stroke-width="3"
+            />
+            <path
+              d="M 62 114 C 54 146, 62 172, 100 172 C 138 172, 146 146, 138 114 Z"
+              fill="#fbcfe8"
+              stroke="#831843"
+              stroke-width="3"
+            />
+            <ellipse cx="100" cy="145" rx="22" ry="20" fill="#fff1f2" />
+            <path
+              d="M 72 112 Q 100 122 128 112 L 130 120 Q 100 130 70 120 Z"
+              fill="#a855f7"
+              stroke="#581c87"
+              stroke-width="2.2"
+            />
+            <circle
+              cx="100"
+              cy="126"
+              r="6"
+              fill="#fde047"
+              stroke="#854d0e"
+              stroke-width="2"
+            />
+            <rect
+              x="76"
+              y="138"
+              width="16"
+              height="32"
+              rx="8"
+              fill="#fbcfe8"
+              stroke="#831843"
+              stroke-width="2.8"
+            />
+            <rect
+              x="108"
+              y="138"
+              width="16"
+              height="32"
+              rx="8"
+              fill="#fbcfe8"
+              stroke="#831843"
+              stroke-width="2.8"
+            />
+            <!-- Pointy Cat Ears -->
+            <polygon
+              points="56,74 52,32 84,52"
+              fill="#f9a8d4"
+              stroke="#831843"
+              stroke-width="3"
+              stroke-linejoin="round"
+            />
+            <polygon points="60,67 58,41 77,54" fill="#fbcfe8" />
+            <polygon
+              points="144,74 148,32 116,52"
+              fill="#f9a8d4"
+              stroke="#831843"
+              stroke-width="3"
+              stroke-linejoin="round"
+            />
+            <polygon points="140,67 142,41 123,54" fill="#fbcfe8" />
+            <!-- Cat Head -->
+            <ellipse
+              cx="100"
+              cy="78"
+              rx="46"
+              ry="38"
+              fill="#fbcfe8"
+              stroke="#831843"
+              stroke-width="3"
+            />
+            <!-- Forehead Stripes -->
+            <path
+              d="M 93 42 L 93 52 M 100 41 L 100 53 M 107 42 L 107 52"
+              stroke="#db2777"
+              stroke-width="2.6"
+              stroke-linecap="round"
+            />
+            <!-- Blush -->
+            <ellipse
+              cx="68"
+              cy="88"
+              rx="7"
+              ry="4.5"
+              fill="#fb7185"
+              opacity="0.6"
+            />
+            <ellipse
+              cx="132"
+              cy="88"
+              rx="7"
+              ry="4.5"
+              fill="#fb7185"
+              opacity="0.6"
+            />
+            <!-- Eyes -->
+            <g id="catEyesNormal" class="eyes-open">
+              <circle cx="80" cy="76" r="7.5" fill="#31102f" />
+              <circle cx="77.5" cy="73.5" r="2.6" fill="#ffffff" />
+              <circle cx="120" cy="76" r="7.5" fill="#31102f" />
+              <circle cx="117.5" cy="73.5" r="2.6" fill="#ffffff" />
+            </g>
+            <g id="catEyesHappy" class="hidden">
+              <path
+                d="M 72 78 Q 80 67 88 78"
+                fill="none"
+                stroke="#31102f"
+                stroke-width="3.6"
+                stroke-linecap="round"
+              />
+              <path
+                d="M 112 78 Q 120 67 128 78"
+                fill="none"
+                stroke="#31102f"
+                stroke-width="3.6"
+                stroke-linecap="round"
+              />
+            </g>
+            <g id="catEyesSleep" class="hidden">
+              <path
+                d="M 72 76 Q 80 83 88 76"
+                fill="none"
+                stroke="#31102f"
+                stroke-width="3.4"
+                stroke-linecap="round"
+              />
+              <path
+                d="M 112 76 Q 120 83 128 76"
+                fill="none"
+                stroke="#31102f"
+                stroke-width="3.4"
+                stroke-linecap="round"
+              />
+            </g>
+            <!-- Pink Triangle Nose & Whiskers -->
+            <polygon points="96,85 104,85 100,90" fill="#f43f5e" />
+            <path
+              d="M 52 82 L 70 85 M 50 90 L 70 90 M 148 82 L 130 85 M 150 90 L 130 90"
+              stroke="#831843"
+              stroke-width="2.2"
+              stroke-linecap="round"
+            />
+            <path
+              d="M 90 95 Q 95 100 100 94 Q 105 100 110 95"
+              fill="none"
+              stroke="#831843"
+              stroke-width="2.5"
+              stroke-linecap="round"
+            />
+          </svg>
+        </div>
+
+        <div
+          class="absolute bottom-1 text-[11px] font-semibold text-pink-900/75 bg-white/75 px-2.5 py-0.5 rounded-full pointer-events-none"
+        >
+          👆 Tap Kitty or choose an action below!
+        </div>
+      </main>
+
+      <footer class="w-full px-2.5 pb-3 pt-1.5 z-30 shrink-0">
+        <div
+          class="max-w-md mx-auto bg-white/90 backdrop-blur-md rounded-3xl p-2.5 shadow-xl border border-pink-200/90"
+        >
+          <div class="grid grid-cols-4 gap-1.5 sm:gap-2">
+            <button
+              type="button"
+              onclick="doCatAction('pet')"
+              class="action-btn flex flex-col items-center justify-center py-2 px-1 rounded-2xl bg-gradient-to-b from-rose-100 to-rose-200 border border-rose-300 text-rose-950 shadow-sm"
+            >
+              <span class="text-xl sm:text-2xl leading-none mb-1">🥰</span>
+              <span class="text-[11px] font-bold leading-none">Pet / আদর</span>
+            </button>
+            <button
+              type="button"
+              onclick="doCatAction('feed')"
+              class="action-btn flex flex-col items-center justify-center py-2 px-1 rounded-2xl bg-gradient-to-b from-amber-100 to-amber-200 border border-amber-300 text-amber-950 shadow-sm"
+            >
+              <span class="text-xl sm:text-2xl leading-none mb-1">🐟</span>
+              <span class="text-[11px] font-bold leading-none"
+                >Fish / খাবার</span
+              >
+            </button>
+            <button
+              type="button"
+              onclick="doCatAction('yarn')"
+              class="action-btn flex flex-col items-center justify-center py-2 px-1 rounded-2xl bg-gradient-to-b from-pink-100 to-pink-200 border border-pink-300 text-pink-950 shadow-sm"
+            >
+              <span class="text-xl sm:text-2xl leading-none mb-1">🧶</span>
+              <span class="text-[11px] font-bold leading-none"
+                >Yarn / খেলা</span
+              >
+            </button>
+            <button
+              type="button"
+              onclick="doCatAction('jump')"
+              class="action-btn flex flex-col items-center justify-center py-2 px-1 rounded-2xl bg-gradient-to-b from-sky-100 to-sky-200 border border-sky-300 text-sky-950 shadow-sm"
+            >
+              <span class="text-xl sm:text-2xl leading-none mb-1">🐈</span>
+              <span class="text-[11px] font-bold leading-none"
+                >Pounce / লাফ</span
+              >
+            </button>
+            <button
+              type="button"
+              onclick="doCatAction('dance')"
+              class="action-btn flex flex-col items-center justify-center py-2 px-1 rounded-2xl bg-gradient-to-b from-purple-100 to-purple-200 border border-purple-300 text-purple-950 shadow-sm"
+            >
+              <span class="text-xl sm:text-2xl leading-none mb-1">💃</span>
+              <span class="text-[11px] font-bold leading-none"
+                >Dance / নাচ</span
+              >
+            </button>
+            <button
+              type="button"
+              onclick="doCatAction('meow')"
+              class="action-btn flex flex-col items-center justify-center py-2 px-1 rounded-2xl bg-gradient-to-b from-fuchsia-100 to-fuchsia-200 border border-fuchsia-300 text-fuchsia-950 shadow-sm"
+            >
+              <span class="text-xl sm:text-2xl leading-none mb-1">🐱</span>
+              <span class="text-[11px] font-bold leading-none">Meow / ডাক</span>
+            </button>
+            <button
+              type="button"
+              onclick="doCatAction('purr')"
+              class="action-btn flex flex-col items-center justify-center py-2 px-1 rounded-2xl bg-gradient-to-b from-teal-100 to-teal-200 border border-teal-300 text-teal-950 shadow-sm"
+            >
+              <span class="text-xl sm:text-2xl leading-none mb-1">✨</span>
+              <span class="text-[11px] font-bold leading-none">Purr / আদর</span>
+            </button>
+            <button
+              type="button"
+              id="catSleepBtn"
+              onclick="doCatAction('sleep')"
+              class="action-btn flex flex-col items-center justify-center py-2 px-1 rounded-2xl bg-gradient-to-b from-indigo-100 to-indigo-200 border border-indigo-300 text-indigo-950 shadow-sm"
+            >
+              <span
+                id="catSleepBtnIcon"
+                class="text-xl sm:text-2xl leading-none mb-1"
+                >😴</span
+              >
+              <span
+                id="catSleepBtnText"
+                class="text-[11px] font-bold leading-none"
+                >Sleep / ঘুম</span
+              >
+            </button>
+          </div>
+        </div>
+      </footer>
+    </div>
+
     <!-- 3-Second Splash Screen -->
     <div
       id="splashScreen"
@@ -610,42 +2013,40 @@
           <div
             class="w-full max-w-4xl mx-auto flex items-center justify-between gap-2"
           >
-            <div class="flex items-center gap-2.5 min-w-0">
+            <div class="flex items-center gap-3 min-w-0">
               <div class="relative shrink-0">
                 <div
                   id="partnerAvatar"
-                  class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-rose-500 to-indigo-500 flex items-center justify-center font-bold text-sm text-white overflow-hidden ring-1 ring-white/20 shadow-lg"
+                  class="w-10 h-10 rounded-full bg-gradient-to-tr from-rose-500 to-indigo-500 flex items-center justify-center font-bold text-sm text-white overflow-hidden ring-2 ring-white/15 shadow-md"
                 >
                   P
                 </div>
                 <span
                   id="partnerDot"
-                  class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-slate-500 ring-2 ring-slate-950"
+                  class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-slate-500 ring-2 ring-slate-950"
                 ></span>
               </div>
-              <div class="min-w-0">
-                <div class="flex items-center gap-1.5 flex-wrap">
+              <div class="min-w-0 flex flex-col justify-center">
+                <div class="flex items-center gap-1.5">
                   <h1
                     id="partnerTitle"
-                    class="font-display font-bold text-sm sm:text-base text-white truncate"
+                    class="font-display font-bold text-base leading-tight text-white truncate"
                   >
                     Pomi
                   </h1>
                   <span
-                    id="partnerStatusText"
-                    class="text-[10px] px-2 py-0.5 rounded-full bg-white/[0.08] border border-white/10 text-slate-300 truncate max-w-[130px]"
-                  >
-                    Offline
-                  </span>
-                  <span
                     id="partnerMoodBadge"
-                    class="text-[10px] px-2 py-0.5 rounded-full bg-rose-500/15 border border-rose-400/30 text-rose-200 truncate max-w-[125px]"
+                    title="Vibe"
+                    class="text-[11px] px-1.5 py-0.5 rounded-full bg-white/[0.07] border border-white/10 text-rose-200 shrink-0"
                   >
-                    ✨ Vibing
+                    ✨
                   </span>
                 </div>
-                <p id="youAreText" class="text-[11px] text-slate-400 truncate">
-                  ❌ • Locked
+                <p
+                  id="partnerStatusText"
+                  class="text-[11px] leading-tight text-slate-400 truncate mt-0.5"
+                >
+                  Offline
                 </p>
               </div>
             </div>
@@ -654,137 +2055,138 @@
               <button
                 type="button"
                 onclick="openUpdatesPage()"
-                title="Updates (Status)"
-                class="relative px-2.5 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/35 text-emerald-200 text-xs font-semibold transition active:scale-95"
+                title="Updates"
+                aria-label="Updates"
+                class="relative w-9 h-9 rounded-full bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-400/30 text-emerald-300 flex items-center justify-center transition active:scale-95"
               >
-                Updates
+                <i data-lucide="circle-dashed" class="w-4 h-4"></i>
                 <span
                   id="updatesUnreadDot"
-                  class="hidden absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-slate-950"
+                  class="hidden absolute top-0.5 right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-slate-950"
                 ></span>
               </button>
               <button
                 type="button"
-                onclick="
-                  openModal('memoryModal');
-                  renderMemoryVault();
-                "
-                title="Memories"
-                class="px-2 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/25 text-amber-200 text-xs transition active:scale-95"
-              >
-                📸
-              </button>
-              <button
-                type="button"
                 onclick="sendNudgePoke()"
-                title="Nudge / Poke"
-                class="px-2 py-1.5 rounded-xl bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-400/25 text-indigo-200 text-xs transition active:scale-95"
+                title="Poke"
+                aria-label="Poke"
+                class="w-9 h-9 rounded-full bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-400/30 text-indigo-300 flex items-center justify-center transition active:scale-95"
               >
-                👉
+                <i data-lucide="hand" class="w-4 h-4"></i>
               </button>
               <button
                 type="button"
                 onclick="sendLoveBurst()"
-                title="Heart"
-                class="px-2 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-400/25 text-rose-400 text-xs transition active:scale-95"
+                title="Love"
+                aria-label="Love"
+                class="w-9 h-9 rounded-full bg-rose-500/15 hover:bg-rose-500/25 border border-rose-400/30 text-rose-400 flex items-center justify-center transition active:scale-95"
               >
-                ❤️
+                <i data-lucide="heart" class="w-4 h-4 fill-rose-400/30"></i>
               </button>
               <button
                 type="button"
                 onclick="openModal('settingsModal')"
                 title="Settings"
-                class="px-2 py-1.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] border border-white/10 text-slate-100 text-xs transition active:scale-95"
+                aria-label="Settings"
+                class="w-9 h-9 rounded-full bg-white/[0.07] hover:bg-white/[0.14] border border-white/10 text-slate-200 flex items-center justify-center transition active:scale-95"
               >
-                ⚙️
+                <i data-lucide="settings" class="w-4 h-4"></i>
               </button>
             </div>
           </div>
         </header>
 
-        <!-- Shared Mood & Weather Canvas Strip -->
-        <div
-          class="px-3.5 py-1.5 bg-slate-950/45 border-b border-white/5 shrink-0"
-        >
+        <!-- Compact Mood & Sky Icon Strip -->
+        <div class="px-3 py-1 bg-slate-950/40 border-b border-white/5 shrink-0">
           <div
-            class="w-full max-w-4xl mx-auto flex items-center gap-1.5 overflow-x-auto chat-scroll"
+            class="w-full max-w-4xl mx-auto flex items-center justify-between gap-1.5 overflow-x-auto chat-scroll"
           >
-            <span class="text-[10px] text-slate-400 shrink-0">Vibe:</span>
-            <button
-              type="button"
-              data-mood="✨ Vibing"
-              onclick="setMyMood('✨ Vibing')"
-              class="mood-chip px-2 py-0.5 rounded-full text-[10px] bg-white/[0.06] border border-white/10 text-slate-200 shrink-0"
-            >
-              ✨ Vibing
-            </button>
-            <button
-              type="button"
-              data-mood="❤️ Missing you"
-              onclick="setMyMood('❤️ Missing you')"
-              class="mood-chip px-2 py-0.5 rounded-full text-[10px] bg-white/[0.06] border border-white/10 text-slate-200 shrink-0"
-            >
-              ❤️ Missing you
-            </button>
-            <button
-              type="button"
-              data-mood="😴 Sleepy"
-              onclick="setMyMood('😴 Sleepy')"
-              class="mood-chip px-2 py-0.5 rounded-full text-[10px] bg-white/[0.06] border border-white/10 text-slate-200 shrink-0"
-            >
-              😴 Sleepy
-            </button>
-            <button
-              type="button"
-              data-mood="🎵 Music"
-              onclick="setMyMood('🎵 Music')"
-              class="mood-chip px-2 py-0.5 rounded-full text-[10px] bg-white/[0.06] border border-white/10 text-slate-200 shrink-0"
-            >
-              🎵 Music
-            </button>
-            <button
-              type="button"
-              data-mood="🎮 Gaming"
-              onclick="setMyMood('🎮 Gaming')"
-              class="mood-chip px-2 py-0.5 rounded-full text-[10px] bg-white/[0.06] border border-white/10 text-slate-200 shrink-0"
-            >
-              🎮 Gaming
-            </button>
+            <div class="flex items-center gap-1 shrink-0">
+              <button
+                type="button"
+                data-mood="✨"
+                title="Vibing"
+                onclick="setMyMood('✨')"
+                class="mood-chip w-7 h-7 rounded-full text-xs bg-white/[0.06] border border-white/10 flex items-center justify-center shrink-0"
+              >
+                ✨
+              </button>
+              <button
+                type="button"
+                data-mood="❤️"
+                title="Missing you"
+                onclick="setMyMood('❤️')"
+                class="mood-chip w-7 h-7 rounded-full text-xs bg-white/[0.06] border border-white/10 flex items-center justify-center shrink-0"
+              >
+                ❤️
+              </button>
+              <button
+                type="button"
+                data-mood="😴"
+                title="Sleepy"
+                onclick="setMyMood('😴')"
+                class="mood-chip w-7 h-7 rounded-full text-xs bg-white/[0.06] border border-white/10 flex items-center justify-center shrink-0"
+              >
+                😴
+              </button>
+              <button
+                type="button"
+                data-mood="🎵"
+                title="Music"
+                onclick="setMyMood('🎵')"
+                class="mood-chip w-7 h-7 rounded-full text-xs bg-white/[0.06] border border-white/10 flex items-center justify-center shrink-0"
+              >
+                🎵
+              </button>
+              <button
+                type="button"
+                data-mood="🎮"
+                title="Gaming"
+                onclick="setMyMood('🎮')"
+                class="mood-chip w-7 h-7 rounded-full text-xs bg-white/[0.06] border border-white/10 flex items-center justify-center shrink-0"
+              >
+                🎮
+              </button>
+            </div>
 
-            <span class="text-[10px] text-slate-500 shrink-0 mx-0.5">|</span>
-            <span class="text-[10px] text-slate-400 shrink-0">Sky:</span>
-            <button
-              type="button"
-              data-weather="sunny"
-              onclick="setWeatherCanvas('sunny')"
-              class="weather-chip px-2 py-0.5 rounded-full text-[10px] bg-white/[0.06] border border-white/10 text-amber-200 shrink-0"
-            >
-              ☀️ Sunny
-            </button>
-            <button
-              type="button"
-              data-weather="rain"
-              onclick="setWeatherCanvas('rain')"
-              class="weather-chip px-2 py-0.5 rounded-full text-[10px] bg-white/[0.06] border border-white/10 text-sky-200 shrink-0"
-            >
-              🌧️ Rain
-            </button>
-            <button
-              type="button"
-              data-weather="night"
-              onclick="setWeatherCanvas('night')"
-              class="weather-chip px-2 py-0.5 rounded-full text-[10px] bg-white/[0.06] border border-white/10 text-purple-200 shrink-0"
-            >
-              🌙 Night
-            </button>
-            <button
-              type="button"
-              data-weather="lowbat"
-              onclick="setWeatherCanvas('lowbat')"
-              class="weather-chip px-2 py-0.5 rounded-full text-[10px] bg-white/[0.06] border border-white/10 text-rose-200 shrink-0"
-            >
-              🔋 Low
-            </button>
+            <div class="flex items-center gap-1 shrink-0">
+              <button
+                type="button"
+                data-weather="sunny"
+                title="Sunny"
+                onclick="setWeatherCanvas('sunny')"
+                class="weather-chip w-7 h-7 rounded-full text-xs bg-white/[0.06] border border-white/10 flex items-center justify-center shrink-0"
+              >
+                ☀️
+              </button>
+              <button
+                type="button"
+                data-weather="rain"
+                title="Rain"
+                onclick="setWeatherCanvas('rain')"
+                class="weather-chip w-7 h-7 rounded-full text-xs bg-white/[0.06] border border-white/10 flex items-center justify-center shrink-0"
+              >
+                🌧️
+              </button>
+              <button
+                type="button"
+                data-weather="night"
+                title="Night"
+                onclick="setWeatherCanvas('night')"
+                class="weather-chip w-7 h-7 rounded-full text-xs bg-white/[0.06] border border-white/10 flex items-center justify-center shrink-0"
+              >
+                🌙
+              </button>
+              <button
+                type="button"
+                data-weather="lowbat"
+                title="Low Battery"
+                onclick="setWeatherCanvas('lowbat')"
+                class="weather-chip w-7 h-7 rounded-full text-xs bg-white/[0.06] border border-white/10 flex items-center justify-center shrink-0"
+              >
+                🔋
+              </button>
+            </div>
           </div>
         </div>
 
@@ -827,17 +2229,19 @@
             <div class="flex items-center gap-1 shrink-0">
               <button
                 type="button"
+                title="Send Prompt"
                 onclick="sendPromptToChat()"
-                class="px-2 py-0.5 rounded-lg bg-rose-500/25 hover:bg-rose-500/35 border border-rose-400/40 text-[10px] font-semibold text-white"
+                class="w-6 h-6 rounded-lg bg-rose-500/25 hover:bg-rose-500/35 border border-rose-400/40 text-white flex items-center justify-center"
               >
-                Ask
+                <i data-lucide="send" class="w-3 h-3"></i>
               </button>
               <button
                 type="button"
+                title="Next Prompt"
                 onclick="cycleCouplePrompt()"
-                class="px-2 py-0.5 rounded-lg bg-white/[0.08] hover:bg-white/[0.14] text-[10px] text-slate-200"
+                class="w-6 h-6 rounded-lg bg-white/[0.08] hover:bg-white/[0.14] text-slate-200 flex items-center justify-center"
               >
-                Next
+                <i data-lucide="shuffle" class="w-3 h-3"></i>
               </button>
             </div>
           </div>
@@ -1055,36 +2459,36 @@
               type="button"
               onclick="openModal('geminiModal')"
               title="Gemini AI"
-              class="p-2.5 rounded-2xl bg-gradient-to-tr from-sky-500/25 to-indigo-500/25 hover:brightness-110 border border-sky-400/40 text-sky-200 text-xs font-bold shrink-0 transition active:scale-95"
+              class="w-10 h-10 rounded-full bg-gradient-to-tr from-sky-500/20 to-indigo-500/20 hover:brightness-110 border border-sky-400/35 text-sky-300 flex items-center justify-center shrink-0 transition active:scale-95"
             >
-              ✨
+              <i data-lucide="sparkles" class="w-4 h-4"></i>
             </button>
 
             <button
               type="button"
               onclick="document.getElementById('photoInput').click()"
-              title="Gallery"
-              class="p-2.5 rounded-2xl bg-white/[0.07] hover:bg-white/[0.13] border border-white/10 text-indigo-300 text-xs shrink-0 transition active:scale-95"
+              title="Photo"
+              class="w-10 h-10 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-indigo-300 flex items-center justify-center shrink-0 transition active:scale-95"
             >
-              🖼️
+              <i data-lucide="image" class="w-4 h-4"></i>
             </button>
 
             <button
               type="button"
               onclick="document.getElementById('docInput').click()"
-              title="Document"
-              class="p-2.5 rounded-2xl bg-white/[0.07] hover:bg-white/[0.13] border border-white/10 text-amber-300 text-xs shrink-0 transition active:scale-95"
+              title="File"
+              class="w-10 h-10 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-amber-300 flex items-center justify-center shrink-0 transition active:scale-95"
             >
-              📄
+              <i data-lucide="paperclip" class="w-4 h-4"></i>
             </button>
 
             <button
               type="button"
               onclick="toggleVoiceRecording()"
               title="Voice"
-              class="p-2.5 rounded-2xl bg-white/[0.07] hover:bg-white/[0.13] border border-white/10 text-rose-300 text-xs shrink-0 transition active:scale-95"
+              class="w-10 h-10 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-rose-300 flex items-center justify-center shrink-0 transition active:scale-95"
             >
-              🎙️
+              <i data-lucide="mic" class="w-4 h-4"></i>
             </button>
 
             <input
@@ -1093,18 +2497,127 @@
               autocomplete="off"
               oninput="notifyTyping()"
               placeholder="Message"
-              class="flex-1 min-w-0 bg-white/[0.07] text-white placeholder-slate-400 text-sm px-4 py-2.5 rounded-2xl border border-white/10 focus:outline-none focus:border-rose-400/60 focus:bg-white/[0.1] transition"
+              class="flex-1 min-w-0 bg-white/[0.07] text-white placeholder-slate-400 text-sm px-4 py-2.5 rounded-full border border-white/10 focus:outline-none focus:border-rose-400/60 focus:bg-white/[0.1] transition"
             />
 
             <button
               id="sendSubmitBtn"
               type="submit"
-              class="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-rose-500 to-indigo-500 hover:brightness-110 text-white text-xs font-semibold shadow-lg shadow-rose-500/20 shrink-0 transition active:scale-95"
+              aria-label="Send"
+              class="w-10 h-10 rounded-full bg-gradient-to-r from-rose-500 to-indigo-500 hover:brightness-110 text-white flex items-center justify-center shadow-lg shadow-rose-500/25 shrink-0 transition active:scale-95"
             >
-              Send
+              <i data-lucide="send-horizontal" class="w-4 h-4"></i>
             </button>
           </div>
         </form>
+      </div>
+
+      <!-- Floating Draggable Interactive Doggy Widget ("Doggy") -->
+      <div
+        id="floatingDoggyWidget"
+        style="touch-action: none"
+        class="hidden fixed bottom-20 right-4 z-40 flex flex-col items-end gap-1.5 select-none cursor-grab active:cursor-grabbing"
+      >
+        <div
+          id="doggyActionMenu"
+          class="hidden flex items-center gap-1 px-2 py-1.5 rounded-2xl glass-modal border border-amber-300/35 shadow-xl"
+        >
+          <button
+            type="button"
+            onclick="triggerDoggyAction('laugh')"
+            title="Laugh"
+            class="px-2 py-1 rounded-xl bg-amber-400/20 hover:bg-amber-400/30 text-[11px] font-semibold text-amber-100"
+          >
+            😂 Hasbe
+          </button>
+          <button
+            type="button"
+            onclick="triggerDoggyAction('cry')"
+            title="Cry"
+            class="px-2 py-1 rounded-xl bg-sky-400/20 hover:bg-sky-400/30 text-[11px] font-semibold text-sky-100"
+          >
+            😢 Kandbe
+          </button>
+          <button
+            type="button"
+            onclick="triggerDoggyAction('feed')"
+            title="Feed"
+            class="px-2 py-1 rounded-xl bg-emerald-400/20 hover:bg-emerald-400/30 text-[11px] font-semibold text-emerald-100"
+          >
+            🦴 Khabar
+          </button>
+          <button
+            type="button"
+            onclick="triggerDoggyAction('play')"
+            title="Play with Pomi"
+            class="px-2 py-1 rounded-xl bg-rose-400/20 hover:bg-rose-400/30 text-[11px] font-semibold text-rose-100"
+          >
+            🎾 Khela
+          </button>
+        </div>
+
+        <div
+          id="doggyBubbleSpeech"
+          class="hidden px-2.5 py-1 rounded-full bg-slate-950/90 border border-amber-300/40 text-[11px] font-semibold text-amber-200 shadow-lg"
+        >
+          🐶 Doggy!
+        </div>
+
+        <button
+          type="button"
+          id="doggyAvatarBtn"
+          onclick="onDoggyTap()"
+          class="group relative w-16 h-16 rounded-full p-0.5 bg-gradient-to-tr from-amber-300 via-rose-400 to-indigo-400 shadow-2xl transition-transform duration-200 active:scale-90"
+          title="Doggy"
+        >
+          <img
+            id="doggyAvatarImg"
+            src="data:image/jpeg;base64,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"
+            alt="Doggy"
+            class="w-full h-full rounded-full object-cover bg-slate-900"
+          />
+          <span
+            id="doggyMoodTag"
+            class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 px-1.5 py-0.2 rounded-full bg-slate-950/95 border border-amber-300/40 text-[9px] font-bold text-amber-200 whitespace-nowrap"
+          >
+            Doggy
+          </span>
+        </button>
+      </div>
+
+      <!-- Fullscreen Photo Lightbox Modal -->
+      <div
+        id="photoLightboxModal"
+        onclick="closePhotoLightbox(event)"
+        class="hidden fixed inset-0 z-50 bg-black/92 backdrop-blur-md flex flex-col items-center justify-center p-4"
+      >
+        <div class="w-full max-w-2xl flex items-center justify-between mb-3">
+          <a
+            id="lightboxDownloadBtn"
+            href="#"
+            download="pomilink-photo.jpg"
+            onclick="event.stopPropagation()"
+            class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center"
+            title="Download"
+          >
+            <i data-lucide="download" class="w-5 h-5"></i>
+          </a>
+          <button
+            type="button"
+            onclick="closePhotoLightbox()"
+            class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center"
+            title="Close"
+          >
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+        <img
+          id="lightboxFullImg"
+          src=""
+          alt="Full Photo"
+          onclick="event.stopPropagation()"
+          class="max-h-[80dvh] max-w-full rounded-2xl object-contain shadow-2xl border border-white/10"
+        />
       </div>
 
       <!-- Love Burst / Nudge Overlay -->
@@ -1729,6 +3242,23 @@
               </button>
             </div>
           </div>
+
+          <!-- Pomi's Pet Dedicated Playground Button -->
+          <button
+            type="button"
+            onclick="
+              closeModal('settingsModal');
+              openPomisPetPage();
+            "
+            class="w-full py-2.5 px-3.5 rounded-2xl bg-gradient-to-r from-amber-500/20 via-rose-500/20 to-indigo-500/20 hover:brightness-110 border border-amber-400/40 text-xs font-bold text-amber-100 text-left flex items-center justify-between transition"
+          >
+            <span>🐾 Pomi's Pet</span>
+            <span
+              id="settingsPetBadgeName"
+              class="text-[11px] text-amber-300 font-semibold"
+              >Pudding</span
+            >
+          </button>
 
           <!-- Chat Sound On / Off -->
           <button
@@ -2386,6 +3916,252 @@
           </div>
         </div>
       </div>
+
+      <!-- Dedicated "Pomi's Pet" Interactive Playground Page -->
+      <div
+        id="pomisPetPage"
+        class="hidden fixed inset-0 z-50 bg-gradient-to-b from-[#0b0f19] via-[#171026] to-[#080c16] flex flex-col w-full h-[100dvh]"
+      >
+        <header
+          class="px-4 py-3 glass-panel border-b border-white/10 flex items-center justify-between shrink-0"
+        >
+          <div class="flex items-center gap-2.5">
+            <button
+              type="button"
+              onclick="closePomisPetPage()"
+              class="px-3 py-1.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.15] border border-white/10 text-xs font-semibold text-white transition"
+            >
+              ← Back to Chat
+            </button>
+            <div>
+              <h2
+                class="font-display font-bold text-base text-white flex items-center gap-1.5"
+              >
+                <span>🐾</span>
+                <span id="petPageTitleName">Pomi's Pet — Pudding</span>
+              </h2>
+              <p class="text-[11px] text-amber-300/90">
+                Play, name, feed &amp; dress up with Pomi
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onclick="triggerPetAction('love')"
+            class="px-3 py-1.5 rounded-xl bg-rose-500/20 border border-rose-400/40 text-xs font-semibold text-rose-200"
+          >
+            ❤️ Hug
+          </button>
+        </header>
+
+        <div class="flex-1 overflow-y-auto chat-scroll p-4">
+          <div class="w-full max-w-md mx-auto space-y-4">
+            <!-- Pet Stage Card -->
+            <div
+              class="relative p-5 rounded-3xl glass-modal border border-amber-300/25 flex flex-col items-center text-center overflow-hidden"
+            >
+              <div
+                class="w-full flex items-center justify-between text-[11px] text-slate-300 mb-2"
+              >
+                <span
+                  id="petHappinessLabel"
+                  class="px-2.5 py-1 rounded-full bg-rose-500/20 border border-rose-400/30 text-rose-200 font-semibold"
+                  >💖 Happy: 100%</span
+                >
+                <span
+                  id="petEnergyLabel"
+                  class="px-2.5 py-1 rounded-full bg-amber-500/20 border border-amber-400/30 text-amber-200 font-semibold"
+                  >⚡ Energy: 100%</span
+                >
+              </div>
+
+              <div
+                id="petPlaygroundSpeech"
+                class="mb-3 px-3.5 py-1.5 rounded-full bg-slate-950/85 border border-amber-300/40 text-xs font-semibold text-amber-200 shadow-lg"
+              >
+                🐶 Woof! Pomi, let's play together!
+              </div>
+
+              <div class="relative my-2 flex items-center justify-center">
+                <div
+                  id="petStageFrame"
+                  onclick="triggerPetAction('play')"
+                  class="w-40 h-40 rounded-3xl p-1 bg-gradient-to-tr from-amber-300 via-rose-400 to-indigo-400 shadow-2xl cursor-pointer transition-transform active:scale-95"
+                >
+                  <img
+                    id="petStageImg"
+                    src="data:image/jpeg;base64,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"
+                    alt="Pomi's Pet"
+                    class="w-full h-full rounded-[20px] object-cover bg-slate-900 doggy-idle"
+                  />
+                </div>
+                <span
+                  id="petStageAccessory"
+                  class="hidden absolute -top-3 -right-2 text-3xl drop-shadow-lg select-none"
+                  >🎀</span
+                >
+              </div>
+
+              <div class="mt-3">
+                <div
+                  id="petDisplayNameBadge"
+                  class="font-display text-lg font-extrabold text-white tracking-wide"
+                >
+                  Pudding
+                </div>
+                <p
+                  id="petActionStatusText"
+                  class="text-xs text-slate-300 mt-0.5"
+                >
+                  Tap the doggy or choose an action below!
+                </p>
+              </div>
+            </div>
+
+            <!-- Rename Pet & Change Doggy Photo -->
+            <div
+              class="p-4 rounded-3xl glass-modal border border-white/15 space-y-3"
+            >
+              <label class="block text-xs font-bold text-amber-200">
+                ✏️ Set Doggy's Name
+              </label>
+              <div class="flex gap-2">
+                <input
+                  id="petNameInput"
+                  type="text"
+                  maxlength="24"
+                  placeholder="Enter doggy name (e.g. Pudding)..."
+                  class="flex-1 min-w-0 px-3.5 py-2 rounded-2xl bg-white/[0.07] border border-white/15 text-xs text-white focus:outline-none focus:border-amber-400/60"
+                />
+                <button
+                  type="button"
+                  onclick="saveCustomPetName()"
+                  class="px-4 py-2 rounded-2xl bg-gradient-to-r from-amber-500 to-rose-500 text-xs font-bold text-white shadow shrink-0"
+                >
+                  Save
+                </button>
+              </div>
+
+              <div class="flex items-center justify-between pt-1 gap-2">
+                <input
+                  type="file"
+                  id="customDoggyPhotoInput"
+                  accept="image/*"
+                  class="hidden"
+                  onchange="handleCustomDoggyUpload(event)"
+                />
+                <button
+                  type="button"
+                  onclick="
+                    document.getElementById('customDoggyPhotoInput').click()
+                  "
+                  class="flex-1 py-2 px-3 rounded-2xl bg-white/[0.07] hover:bg-white/[0.12] border border-white/12 text-xs font-semibold text-slate-100 transition"
+                >
+                  🖼️ Change Doggy Photo
+                </button>
+                <button
+                  type="button"
+                  onclick="resetCustomDoggyPhoto()"
+                  class="py-2 px-3 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 text-xs text-slate-300 transition"
+                >
+                  Reset
+                </button>
+              </div>
+            </div>
+
+            <!-- Play & Care Actions ("ja kushi korbe") -->
+            <div
+              class="p-4 rounded-3xl glass-modal border border-white/15 space-y-2.5"
+            >
+              <h3
+                class="font-display font-bold text-xs uppercase tracking-wider text-slate-300"
+              >
+                Play &amp; Do Anything With Doggy
+              </h3>
+              <div class="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onclick="triggerPetAction('play')"
+                  class="py-2.5 px-3 rounded-2xl bg-rose-500/20 hover:bg-rose-500/30 border border-rose-400/35 text-xs font-bold text-rose-100 transition active:scale-95"
+                >
+                  🎾 Play Fetch
+                </button>
+                <button
+                  type="button"
+                  onclick="triggerPetAction('feed')"
+                  class="py-2.5 px-3 rounded-2xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/35 text-xs font-bold text-emerald-100 transition active:scale-95"
+                >
+                  🦴 Give Treat
+                </button>
+                <button
+                  type="button"
+                  onclick="triggerPetAction('laugh')"
+                  class="py-2.5 px-3 rounded-2xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/35 text-xs font-bold text-amber-100 transition active:scale-95"
+                >
+                  😂 Tickle &amp; Laugh
+                </button>
+                <button
+                  type="button"
+                  onclick="triggerPetAction('cry')"
+                  class="py-2.5 px-3 rounded-2xl bg-sky-500/20 hover:bg-sky-500/30 border border-sky-400/35 text-xs font-bold text-sky-100 transition active:scale-95"
+                >
+                  😢 Drama Cry
+                </button>
+                <button
+                  type="button"
+                  onclick="triggerPetAction('dance')"
+                  class="py-2.5 px-3 rounded-2xl bg-purple-500/20 hover:bg-purple-500/30 border border-purple-400/35 text-xs font-bold text-purple-100 transition active:scale-95"
+                >
+                  💃 Spin &amp; Dance
+                </button>
+                <button
+                  type="button"
+                  onclick="triggerPetAction('sleep')"
+                  class="py-2.5 px-3 rounded-2xl bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-400/35 text-xs font-bold text-indigo-100 transition active:scale-95"
+                >
+                  😴 Cozy Nap
+                </button>
+              </div>
+
+              <div class="pt-1">
+                <span class="text-[11px] text-slate-400 block mb-1.5"
+                  >Cute Collar / Bow:</span
+                >
+                <div class="grid grid-cols-4 gap-1.5">
+                  <button
+                    type="button"
+                    onclick="setPetAccessory('')"
+                    class="py-1.5 rounded-xl bg-white/[0.06] border border-white/10 text-[11px] text-slate-200"
+                  >
+                    None
+                  </button>
+                  <button
+                    type="button"
+                    onclick="setPetAccessory('🎀')"
+                    class="py-1.5 rounded-xl bg-white/[0.06] border border-white/10 text-[11px] text-slate-200"
+                  >
+                    🎀 Bow
+                  </button>
+                  <button
+                    type="button"
+                    onclick="setPetAccessory('👑')"
+                    class="py-1.5 rounded-xl bg-white/[0.06] border border-white/10 text-[11px] text-slate-200"
+                  >
+                    👑 Crown
+                  </button>
+                  <button
+                    type="button"
+                    onclick="setPetAccessory('🕶️')"
+                    class="py-1.5 rounded-xl bg-white/[0.06] border border-white/10 text-[11px] text-slate-200"
+                  >
+                    🕶️ Cool
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script>
@@ -2554,7 +4330,7 @@
       let pinnedMsgId = localStorage.getItem(PINNED_MSG_KEY) || null;
       let profilesDp = JSON.parse(localStorage.getItem(DP_KEY) || "{}");
       let targetDpRole = "Rick";
-      let myMood = localStorage.getItem(MOOD_KEY) || "✨ Vibing";
+      let myMood = localStorage.getItem(MOOD_KEY) || "✨";
       let vanishModeEnabled = false;
 
       let petWidgetEnabled = localStorage.getItem(PET_ENABLED_KEY) === "true";
@@ -2685,8 +4461,11 @@
 
       function togglePetWidget() {
         petWidgetEnabled = !petWidgetEnabled;
+        doggyEnabled = petWidgetEnabled;
         localStorage.setItem(PET_ENABLED_KEY, String(petWidgetEnabled));
+        localStorage.setItem(DOGGY_KEY, String(doggyEnabled));
         syncPetSettingsUI();
+        syncDoggyUI();
         renderMessages();
       }
 
@@ -2913,8 +4692,8 @@
         document.querySelectorAll(".mood-chip").forEach((chip) => {
           const active = chip.getAttribute("data-mood") === myMood;
           chip.className = active
-            ? "mood-chip px-2 py-0.5 rounded-full text-[10px] bg-rose-500/25 border border-rose-400/50 text-white font-semibold shrink-0"
-            : "mood-chip px-2 py-0.5 rounded-full text-[10px] bg-white/[0.06] border border-white/10 text-slate-200 shrink-0";
+            ? "mood-chip w-7 h-7 rounded-full text-xs bg-rose-500/30 border border-rose-400 flex items-center justify-center shrink-0"
+            : "mood-chip w-7 h-7 rounded-full text-xs bg-white/[0.06] border border-white/10 flex items-center justify-center shrink-0";
         });
       }
 
@@ -2927,7 +4706,7 @@
 
       function updatePartnerMoodBadge(moodText) {
         const badge = document.getElementById("partnerMoodBadge");
-        if (badge) badge.textContent = moodText || "✨ Vibing";
+        if (badge) badge.textContent = (moodText || "✨").split(" ")[0];
       }
 
       function syncVanishSettingsUI() {
@@ -3565,8 +5344,49 @@
         box.scrollTop = box.scrollHeight;
       }
 
+      function isBengaliRequest(text) {
+        const hasBnScript = /[\u0980-\u09FF]/.test(text);
+        const bnKeywords =
+          /\b(bengali|bangla|বাংলা|বাংলায়|বাংলায়|bolo|kor|koro|kemon|acho|achi|tumi|ami|bhalobasha|valobasha|kobita|golpo|ki|keno|kothay)\b/i;
+        return hasBnScript || bnKeywords.test(text);
+      }
+
       function generateLocalGeminiReply(prompt) {
         const p = prompt.toLowerCase();
+        const bn = isBengaliRequest(prompt);
+
+        if (bn) {
+          if (
+            p.includes("love") ||
+            p.includes("shayari") ||
+            p.includes("kobita") ||
+            p.includes("bhalobasha") ||
+            p.includes("valobasha") ||
+            p.includes("pomi")
+          ) {
+            return '❤️ তোমার জন্য একটি মিষ্টি বার্তা:\n"তুমি পাশে থাকলে প্রতিটি মুহূর্ত যেন সবচেয়ে সুন্দর গানের মতো লাগে। দিন যতই ব্যস্ত কাটুক না কেন, আমার মন সবসময় তোমার কাছেই ফিরে আসে।"';
+          }
+          if (
+            p.includes("joke") ||
+            p.includes("funny") ||
+            p.includes("hasi") ||
+            p.includes("moja")
+          ) {
+            return "😄 একটি মজার জোক:\nশিক্ষক: বলো তো, পৃথিবী গোল কেন?\nছাত্র: স্যার, চারকোনা হলে তো কোণায় ধাক্কা লেগে মানুষ পড়ে যেত!";
+          }
+          if (
+            p.includes("kemon") ||
+            p.includes("hi") ||
+            p.includes("hello") ||
+            p.includes("hey") ||
+            p.includes("bolo") ||
+            p.includes("bangla")
+          ) {
+            return `হ্যালো ${getChatName(senderRole)}! ✨ আমি এখন বাংলায় কথা বলতে পারি। তুমি বাংলায় বা বাংলিশে যা খুশি জিজ্ঞেস করো — ভালোবাসার মেসেজ, কবিতা, আইডিয়া বা যেকোনো প্রশ্নের উত্তর আমি বাংলায় দেব!`;
+          }
+          return `✨ "${prompt}" — সম্পর্কে আমার উত্তর:\nসবসময় ইতিবাচক থাকো, ছোট ছোট মুহূর্তগুলো উপভোগ করো এবং নিজের লক্ষ্যে এগিয়ে যাও। আরও বিস্তারিত বা লাইভ উত্তরের জন্য উপরে 🔑 Key বাটনে তোমার Gemini API Key যোগ করতে পারো।`;
+        }
+
         if (
           p.includes("love") ||
           p.includes("shayari") ||
@@ -3582,9 +5402,9 @@
           return "✨ Cozy Date Ideas:\n1. Sunset walk + street snacks\n2. Watch a favorite movie together on call\n3. Cook or order each other's favorite comfort food!";
         }
         if (p.includes("hi") || p.includes("hello") || p.includes("hey")) {
-          return `Hello ${getChatName(senderRole)}! ✨ I'm Gemini AI. Ask me for sweet messages, ideas, answers, or tips anytime!`;
+          return `Hello ${getChatName(senderRole)}! ✨ I'm Gemini AI (supports English & বাংলা). Ask me anything anytime!`;
         }
-        return `✨ Gemini Insight on "${prompt}":\nHere is a clear summary & idea — stay positive, keep things simple, and take one step at a time. (Tip: Tap 🔑 Key at top-right if you want to connect your personal Gemini API key for live web-scale answers.)`;
+        return `✨ Gemini Insight on "${prompt}":\nHere is a clear summary & idea — stay positive, keep things simple, and take one step at a time. (Tip: You can also write in বাংলা or tap 🔑 Key at top-right for live cloud AI.)`;
       }
 
       async function sendGeminiPrompt(e) {
@@ -3594,8 +5414,12 @@
         if (!prompt) return;
         inp.value = "";
 
+        const bn = isBengaliRequest(prompt);
         geminiHistory.push({ role: "user", text: prompt });
-        geminiHistory.push({ role: "ai", text: "✨ Thinking..." });
+        geminiHistory.push({
+          role: "ai",
+          text: bn ? "✨ ভাবছি..." : "✨ Thinking...",
+        });
         renderGeminiHistory();
 
         const apiKey = localStorage.getItem(GEMINI_KEY_STORAGE);
@@ -3603,13 +5427,16 @@
 
         if (apiKey) {
           try {
+            const systemPrefix = bn
+              ? "Reply naturally in Bengali script (বাংলা). User message: "
+              : "Reply clearly and helpfully (if user writes in Bengali or Banglish, reply in Bengali). User message: ";
             const resp = await fetch(
               `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(apiKey)}`,
               {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                  contents: [{ parts: [{ text: prompt }] }],
+                  contents: [{ parts: [{ text: systemPrefix + prompt }] }],
                 }),
               },
             );
@@ -3621,7 +5448,7 @@
             replyText = generateLocalGeminiReply(prompt);
           }
         } else {
-          await new Promise((r) => setTimeout(r, 350));
+          await new Promise((r) => setTimeout(r, 320));
           replyText = generateLocalGeminiReply(prompt);
         }
 
@@ -4406,8 +6233,6 @@
           document.getElementById("partnerTitle").textContent =
             getChatName(partner);
           refreshProfileAvatars();
-          document.getElementById("youAreText").textContent =
-            `${getChatName(senderRole)} • Private Chat`;
         } catch (e) {}
       }
 
@@ -4417,15 +6242,15 @@
           const badge = document.getElementById("partnerStatusText");
           if (partnerOnlineState) {
             dot.className =
-              "absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-400 ring-2 ring-slate-950";
+              "absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-slate-950";
             badge.className =
-              "text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 shrink-0";
+              "text-[11px] leading-tight text-emerald-400 font-medium truncate mt-0.5";
             badge.textContent = t("online");
           } else {
             dot.className =
-              "absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-slate-500 ring-2 ring-slate-950";
+              "absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-slate-500 ring-2 ring-slate-950";
             badge.className =
-              "text-[10px] px-2 py-0.5 rounded-full bg-white/[0.08] border border-white/10 text-slate-300 truncate max-w-[130px]";
+              "text-[11px] leading-tight text-slate-400 truncate mt-0.5";
             badge.textContent = formatLastSeen(partnerLastSeenTs);
           }
         } catch (e) {}
@@ -4660,7 +6485,10 @@
 
         if (preview) preview.textContent = m.text || "";
         if (bar) bar.classList.remove("hidden");
-        if (submitBtn) submitBtn.textContent = "Save";
+        if (submitBtn) {
+          submitBtn.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i>`;
+          if (window.lucide) lucide.createIcons();
+        }
         if (input) {
           input.value = m.text || "";
           input.focus();
@@ -4673,7 +6501,10 @@
         const submitBtn = document.getElementById("sendSubmitBtn");
         const input = document.getElementById("msgInput");
         if (bar) bar.classList.add("hidden");
-        if (submitBtn) submitBtn.textContent = "Send";
+        if (submitBtn) {
+          submitBtn.innerHTML = `<i data-lucide="send-horizontal" class="w-4 h-4"></i>`;
+          if (window.lucide) lucide.createIcons();
+        }
         if (input) input.value = "";
       }
 
@@ -4996,7 +6827,13 @@
             const img = document.createElement("img");
             img.src = m.mediaUrl;
             img.alt = "Photo";
-            img.className = "max-h-52 rounded-xl object-cover";
+            img.className =
+              "max-h-52 rounded-xl object-cover cursor-zoom-in transition hover:brightness-95";
+            img.onclick = (ev) => {
+              if (isSelectionMode || didSwipe || longPressTriggered) return;
+              ev.stopPropagation();
+              openPhotoLightbox(m.mediaUrl);
+            };
             bubble.appendChild(img);
           } else if (m.type === "audio" && m.mediaUrl) {
             const audio = document.createElement("audio");
@@ -5580,6 +7417,1094 @@
         renderTTTBoard();
       } catch (e) {}
 
+      const DOGGY_PIC_URL =
+        "data:image/jpeg;base64,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";
+      const DOGGY_KEY = "pomilink_doggy_widget_on_v1";
+      let doggyEnabled = localStorage.getItem(DOGGY_KEY) !== "false";
+      let doggyMenuOpen = false;
+      let doggySpeechTimer = null;
+
+      function syncDoggyUI() {
+        const w = document.getElementById("floatingDoggyWidget");
+        const img = document.getElementById("doggyAvatarImg");
+        const toggleBtn = document.getElementById("petWidgetToggleBtn");
+        if (img && !img.src) img.src = DOGGY_PIC_URL;
+        if (w) {
+          w.classList.toggle("hidden", !doggyEnabled);
+          if (doggyEnabled && img && !img.className.includes("doggy-")) {
+            img.classList.add("doggy-idle");
+          }
+        }
+        if (toggleBtn) {
+          toggleBtn.textContent = doggyEnabled ? "DOGGY ON" : "OFF";
+          toggleBtn.className = doggyEnabled
+            ? "px-2.5 py-1 rounded-xl bg-amber-500/25 border border-amber-400/50 text-[11px] font-bold text-amber-100"
+            : "px-2.5 py-1 rounded-xl bg-white/[0.08] border border-white/15 text-[11px] font-semibold text-slate-300";
+        }
+      }
+
+      function setDoggySpeech(msg, durationMs = 2200) {
+        const speech = document.getElementById("doggyBubbleSpeech");
+        if (!speech) return;
+        speech.textContent = msg;
+        speech.classList.remove("hidden");
+        clearTimeout(doggySpeechTimer);
+        doggySpeechTimer = setTimeout(() => {
+          speech.classList.add("hidden");
+        }, durationMs);
+      }
+
+      function onDoggyTap() {
+        if (doggyWasDragged) {
+          doggyWasDragged = false;
+          return;
+        }
+        doggyMenuOpen = !doggyMenuOpen;
+        const menu = document.getElementById("doggyActionMenu");
+        if (menu) menu.classList.toggle("hidden", !doggyMenuOpen);
+        triggerDoggyAction("laugh");
+      }
+
+      function triggerDoggyAction(action) {
+        const img = document.getElementById("doggyAvatarImg");
+        const tag = document.getElementById("doggyMoodTag");
+        if (!img) return;
+
+        img.classList.remove(
+          "doggy-idle",
+          "doggy-laugh",
+          "doggy-cry",
+          "doggy-eat",
+          "doggy-play",
+        );
+        void img.offsetWidth;
+
+        if (action === "laugh") {
+          img.classList.add("doggy-laugh");
+          if (tag) tag.textContent = "😂 Doggy";
+          setDoggySpeech("😂 Hew-hew! Doggy hasche!");
+        } else if (action === "cry") {
+          img.classList.add("doggy-cry");
+          if (tag) tag.textContent = "😢 Doggy";
+          setDoggySpeech("😢 Woo-woo... Doggy kandche!");
+        } else if (action === "feed") {
+          img.classList.add("doggy-eat");
+          if (tag) tag.textContent = "🦴 Yummy";
+          setDoggySpeech("🦴 Yum yum! Khabar kheye niyeche!");
+        } else if (action === "play") {
+          img.classList.add("doggy-play");
+          if (tag) tag.textContent = "🎾 Pomi!";
+          setDoggySpeech("🎾 Pomi-r sathe khela korche!");
+        }
+
+        setTimeout(() => {
+          img.classList.remove(
+            "doggy-laugh",
+            "doggy-cry",
+            "doggy-eat",
+            "doggy-play",
+          );
+          img.classList.add("doggy-idle");
+          if (tag) tag.textContent = "Doggy";
+        }, 1250);
+      }
+
+      function openPhotoLightbox(imgUrl) {
+        const modal = document.getElementById("photoLightboxModal");
+        const fullImg = document.getElementById("lightboxFullImg");
+        const dlBtn = document.getElementById("lightboxDownloadBtn");
+        if (!modal || !fullImg) return;
+        fullImg.src = imgUrl;
+        if (dlBtn) dlBtn.href = imgUrl;
+        modal.classList.remove("hidden");
+
+        if (window.lucide) lucide.createIcons();
+      }
+
+      const PET_NAME_KEY = "pomilink_pomis_pet_name_v1";
+      const PET_PHOTO_KEY = "pomilink_pomis_pet_photo_v1";
+      const PET_ACC_KEY = "pomilink_pomis_pet_acc_v1";
+
+      let customPetName = localStorage.getItem(PET_NAME_KEY) || "Pudding";
+      let customPetPhoto = localStorage.getItem(PET_PHOTO_KEY) || "";
+      let petAccessory = localStorage.getItem(PET_ACC_KEY) || "";
+      let petHappiness = 100;
+      let petEnergy = 100;
+
+      function getActiveDoggySrc() {
+        return customPetPhoto || DOGGY_PIC_URL;
+      }
+
+      function syncPomisPetUI() {
+        const activeSrc = getActiveDoggySrc();
+        const floatImg = document.getElementById("doggyAvatarImg");
+        const stageImg = document.getElementById("petStageImg");
+        const floatTag = document.getElementById("doggyMoodTag");
+        const titleEl = document.getElementById("petPageTitleName");
+        const badgeEl = document.getElementById("petDisplayNameBadge");
+        const settingsBadge = document.getElementById("settingsPetBadgeName");
+        const inputEl = document.getElementById("petNameInput");
+        const accEl = document.getElementById("petStageAccessory");
+        const happyEl = document.getElementById("petHappinessLabel");
+        const energyEl = document.getElementById("petEnergyLabel");
+
+        if (floatImg && activeSrc) floatImg.src = activeSrc;
+        if (stageImg && activeSrc) stageImg.src = activeSrc;
+        if (floatTag && !floatTag.textContent.includes(" "))
+          floatTag.textContent = customPetName;
+        if (titleEl) titleEl.textContent = `Pomi's Pet — ${customPetName}`;
+        if (badgeEl) badgeEl.textContent = customPetName;
+        if (settingsBadge) settingsBadge.textContent = customPetName;
+        if (inputEl && document.activeElement !== inputEl)
+          inputEl.value = customPetName;
+        if (accEl) {
+          if (petAccessory) {
+            accEl.textContent = petAccessory;
+            accEl.classList.remove("hidden");
+          } else {
+            accEl.classList.add("hidden");
+          }
+        }
+        if (happyEl) happyEl.textContent = `💖 Happy: ${petHappiness}%`;
+        if (energyEl) energyEl.textContent = `⚡ Energy: ${petEnergy}%`;
+      }
+
+      // === Pomi's Pet: Favourite Pet Chooser, Custom Names, Interactive Dog & Cat Rooms ===
+      const PET_FAV_TYPE_KEY = "pomilink_fav_pet_type_v1";
+      const DOG_CUSTOM_NAME_KEY = "pomilink_dog_custom_name_v1";
+      const CAT_CUSTOM_NAME_KEY = "pomilink_cat_custom_name_v1";
+
+      let favouritePetType = localStorage.getItem(PET_FAV_TYPE_KEY) || "dog";
+      let petNameEditTarget = favouritePetType;
+      let dogCustomName =
+        localStorage.getItem(DOG_CUSTOM_NAME_KEY) || "Tommy";
+      let catCustomName = localStorage.getItem(CAT_CUSTOM_NAME_KEY) || "Mimi";
+
+      const dogPetState = {
+        happy: 85,
+        energy: 80,
+        sleeping: false,
+        soundOn: true,
+        busy: false,
+      };
+
+      const catPetState = {
+        happy: 88,
+        energy: 82,
+        sleeping: false,
+        soundOn: true,
+        busy: false,
+      };
+
+      let petAudioCtx = null;
+      function getPetAudioCtx() {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) return null;
+        if (!petAudioCtx) petAudioCtx = new Ctx();
+        if (petAudioCtx.state === "suspended") {
+          petAudioCtx.resume().catch(() => {});
+        }
+        return petAudioCtx;
+      }
+
+      function playPetTone(kind) {
+        const activeSound =
+          favouritePetType === "cat"
+            ? catPetState.soundOn
+            : dogPetState.soundOn;
+        if (!activeSound) return;
+        const ctx = getPetAudioCtx();
+        if (!ctx) return;
+        try {
+          const now = ctx.currentTime;
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          if (kind === "bark") {
+            osc.type = "triangle";
+            osc.frequency.setValueAtTime(340, now);
+            osc.frequency.exponentialRampToValueAtTime(520, now + 0.08);
+            osc.frequency.exponentialRampToValueAtTime(250, now + 0.19);
+            gain.gain.setValueAtTime(0.001, now);
+            gain.gain.linearRampToValueAtTime(0.16, now + 0.03);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.21);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.22);
+          } else if (kind === "meow") {
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(620, now);
+            osc.frequency.exponentialRampToValueAtTime(840, now + 0.14);
+            osc.frequency.exponentialRampToValueAtTime(510, now + 0.34);
+            gain.gain.setValueAtTime(0.001, now);
+            gain.gain.linearRampToValueAtTime(0.14, now + 0.06);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.36);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.38);
+          } else {
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(560, now);
+            osc.frequency.exponentialRampToValueAtTime(780, now + 0.12);
+            gain.gain.setValueAtTime(0.001, now);
+            gain.gain.linearRampToValueAtTime(0.12, now + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.15);
+          }
+        } catch (e) {}
+      }
+
+      function toggleDogSound() {
+        dogPetState.soundOn = !dogPetState.soundOn;
+        const btn = document.getElementById("dogSoundToggleBtn");
+        if (btn) btn.textContent = dogPetState.soundOn ? "🔊" : "🔇";
+      }
+
+      function toggleCatSound() {
+        catPetState.soundOn = !catPetState.soundOn;
+        const btn = document.getElementById("catSoundToggleBtn");
+        if (btn) btn.textContent = catPetState.soundOn ? "🔊" : "🔇";
+      }
+
+      function syncPetLabelsAndUI() {
+        const dogTitle = document.getElementById("dogNameTitle");
+        const catTitle = document.getElementById("catNameTitle");
+        const choiceDogPrev = document.getElementById("choiceDogNamePreview");
+        const choiceCatPrev = document.getElementById("choiceCatNamePreview");
+        const settingsBadge = document.getElementById("settingsPetBadgeName");
+        const nameInput = document.getElementById("favPetNameInput");
+        const dogBtn = document.getElementById("nameTargetDogBtn");
+        const catBtn = document.getElementById("nameTargetCatBtn");
+
+        if (dogTitle) dogTitle.textContent = `${dogCustomName} (Cutie Pup)`;
+        if (catTitle) catTitle.textContent = `${catCustomName} (Cutie Cat)`;
+        if (choiceDogPrev) choiceDogPrev.textContent = dogCustomName;
+        if (choiceCatPrev) choiceCatPrev.textContent = catCustomName;
+        if (settingsBadge) {
+          settingsBadge.textContent =
+            favouritePetType === "cat"
+              ? `🐱 ${catCustomName}`
+              : `🐶 ${dogCustomName}`;
+        }
+        if (nameInput && document.activeElement !== nameInput) {
+          nameInput.value =
+            petNameEditTarget === "cat" ? catCustomName : dogCustomName;
+        }
+        if (dogBtn && catBtn) {
+          if (petNameEditTarget === "cat") {
+            catBtn.className =
+              "px-2 py-0.5 rounded-lg bg-rose-500/35 border border-rose-300/60 text-rose-100 font-bold";
+            dogBtn.className =
+              "px-2 py-0.5 rounded-lg bg-white/[0.06] border border-white/10 text-slate-300 font-semibold";
+          } else {
+            dogBtn.className =
+              "px-2 py-0.5 rounded-lg bg-amber-500/35 border border-amber-300/60 text-amber-100 font-bold";
+            catBtn.className =
+              "px-2 py-0.5 rounded-lg bg-white/[0.06] border border-white/10 text-slate-300 font-semibold";
+          }
+        }
+      }
+
+      function setPetNameTarget(target) {
+        petNameEditTarget = target === "cat" ? "cat" : "dog";
+        const nameInput = document.getElementById("favPetNameInput");
+        if (nameInput) {
+          nameInput.value =
+            petNameEditTarget === "cat" ? catCustomName : dogCustomName;
+          nameInput.focus();
+        }
+        syncPetLabelsAndUI();
+      }
+
+      function savePetNameFromModal() {
+        const input = document.getElementById("favPetNameInput");
+        const val = (input ? input.value : "").trim();
+        if (!val) return;
+        if (petNameEditTarget === "cat") {
+          catCustomName = val;
+          localStorage.setItem(CAT_CUSTOM_NAME_KEY, catCustomName);
+        } else {
+          dogCustomName = val;
+          localStorage.setItem(DOG_CUSTOM_NAME_KEY, dogCustomName);
+        }
+        syncPetLabelsAndUI();
+      }
+
+      function closePetRooms() {
+        const dogRoom = document.getElementById("petDogRoom");
+        const catRoom = document.getElementById("petCatRoom");
+        if (dogRoom) dogRoom.classList.add("hidden");
+        if (catRoom) catRoom.classList.add("hidden");
+        syncPetLabelsAndUI();
+      }
+
+      function openPetChoiceFromRoom(target) {
+        petNameEditTarget = target === "cat" ? "cat" : "dog";
+        closePetRooms();
+        syncPetLabelsAndUI();
+        openModal("petChoiceModal");
+      }
+
+      function openPetRoom(type) {
+        favouritePetType = type === "cat" ? "cat" : "dog";
+        petNameEditTarget = favouritePetType;
+        localStorage.setItem(PET_FAV_TYPE_KEY, favouritePetType);
+        closeModal("petChoiceModal");
+        closePetRooms();
+        syncPetLabelsAndUI();
+
+        if (favouritePetType === "cat") {
+          const catRoom = document.getElementById("petCatRoom");
+          if (catRoom) catRoom.classList.remove("hidden");
+          updateCatMeters(0, 0);
+          sayCatBubble(`Meow! ${catCustomName} loves Pomi! 💖`, 1800);
+        } else {
+          const dogRoom = document.getElementById("petDogRoom");
+          if (dogRoom) dogRoom.classList.remove("hidden");
+          updateDogMeters(0, 0);
+          sayDogBubble(`Woof! ${dogCustomName} loves Pomi! ❤️`, 1800);
+        }
+      }
+
+      // Override openPomisPetPage so clicking "🐾 Pomi's Pet" asks Dog or Cat & lets Pomi set name
+      function openPomisPetPage() {
+        closePetRooms();
+        petNameEditTarget = favouritePetType;
+        syncPetLabelsAndUI();
+        openModal("petChoiceModal");
+      }
+
+      // === Interactive DOG Room Functions ===
+      function updateDogMeters(hDelta = 0, eDelta = 0) {
+        dogPetState.happy = Math.max(
+          0,
+          Math.min(100, dogPetState.happy + hDelta),
+        );
+        dogPetState.energy = Math.max(
+          0,
+          Math.min(100, dogPetState.energy + eDelta),
+        );
+        const hBar = document.getElementById("dogHappyBar");
+        const eBar = document.getElementById("dogEnergyBar");
+        const hTxt = document.getElementById("dogHappyValText");
+        const eTxt = document.getElementById("dogEnergyValText");
+        const mood = document.getElementById("dogMoodLabel");
+        if (hBar) hBar.style.width = dogPetState.happy + "%";
+        if (eBar) eBar.style.width = dogPetState.energy + "%";
+        if (hTxt) hTxt.textContent = dogPetState.happy + "%";
+        if (eTxt) eTxt.textContent = dogPetState.energy + "%";
+        if (mood) {
+          if (dogPetState.sleeping)
+            mood.textContent = `Sleeping soundly... Zzz (${dogCustomName})`;
+          else if (dogPetState.energy < 20)
+            mood.textContent = `A bit tired • Feed or Nap!`;
+          else if (dogPetState.happy >= 80)
+            mood.textContent = `Super Happy & Playful!`;
+          else mood.textContent = `Happy & Ready to Play!`;
+        }
+      }
+
+      function setDogEyes(mode) {
+        const n = document.getElementById("dogEyesNormal");
+        const h = document.getElementById("dogEyesHappy");
+        const s = document.getElementById("dogEyesSleep");
+        if (n) n.classList.toggle("hidden", mode !== "normal");
+        if (h) h.classList.toggle("hidden", mode !== "happy");
+        if (s) s.classList.toggle("hidden", mode !== "sleep");
+      }
+
+      let dogSpeechTimer = null;
+      function sayDogBubble(text, duration = 1800) {
+        const bubble = document.getElementById("dogSpeechBubble");
+        if (!bubble) return;
+        bubble.textContent = text;
+        bubble.classList.remove("opacity-0", "scale-90");
+        bubble.classList.add("opacity-100", "scale-100");
+        clearTimeout(dogSpeechTimer);
+        dogSpeechTimer = setTimeout(() => {
+          bubble.classList.remove("opacity-100", "scale-100");
+          bubble.classList.add("opacity-0", "scale-90");
+        }, duration);
+      }
+
+      function spawnPetParticles(stageId, wrapperId, emojis, count = 5) {
+        const stage = document.getElementById(stageId);
+        const wrap = document.getElementById(wrapperId);
+        if (!stage || !wrap) return;
+        const wRect = wrap.getBoundingClientRect();
+        const sRect = stage.getBoundingClientRect();
+        const cx = wRect.left - sRect.left + wRect.width / 2;
+        const cy = wRect.top - sRect.top + wRect.height / 3;
+        for (let i = 0; i < count; i++) {
+          const el = document.createElement("div");
+          el.className = "particle-float text-xl sm:text-2xl";
+          el.textContent = emojis[i % emojis.length];
+          el.style.left = cx + (Math.random() - 0.5) * 120 + "px";
+          el.style.top = cy + (Math.random() - 0.5) * 35 + "px";
+          stage.appendChild(el);
+          setTimeout(() => el.remove(), 1100);
+        }
+      }
+
+      function setDogSleepState(sleep) {
+        dogPetState.sleeping = sleep;
+        const room = document.getElementById("petDogRoom");
+        const sky = document.getElementById("dogWindowSky");
+        const sunMoon = document.getElementById("dogSunMoon");
+        const lamp = document.getElementById("dogNightLampGlow");
+        const icon = document.getElementById("dogSleepBtnIcon");
+        const text = document.getElementById("dogSleepBtnText");
+        const wrap = document.getElementById("doggyWrapper");
+        if (room) {
+          room.classList.toggle("room-night", sleep);
+          room.classList.toggle("room-day", !sleep);
+        }
+        if (sky) {
+          sky.className = sleep
+            ? "w-full h-full bg-gradient-to-b from-indigo-950 to-slate-800 relative"
+            : "w-full h-full bg-gradient-to-b from-sky-300 to-sky-100 relative";
+        }
+        if (sunMoon) {
+          sunMoon.className = sleep
+            ? "w-4 h-4 rounded-full bg-amber-100 absolute top-2 right-2 shadow-[0_0_8px_#fef08a]"
+            : "w-5 h-5 rounded-full bg-amber-300 absolute top-2 right-2 shadow";
+        }
+        if (lamp) lamp.classList.toggle("hidden", !sleep);
+        if (icon) icon.textContent = sleep ? "☀️" : "😴";
+        if (text) text.textContent = sleep ? "Wake / ওঠো" : "Sleep / ঘুম";
+        if (wrap) {
+          wrap.classList.remove(
+            "anim-idle",
+            "anim-happy",
+            "anim-jump",
+            "anim-dance",
+            "anim-bark",
+          );
+          if (sleep) wrap.classList.add("anim-sleep");
+          else wrap.classList.add("anim-idle");
+        }
+        setDogEyes(sleep ? "sleep" : "normal");
+        updateDogMeters(0, sleep ? 10 : 0);
+        sayDogBubble(
+          sleep
+            ? `Zzz... ${dogCustomName} sleeping 💤`
+            : `Good morning Pomi! ☀️`,
+          1800,
+        );
+      }
+
+      function handleDirectDogTap() {
+        if (dogPetState.sleeping) {
+          setDogSleepState(false);
+          return;
+        }
+        playPetTone("bark");
+        updateDogMeters(4, -2);
+        setDogEyes("happy");
+        sayDogBubble(`Woof woof! ${dogCustomName} ❤️`, 1400);
+        spawnPetParticles(
+          "dogStageArea",
+          "doggyWrapper",
+          ["❤️", "🐾", "✨"],
+          4,
+        );
+        setTimeout(() => {
+          if (!dogPetState.sleeping) setDogEyes("normal");
+        }, 900);
+      }
+
+      function doDogAction(action) {
+        if (action === "sleep") {
+          setDogSleepState(!dogPetState.sleeping);
+          return;
+        }
+        if (dogPetState.sleeping) {
+          setDogSleepState(false);
+        }
+        if (dogPetState.busy) return;
+        dogPetState.busy = true;
+        const wrap = document.getElementById("doggyWrapper");
+        if (wrap) {
+          wrap.classList.remove(
+            "anim-idle",
+            "anim-happy",
+            "anim-jump",
+            "anim-dance",
+            "anim-bark",
+          );
+          void wrap.offsetWidth;
+        }
+        setDogEyes("happy");
+
+        if (action === "pet") {
+          playPetTone("happy");
+          if (wrap) wrap.classList.add("anim-happy");
+          updateDogMeters(10, -2);
+          sayDogBubble(`Purr-woof! So cozy! 🥰`, 1700);
+          spawnPetParticles(
+            "dogStageArea",
+            "doggyWrapper",
+            ["❤️", "💖", "🥰"],
+            6,
+          );
+        } else if (action === "feed") {
+          playPetTone("happy");
+          if (wrap) wrap.classList.add("anim-happy");
+          updateDogMeters(8, 18);
+          sayDogBubble(`Yummy bone! 🦴😋`, 1700);
+          spawnPetParticles(
+            "dogStageArea",
+            "doggyWrapper",
+            ["🦴", "🍖", "😋"],
+            5,
+          );
+        } else if (action === "fetch") {
+          playPetTone("bark");
+          if (wrap) wrap.classList.add("anim-jump");
+          updateDogMeters(9, -10);
+          sayDogBubble(`Got the ball! 🎾Woof!`, 1700);
+          spawnPetParticles(
+            "dogStageArea",
+            "doggyWrapper",
+            ["🎾", "⭐", "🐾"],
+            5,
+          );
+        } else if (action === "jump") {
+          playPetTone("bark");
+          if (wrap) wrap.classList.add("anim-jump");
+          updateDogMeters(7, -8);
+          sayDogBubble(`Boing boing! 🤸`, 1600);
+          spawnPetParticles(
+            "dogStageArea",
+            "doggyWrapper",
+            ["⭐", "✨", "🎉"],
+            5,
+          );
+        } else if (action === "dance") {
+          playPetTone("happy");
+          if (wrap) wrap.classList.add("anim-dance");
+          updateDogMeters(10, -9);
+          sayDogBubble(`Dance time with Pomi! 💃`, 1800);
+          spawnPetParticles(
+            "dogStageArea",
+            "doggyWrapper",
+            ["🎵", "🎶", "💖"],
+            6,
+          );
+        } else if (action === "bark") {
+          playPetTone("bark");
+          if (wrap) wrap.classList.add("anim-bark");
+          updateDogMeters(5, -4);
+          sayDogBubble(`Woof! Arf! 🗣️`, 1500);
+          spawnPetParticles(
+            "dogStageArea",
+            "doggyWrapper",
+            ["💬", "🐾", "❤️"],
+            4,
+          );
+        } else if (action === "bath") {
+          playPetTone("happy");
+          if (wrap) wrap.classList.add("anim-happy");
+          updateDogMeters(8, 5);
+          sayDogBubble(`Splish splash! Clean & fresh! 🛁`, 1700);
+          spawnPetParticles(
+            "dogStageArea",
+            "doggyWrapper",
+            ["🫧", "✨", "💧"],
+            6,
+          );
+        }
+
+        setTimeout(() => {
+          if (wrap && !dogPetState.sleeping) {
+            wrap.classList.remove(
+              "anim-happy",
+              "anim-jump",
+              "anim-dance",
+              "anim-bark",
+            );
+            wrap.classList.add("anim-idle");
+            setDogEyes("normal");
+          }
+          dogPetState.busy = false;
+        }, 1250);
+      }
+
+      // === Interactive CAT Room Functions ===
+      function updateCatMeters(hDelta = 0, eDelta = 0) {
+        catPetState.happy = Math.max(
+          0,
+          Math.min(100, catPetState.happy + hDelta),
+        );
+        catPetState.energy = Math.max(
+          0,
+          Math.min(100, catPetState.energy + eDelta),
+        );
+        const hBar = document.getElementById("catHappyBar");
+        const eBar = document.getElementById("catEnergyBar");
+        const hTxt = document.getElementById("catHappyValText");
+        const eTxt = document.getElementById("catEnergyValText");
+        const mood = document.getElementById("catMoodLabel");
+        if (hBar) hBar.style.width = catPetState.happy + "%";
+        if (eBar) eBar.style.width = catPetState.energy + "%";
+        if (hTxt) hTxt.textContent = catPetState.happy + "%";
+        if (eTxt) eTxt.textContent = catPetState.energy + "%";
+        if (mood) {
+          if (catPetState.sleeping)
+            mood.textContent = `Curling up & sleeping... Zzz (${catCustomName})`;
+          else if (catPetState.energy < 20)
+            mood.textContent = `Sleepy kitty • Fish or Nap!`;
+          else if (catPetState.happy >= 80)
+            mood.textContent = `Purring & Super Cute!`;
+          else mood.textContent = `Purring & Ready to Play!`;
+        }
+      }
+
+      function setCatEyes(mode) {
+        const n = document.getElementById("catEyesNormal");
+        const h = document.getElementById("catEyesHappy");
+        const s = document.getElementById("catEyesSleep");
+        if (n) n.classList.toggle("hidden", mode !== "normal");
+        if (h) h.classList.toggle("hidden", mode !== "happy");
+        if (s) s.classList.toggle("hidden", mode !== "sleep");
+      }
+
+      let catSpeechTimer = null;
+      function sayCatBubble(text, duration = 1800) {
+        const bubble = document.getElementById("catSpeechBubble");
+        if (!bubble) return;
+        bubble.textContent = text;
+        bubble.classList.remove("opacity-0", "scale-90");
+        bubble.classList.add("opacity-100", "scale-100");
+        clearTimeout(catSpeechTimer);
+        catSpeechTimer = setTimeout(() => {
+          bubble.classList.remove("opacity-100", "scale-100");
+          bubble.classList.add("opacity-0", "scale-90");
+        }, duration);
+      }
+
+      function setCatSleepState(sleep) {
+        catPetState.sleeping = sleep;
+        const room = document.getElementById("petCatRoom");
+        const sky = document.getElementById("catWindowSky");
+        const sunMoon = document.getElementById("catSunMoon");
+        const lamp = document.getElementById("catNightLampGlow");
+        const icon = document.getElementById("catSleepBtnIcon");
+        const text = document.getElementById("catSleepBtnText");
+        const wrap = document.getElementById("catWrapper");
+        if (room) {
+          room.classList.toggle("cat-room-night", sleep);
+          room.classList.toggle("cat-room-day", !sleep);
+        }
+        if (sky) {
+          sky.className = sleep
+            ? "w-full h-full bg-gradient-to-b from-indigo-950 to-purple-900 relative"
+            : "w-full h-full bg-gradient-to-b from-sky-300 to-pink-100 relative";
+        }
+        if (sunMoon) {
+          sunMoon.className = sleep
+            ? "w-4 h-4 rounded-full bg-pink-100 absolute top-2 right-2 shadow-[0_0_8px_#fbcfe8]"
+            : "w-5 h-5 rounded-full bg-amber-300 absolute top-2 right-2 shadow";
+        }
+        if (lamp) lamp.classList.toggle("hidden", !sleep);
+        if (icon) icon.textContent = sleep ? "☀️" : "😴";
+        if (text) text.textContent = sleep ? "Wake / ওঠো" : "Sleep / ঘুম";
+        if (wrap) {
+          wrap.classList.remove(
+            "anim-idle",
+            "anim-happy",
+            "anim-jump",
+            "anim-dance",
+            "anim-bark",
+          );
+          if (sleep) wrap.classList.add("anim-sleep");
+          else wrap.classList.add("anim-idle");
+        }
+        setCatEyes(sleep ? "sleep" : "normal");
+        updateCatMeters(0, sleep ? 10 : 0);
+        sayCatBubble(
+          sleep
+            ? `Mrrp... ${catCustomName} napping 💤`
+            : `Meow! Good morning Pomi! 🌸`,
+          1800,
+        );
+      }
+
+      function handleDirectCatTap() {
+        if (catPetState.sleeping) {
+          setCatSleepState(false);
+          return;
+        }
+        playPetTone("meow");
+        updateCatMeters(4, -2);
+        setCatEyes("happy");
+        sayCatBubble(`Meow! ${catCustomName} loves you! 💖`, 1400);
+        spawnPetParticles(
+          "catStageArea",
+          "catWrapper",
+          ["💖", "🐾", "✨"],
+          4,
+        );
+        setTimeout(() => {
+          if (!catPetState.sleeping) setCatEyes("normal");
+        }, 900);
+      }
+
+      function doCatAction(action) {
+        if (action === "sleep") {
+          setCatSleepState(!catPetState.sleeping);
+          return;
+        }
+        if (catPetState.sleeping) {
+          setCatSleepState(false);
+        }
+        if (catPetState.busy) return;
+        catPetState.busy = true;
+        const wrap = document.getElementById("catWrapper");
+        if (wrap) {
+          wrap.classList.remove(
+            "anim-idle",
+            "anim-happy",
+            "anim-jump",
+            "anim-dance",
+            "anim-bark",
+          );
+          void wrap.offsetWidth;
+        }
+        setCatEyes("happy");
+
+        if (action === "pet") {
+          playPetTone("meow");
+          if (wrap) wrap.classList.add("anim-happy");
+          updateCatMeters(10, -2);
+          sayCatBubble(`Purrrrr... So soft! 🥰`, 1700);
+          spawnPetParticles(
+            "catStageArea",
+            "catWrapper",
+            ["💖", "🌸", "🥰"],
+            6,
+          );
+        } else if (action === "feed") {
+          playPetTone("happy");
+          if (wrap) wrap.classList.add("anim-happy");
+          updateCatMeters(8, 18);
+          sayCatBubble(`Yum! Fresh fish for ${catCustomName}! 🐟😋`, 1700);
+          spawnPetParticles(
+            "catStageArea",
+            "catWrapper",
+            ["🐟", "🥛", "😋"],
+            5,
+          );
+        } else if (action === "yarn") {
+          playPetTone("meow");
+          if (wrap) wrap.classList.add("anim-jump");
+          updateCatMeters(9, -10);
+          sayCatBubble(`Rolling the yarn ball! 🧶`, 1700);
+          spawnPetParticles(
+            "catStageArea",
+            "catWrapper",
+            ["🧶", "✨", "🐾"],
+            5,
+          );
+        } else if (action === "jump") {
+          playPetTone("meow");
+          if (wrap) wrap.classList.add("anim-jump");
+          updateCatMeters(7, -8);
+          sayCatBubble(`Hop & pounce! 🐈`, 1600);
+          spawnPetParticles(
+            "catStageArea",
+            "catWrapper",
+            ["⭐", "✨", "💖"],
+            5,
+          );
+        } else if (action === "dance") {
+          playPetTone("happy");
+          if (wrap) wrap.classList.add("anim-dance");
+          updateCatMeters(10, -9);
+          sayCatBubble(`Kitty groove with Pomi! 💃`, 1800);
+          spawnPetParticles(
+            "catStageArea",
+            "catWrapper",
+            ["🎵", "🎶", "🌸"],
+            6,
+          );
+        } else if (action === "meow") {
+          playPetTone("meow");
+          if (wrap) wrap.classList.add("anim-bark");
+          updateCatMeters(5, -4);
+          sayCatBubble(`Meow~ Nya! 🐱`, 1500);
+          spawnPetParticles(
+            "catStageArea",
+            "catWrapper",
+            ["💬", "💖", "✨"],
+            4,
+          );
+        } else if (action === "purr") {
+          playPetTone("meow");
+          if (wrap) wrap.classList.add("anim-happy");
+          updateCatMeters(8, 5);
+          sayCatBubble(`Purr-purr sparkles! ✨`, 1700);
+          spawnPetParticles(
+            "catStageArea",
+            "catWrapper",
+            ["✨", "💫", "💖"],
+            6,
+          );
+        }
+
+        setTimeout(() => {
+          if (wrap && !catPetState.sleeping) {
+            wrap.classList.remove(
+              "anim-happy",
+              "anim-jump",
+              "anim-dance",
+              "anim-bark",
+            );
+            wrap.classList.add("anim-idle");
+            setCatEyes("normal");
+          }
+          catPetState.busy = false;
+        }, 1250);
+      }
+
+      syncPetLabelsAndUI();
+
+      function saveCustomPetName() {
+        const inp = document.getElementById("petNameInput");
+        const val = (inp ? inp.value : "").trim();
+        if (!val) return;
+        customPetName = val;
+        localStorage.setItem(PET_NAME_KEY, customPetName);
+        syncPomisPetUI();
+        const speech = document.getElementById("petPlaygroundSpeech");
+        if (speech)
+          speech.textContent = `🐶 Woof! My name is ${customPetName} now!`;
+      }
+
+      function handleCustomDoggyUpload(e) {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement("canvas");
+            const maxSize = 360;
+            const scale = Math.min(
+              1,
+              maxSize / Math.max(img.width, img.height),
+            );
+            canvas.width = Math.max(1, Math.round(img.width * scale));
+            canvas.height = Math.max(1, Math.round(img.height * scale));
+            canvas
+              .getContext("2d")
+              .drawImage(img, 0, 0, canvas.width, canvas.height);
+            customPetPhoto = canvas.toDataURL("image/jpeg", 0.82);
+            localStorage.setItem(PET_PHOTO_KEY, customPetPhoto);
+            syncPomisPetUI();
+          };
+          img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+        e.target.value = "";
+      }
+
+      function resetCustomDoggyPhoto() {
+        customPetPhoto = "";
+        localStorage.removeItem(PET_PHOTO_KEY);
+        syncPomisPetUI();
+      }
+
+      function setPetAccessory(acc) {
+        petAccessory = acc || "";
+        localStorage.setItem(PET_ACC_KEY, petAccessory);
+        syncPomisPetUI();
+      }
+
+      function triggerPetAction(action) {
+        const img = document.getElementById("petStageImg");
+        const speech = document.getElementById("petPlaygroundSpeech");
+        const statusEl = document.getElementById("petActionStatusText");
+        if (!img) return;
+
+        img.classList.remove(
+          "doggy-idle",
+          "doggy-laugh",
+          "doggy-cry",
+          "doggy-eat",
+          "doggy-play",
+        );
+        void img.offsetWidth;
+
+        if (action === "play") {
+          img.classList.add("doggy-play");
+          petHappiness = Math.min(100, petHappiness + 8);
+          petEnergy = Math.max(10, petEnergy - 8);
+          if (speech)
+            speech.textContent = `🎾 ${customPetName} is chasing the ball with Pomi!`;
+          if (statusEl)
+            statusEl.textContent = `${customPetName} played fetch!`;
+        } else if (action === "feed") {
+          img.classList.add("doggy-eat");
+          petHappiness = Math.min(100, petHappiness + 6);
+          petEnergy = Math.min(100, petEnergy + 15);
+          if (speech)
+            speech.textContent = `🦴 Yum yum! ${customPetName} loves treats!`;
+          if (statusEl)
+            statusEl.textContent = `${customPetName} ate a yummy treat!`;
+        } else if (action === "laugh") {
+          img.classList.add("doggy-laugh");
+          petHappiness = Math.min(100, petHappiness + 10);
+          if (speech)
+            speech.textContent = `😂 Arf-arf! ${customPetName} is laughing out loud!`;
+          if (statusEl)
+            statusEl.textContent = `${customPetName} is giggling happily!`;
+        } else if (action === "cry") {
+          img.classList.add("doggy-cry");
+          petHappiness = Math.max(20, petHappiness - 5);
+          if (speech)
+            speech.textContent = `😢 Whimper... ${customPetName} wants a hug from Pomi!`;
+          if (statusEl)
+            statusEl.textContent = `${customPetName} is being dramatic!`;
+        } else if (action === "dance") {
+          img.classList.add("doggy-play");
+          petHappiness = Math.min(100, petHappiness + 7);
+          petEnergy = Math.max(10, petEnergy - 6);
+          if (speech)
+            speech.textContent = `💃 Boogie time! ${customPetName} is dancing!`;
+          if (statusEl)
+            statusEl.textContent = `${customPetName} danced for Pomi!`;
+        } else if (action === "sleep") {
+          img.classList.add("doggy-idle");
+          petEnergy = Math.min(100, petEnergy + 20);
+          if (speech)
+            speech.textContent = `😴 Zzz... ${customPetName} is taking a cozy nap!`;
+          if (statusEl)
+            statusEl.textContent = `${customPetName} is resting peacefully.`;
+        } else if (action === "love") {
+          img.classList.add("doggy-laugh");
+          petHappiness = 100;
+          if (speech)
+            speech.textContent = `❤️ ${customPetName} sends big puppy kisses to Pomi!`;
+          if (statusEl)
+            statusEl.textContent = `${customPetName} got a warm hug!`;
+        }
+
+        syncPomisPetUI();
+        setTimeout(() => {
+          img.classList.remove(
+            "doggy-laugh",
+            "doggy-cry",
+            "doggy-eat",
+            "doggy-play",
+          );
+          img.classList.add("doggy-idle");
+        }, 1250);
+      }
+
+
+      syncPomisPetUI();
+
+
+      function closePhotoLightbox(ev) {
+        if (ev && ev.target && ev.target.id !== "photoLightboxModal") return;
+        const modal = document.getElementById("photoLightboxModal");
+        if (modal) modal.classList.add("hidden");
+      }
+
+      // Free-moving Draggable Doggy Widget
+      let doggyWasDragged = false;
+      (function initDraggableDoggy() {
+        const widget = document.getElementById("floatingDoggyWidget");
+        if (!widget) return;
+
+        // Restore saved position if any
+        try {
+          const savedPos = JSON.parse(
+            localStorage.getItem("pomilink_doggy_pos_v1") || "null",
+          );
+          if (
+            savedPos &&
+            typeof savedPos.left === "number" &&
+            typeof savedPos.top === "number"
+          ) {
+            widget.style.bottom = "auto";
+            widget.style.right = "auto";
+            widget.style.left =
+              Math.max(6, Math.min(window.innerWidth - 74, savedPos.left)) +
+              "px";
+            widget.style.top =
+              Math.max(54, Math.min(window.innerHeight - 90, savedPos.top)) +
+              "px";
+          }
+        } catch (e) {}
+
+        let dragging = false;
+        let startX = 0;
+        let startY = 0;
+        let origLeft = 0;
+        let origTop = 0;
+
+        widget.addEventListener("pointerdown", (e) => {
+          if (e.target.closest("#doggyActionMenu")) return;
+          dragging = true;
+          doggyWasDragged = false;
+          const rect = widget.getBoundingClientRect();
+          startX = e.clientX;
+          startY = e.clientY;
+          origLeft = rect.left;
+          origTop = rect.top;
+          widget.style.bottom = "auto";
+          widget.style.right = "auto";
+          widget.style.left = origLeft + "px";
+          widget.style.top = origTop + "px";
+          if (widget.setPointerCapture) {
+            try {
+              widget.setPointerCapture(e.pointerId);
+            } catch (err) {}
+          }
+        });
+
+        widget.addEventListener("pointermove", (e) => {
+          if (!dragging) return;
+          const dx = e.clientX - startX;
+          const dy = e.clientY - startY;
+          if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+            doggyWasDragged = true;
+          }
+          if (!doggyWasDragged) return;
+          const maxLeft = window.innerWidth - widget.offsetWidth - 4;
+          const maxTop = window.innerHeight - widget.offsetHeight - 4;
+          const nextLeft = Math.max(4, Math.min(maxLeft, origLeft + dx));
+          const nextTop = Math.max(4, Math.min(maxTop, origTop + dy));
+          widget.style.left = nextLeft + "px";
+          widget.style.top = nextTop + "px";
+        });
+
+        const endDrag = (e) => {
+          if (!dragging) return;
+          dragging = false;
+          if (doggyWasDragged) {
+            const rect = widget.getBoundingClientRect();
+            localStorage.setItem(
+              "pomilink_doggy_pos_v1",
+              JSON.stringify({ left: rect.left, top: rect.top }),
+            );
+          }
+        };
+
+        widget.addEventListener("pointerup", endDrag);
+        widget.addEventListener("pointercancel", endDrag);
+      })();
+
+      if (window.lucide) lucide.createIcons();
+
+      syncDoggyUI();
+      syncPetLabelsAndUI();
       startSplashSequence();
     </script>
   </body>
