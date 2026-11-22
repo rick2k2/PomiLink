@@ -653,6 +653,18 @@
             <div class="flex items-center gap-1.5 shrink-0">
               <button
                 type="button"
+                onclick="openUpdatesPage()"
+                title="Updates (Status)"
+                class="relative px-2.5 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/35 text-emerald-200 text-xs font-semibold transition active:scale-95"
+              >
+                Updates
+                <span
+                  id="updatesUnreadDot"
+                  class="hidden absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-slate-950"
+                ></span>
+              </button>
+              <button
+                type="button"
                 onclick="
                   openModal('memoryModal');
                   renderMemoryVault();
@@ -1041,24 +1053,11 @@
 
             <button
               type="button"
-              onclick="
-                openModal('doodleModal');
-                initDoodleCanvas();
-              "
-              title="Co-Draw Doodle"
-              class="p-2.5 rounded-2xl bg-white/[0.07] hover:bg-white/[0.13] border border-white/10 text-pink-300 text-xs shrink-0 transition active:scale-95"
+              onclick="openModal('geminiModal')"
+              title="Gemini AI"
+              class="p-2.5 rounded-2xl bg-gradient-to-tr from-sky-500/25 to-indigo-500/25 hover:brightness-110 border border-sky-400/40 text-sky-200 text-xs font-bold shrink-0 transition active:scale-95"
             >
-              🎨
-            </button>
-
-            <button
-              type="button"
-              id="vanishToggleBtn"
-              onclick="toggleVanishMode()"
-              title="Vanish Mode (15s)"
-              class="p-2.5 rounded-2xl bg-white/[0.07] hover:bg-white/[0.13] border border-white/10 text-slate-300 text-xs shrink-0 transition active:scale-95"
-            >
-              👻
+              ✨
             </button>
 
             <button
@@ -1372,21 +1371,29 @@
           </div>
 
           <div
-            class="grid grid-cols-3 gap-1.5 p-1 rounded-2xl bg-slate-950/60 border border-white/10"
+            class="grid grid-cols-4 gap-1 p-1 rounded-2xl bg-slate-950/60 border border-white/10"
           >
             <button
               type="button"
               id="tabGameTTT"
               onclick="switchPomiGame('ttt')"
-              class="py-2 px-1.5 rounded-xl bg-rose-500/25 border border-rose-400/45 text-[11px] font-semibold text-white"
+              class="py-2 px-1 rounded-xl bg-rose-500/25 border border-rose-400/45 text-[10px] font-semibold text-white"
             >
               Tic-Tac-Toe
             </button>
             <button
               type="button"
+              id="tabGameQuiz"
+              onclick="switchPomiGame('quiz')"
+              class="py-2 px-1 rounded-xl border border-transparent text-[10px] font-medium text-slate-400 hover:text-slate-200"
+            >
+              🧠 Quiz
+            </button>
+            <button
+              type="button"
               id="tabGameRPS"
               onclick="switchPomiGame('rps')"
-              class="py-2 px-1.5 rounded-xl border border-transparent text-[11px] font-medium text-slate-400 hover:text-slate-200"
+              class="py-2 px-1 rounded-xl border border-transparent text-[10px] font-medium text-slate-400 hover:text-slate-200"
             >
               Rock Paper
             </button>
@@ -1394,19 +1401,27 @@
               type="button"
               id="tabGameHeart"
               onclick="switchPomiGame('heart')"
-              class="py-2 px-1.5 rounded-xl border border-transparent text-[11px] font-medium text-slate-400 hover:text-slate-200"
+              class="py-2 px-1 rounded-xl border border-transparent text-[10px] font-medium text-slate-400 hover:text-slate-200"
             >
               Heart Catch
             </button>
           </div>
 
           <div id="gamePanelTTT" class="space-y-2.5 pt-1">
-            <div class="grid grid-cols-2 gap-1.5">
+            <div class="grid grid-cols-3 gap-1">
+              <button
+                type="button"
+                id="tttModeOnlineBtn"
+                onclick="setTTTMode('online')"
+                class="py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-400/45 text-[10px] font-semibold text-emerald-100"
+              >
+                🌐 Online Live
+              </button>
               <button
                 type="button"
                 id="tttModeBotBtn"
                 onclick="setTTTMode('bot')"
-                class="py-1.5 rounded-xl bg-rose-500/20 border border-rose-400/40 text-[11px] font-semibold text-rose-100"
+                class="py-1.5 rounded-xl bg-white/[0.05] border border-white/10 text-[10px] font-medium text-slate-300"
               >
                 vs Smart Bot
               </button>
@@ -1414,18 +1429,18 @@
                 type="button"
                 id="tttMode2PBtn"
                 onclick="setTTTMode('2p')"
-                class="py-1.5 rounded-xl bg-white/[0.05] border border-white/10 text-[11px] font-medium text-slate-300"
+                class="py-1.5 rounded-xl bg-white/[0.05] border border-white/10 text-[10px] font-medium text-slate-300"
               >
-                🚫 vs ❌ (2P)
+                Local 2P
               </button>
             </div>
 
             <div
               class="flex items-center justify-between text-[11px] text-slate-300 px-1"
             >
-              <span id="tttPlayersLabel">🚫 (❤️) vs Bot (✨)</span>
+              <span id="tttPlayersLabel">Pomi (❤️) vs Rick (✨)</span>
               <span id="tttScoreText" class="text-rose-300 font-semibold"
-                >🚫: 0 | Bot: 0</span
+                >Pomi: 0 | Rick: 0</span
               >
             </div>
 
@@ -1438,7 +1453,7 @@
               id="tttStatus"
               class="text-center text-xs font-semibold text-rose-200 min-h-[20px]"
             >
-              Your turn (❤️)
+              Pomi's turn (❤️)
             </p>
 
             <div class="grid grid-cols-2 gap-2">
@@ -1457,6 +1472,36 @@
                 Reset Score
               </button>
             </div>
+          </div>
+
+          <!-- Quiz Game Panel -->
+          <div id="gamePanelQuiz" class="hidden space-y-3 pt-1">
+            <div
+              class="flex items-center justify-between text-xs text-slate-300"
+            >
+              <span id="quizProgressText">Question 1 / 10</span>
+              <span id="quizScoreText" class="text-amber-300 font-bold"
+                >Score: 0</span
+              >
+            </div>
+            <div
+              class="p-3 rounded-2xl bg-white/[0.06] border border-white/10 text-xs font-semibold text-white leading-relaxed"
+              id="quizQuestionText"
+            >
+              Loading question...
+            </div>
+            <div id="quizOptionsBox" class="space-y-1.5"></div>
+            <p
+              id="quizFeedbackText"
+              class="text-center text-xs font-semibold min-h-[18px] text-rose-200"
+            ></p>
+            <button
+              type="button"
+              onclick="restartQuizGame()"
+              class="w-full py-2 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] border border-white/10 text-xs font-semibold text-slate-200"
+            >
+              Restart Quiz
+            </button>
           </div>
 
           <div id="gamePanelRPS" class="hidden space-y-3 pt-1 text-center">
@@ -1723,6 +1768,19 @@
             📢 Share Status
           </button>
 
+          <!-- Vanish Mode inside Settings -->
+          <button
+            type="button"
+            id="vanishSettingsBtn"
+            onclick="toggleVanishMode()"
+            class="w-full py-2.5 px-3.5 rounded-2xl bg-white/[0.06] hover:bg-white/[0.11] border border-white/10 text-xs font-semibold text-purple-200 text-left flex items-center justify-between transition"
+          >
+            <span>👻 Vanish Mode (15s)</span>
+            <span id="vanishStatusLabel" class="text-[11px] text-slate-400"
+              >OFF</span
+            >
+          </button>
+
           <!-- Co-Draw Doodle Pad -->
           <button
             type="button"
@@ -1735,6 +1793,34 @@
           >
             🎨 Co-Draw / Quick Doodle Pad
           </button>
+
+          <!-- Rick-Only Offline Auto-Reply Control -->
+          <div
+            id="rickAutoReplyBox"
+            class="hidden p-3 rounded-2xl bg-sky-500/10 border border-sky-400/30 space-y-2"
+          >
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-sky-200"
+                >🤖 Offline Auto-Reply (Only Rick)</span
+              >
+              <button
+                type="button"
+                id="autoReplyToggleBtn"
+                onclick="toggleRickAutoReply()"
+                class="px-2.5 py-1 rounded-xl bg-white/[0.08] border border-white/15 text-[11px] font-semibold text-slate-300"
+              >
+                OFF
+              </button>
+            </div>
+            <input
+              id="autoReplyCustomMsg"
+              type="text"
+              maxlength="140"
+              onchange="saveRickAutoReplyText(this.value)"
+              placeholder="Auto-reply message when Rick is offline..."
+              class="w-full px-3 py-2 rounded-xl bg-slate-950/60 border border-white/10 text-xs text-white focus:outline-none focus:border-sky-400/50"
+            />
+          </div>
 
           <!-- Time-Capsule / Open When -->
           <button
@@ -2012,6 +2098,294 @@
           </button>
         </div>
       </div>
+      <!-- Gemini AI Assistant Modal inside App -->
+      <div
+        id="geminiModal"
+        class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4"
+      >
+        <div
+          class="w-full max-w-md glass-modal border border-sky-400/30 rounded-3xl p-4 flex flex-col h-[84dvh]"
+        >
+          <div
+            class="flex items-center justify-between border-b border-white/10 pb-2.5 shrink-0"
+          >
+            <div class="flex items-center gap-2">
+              <div
+                class="w-8 h-8 rounded-2xl bg-gradient-to-tr from-sky-500 to-indigo-500 flex items-center justify-center text-sm font-bold text-white shadow"
+              >
+                ✨
+              </div>
+              <div>
+                <h3 class="font-display font-bold text-sm text-white">
+                  Gemini AI Assistant
+                </h3>
+                <p class="text-[10px] text-sky-300">
+                  Direct AI inside PomiLink
+                </p>
+              </div>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button
+                type="button"
+                onclick="toggleGeminiKeyBox()"
+                title="API Key"
+                class="px-2 py-1 rounded-xl bg-white/[0.06] text-[11px] text-sky-200"
+              >
+                🔑 Key
+              </button>
+              <button
+                type="button"
+                onclick="clearGeminiHistory()"
+                class="px-2 py-1 rounded-xl bg-white/[0.06] text-[11px] text-slate-300"
+              >
+                Clear
+              </button>
+              <button
+                type="button"
+                onclick="closeModal('geminiModal')"
+                class="px-2.5 py-1 rounded-xl bg-white/[0.08] text-xs text-slate-200"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+
+          <div
+            id="geminiKeySetupBox"
+            class="hidden mt-2 p-2.5 rounded-2xl bg-sky-500/10 border border-sky-400/25 space-y-1.5 shrink-0"
+          >
+            <p class="text-[10px] text-sky-200">
+              Optional: Enter Gemini API Key for live cloud AI (works offline
+              with built-in smart assistant too):
+            </p>
+            <div class="flex gap-1.5">
+              <input
+                id="geminiApiKeyInput"
+                type="password"
+                placeholder="AIzaSy..."
+                class="flex-1 px-2.5 py-1.5 rounded-xl bg-slate-950/70 border border-white/10 text-xs text-white focus:outline-none"
+              />
+              <button
+                type="button"
+                onclick="saveGeminiApiKey()"
+                class="px-3 py-1.5 rounded-xl bg-sky-500 text-xs font-semibold text-white"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+
+          <div
+            id="geminiChatMessages"
+            class="flex-1 overflow-y-auto chat-scroll py-3 space-y-2.5 pr-1"
+          ></div>
+
+          <form
+            onsubmit="sendGeminiPrompt(event)"
+            class="pt-2 border-t border-white/10 flex items-center gap-1.5 shrink-0"
+          >
+            <input
+              id="geminiPromptInput"
+              type="text"
+              autocomplete="off"
+              placeholder="Ask Gemini anything..."
+              class="flex-1 min-w-0 bg-white/[0.07] text-white placeholder-slate-400 text-xs px-3.5 py-2.5 rounded-2xl border border-white/10 focus:outline-none focus:border-sky-400/60"
+            />
+            <button
+              type="submit"
+              class="px-3.5 py-2.5 rounded-2xl bg-gradient-to-r from-sky-500 to-indigo-500 text-white text-xs font-semibold shrink-0"
+            >
+              Ask
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Dedicated "Updates" Page (Text, Image, Video, Voice Status) -->
+      <div
+        id="updatesPage"
+        class="hidden fixed inset-0 z-50 bg-[#070b14] flex flex-col w-full h-[100dvh]"
+      >
+        <header
+          class="px-4 py-3 glass-panel border-b border-white/10 flex items-center justify-between shrink-0"
+        >
+          <div class="flex items-center gap-2.5">
+            <button
+              type="button"
+              onclick="closeUpdatesPage()"
+              class="px-2.5 py-1.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] text-xs font-semibold text-white"
+            >
+              ← Back
+            </button>
+            <div>
+              <h2 class="font-display font-bold text-base text-white">
+                Updates
+              </h2>
+              <p class="text-[11px] text-emerald-300">
+                Private Status • Rick &amp; Pomi
+              </p>
+            </div>
+          </div>
+          <span
+            id="updatesActiveUserBadge"
+            class="px-2.5 py-1 rounded-full bg-rose-500/20 border border-rose-400/35 text-xs font-semibold text-rose-200"
+          >
+            Rick
+          </span>
+        </header>
+
+        <div class="flex-1 overflow-y-auto chat-scroll p-4 space-y-4">
+          <div class="w-full max-w-xl mx-auto space-y-4">
+            <!-- Create Status Card -->
+            <div
+              class="p-4 rounded-3xl glass-modal border border-white/15 space-y-3"
+            >
+              <div class="flex items-center justify-between">
+                <h3 class="font-display font-bold text-sm text-white">
+                  Post New Status
+                </h3>
+                <span class="text-[10px] text-slate-400">24h Private Feed</span>
+              </div>
+
+              <!-- Status Type Selector -->
+              <div
+                class="grid grid-cols-4 gap-1.5 p-1 rounded-2xl bg-slate-950/70 border border-white/10"
+              >
+                <button
+                  type="button"
+                  id="stTabText"
+                  onclick="switchStatusComposerType('text')"
+                  class="py-2 rounded-xl bg-emerald-500/25 border border-emerald-400/50 text-xs font-semibold text-white"
+                >
+                  ✍️ Text
+                </button>
+                <button
+                  type="button"
+                  id="stTabImage"
+                  onclick="switchStatusComposerType('image')"
+                  class="py-2 rounded-xl border border-transparent text-xs font-medium text-slate-400"
+                >
+                  🖼️ Image
+                </button>
+                <button
+                  type="button"
+                  id="stTabVideo"
+                  onclick="switchStatusComposerType('video')"
+                  class="py-2 rounded-xl border border-transparent text-xs font-medium text-slate-400"
+                >
+                  🎬 Video
+                </button>
+                <button
+                  type="button"
+                  id="stTabVoice"
+                  onclick="switchStatusComposerType('voice')"
+                  class="py-2 rounded-xl border border-transparent text-xs font-medium text-slate-400"
+                >
+                  🎙️ Voice
+                </button>
+              </div>
+
+              <!-- Text Composer -->
+              <div id="stCompText" class="space-y-2">
+                <textarea
+                  id="statusTextBody"
+                  rows="3"
+                  maxlength="240"
+                  placeholder="Write your status update..."
+                  class="w-full px-3.5 py-2.5 rounded-2xl bg-white/[0.06] border border-white/12 text-sm text-white focus:outline-none focus:border-emerald-400/50"
+                ></textarea>
+              </div>
+
+              <!-- Image Composer -->
+              <div id="stCompImage" class="hidden space-y-2">
+                <input
+                  type="file"
+                  id="statusImageFile"
+                  accept="image/*"
+                  class="hidden"
+                  onchange="previewStatusMediaFile(event, 'image')"
+                />
+                <button
+                  type="button"
+                  onclick="document.getElementById('statusImageFile').click()"
+                  class="w-full py-3 rounded-2xl bg-indigo-500/20 border border-indigo-400/40 text-xs font-semibold text-indigo-200"
+                >
+                  Choose Image from Gallery
+                </button>
+                <input
+                  id="statusImageCaption"
+                  type="text"
+                  placeholder="Add a caption (optional)..."
+                  class="w-full px-3.5 py-2 rounded-2xl bg-white/[0.06] border border-white/12 text-xs text-white focus:outline-none"
+                />
+              </div>
+
+              <!-- Video Composer -->
+              <div id="stCompVideo" class="hidden space-y-2">
+                <input
+                  type="file"
+                  id="statusVideoFile"
+                  accept="video/*"
+                  class="hidden"
+                  onchange="previewStatusMediaFile(event, 'video')"
+                />
+                <button
+                  type="button"
+                  onclick="document.getElementById('statusVideoFile').click()"
+                  class="w-full py-3 rounded-2xl bg-purple-500/20 border border-purple-400/40 text-xs font-semibold text-purple-200"
+                >
+                  Choose Short Video (Max 4 MB)
+                </button>
+                <input
+                  id="statusVideoCaption"
+                  type="text"
+                  placeholder="Add a video caption (optional)..."
+                  class="w-full px-3.5 py-2 rounded-2xl bg-white/[0.06] border border-white/12 text-xs text-white focus:outline-none"
+                />
+              </div>
+
+              <!-- Voice Composer -->
+              <div id="stCompVoice" class="hidden space-y-2 text-center">
+                <button
+                  type="button"
+                  id="statusVoiceRecBtn"
+                  onclick="toggleStatusVoiceRecord()"
+                  class="w-full py-3 rounded-2xl bg-rose-500/25 border border-rose-400/45 text-xs font-semibold text-rose-100"
+                >
+                  🎙️ Tap to Record Voice Status
+                </button>
+                <p id="statusVoiceTimer" class="text-xs text-rose-300 hidden">
+                  Recording... 0:00
+                </p>
+              </div>
+
+              <!-- Preview Box -->
+              <div
+                id="statusMediaPreviewBox"
+                class="hidden p-2.5 rounded-2xl bg-slate-950/70 border border-white/10 text-center"
+              ></div>
+
+              <button
+                type="button"
+                onclick="publishRichStatusUpdate()"
+                class="w-full py-2.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-xs font-bold text-white shadow-lg"
+              >
+                Share Update
+              </button>
+            </div>
+
+            <!-- Recent Updates Feed -->
+            <div class="space-y-2.5">
+              <h3
+                class="font-display font-bold text-xs uppercase tracking-wider text-slate-400 px-1"
+              >
+                Recent Updates
+              </h3>
+              <div id="richUpdatesFeedList" class="space-y-3"></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script>
@@ -2047,6 +2421,15 @@
         Rick: "❌",
         Pomi: "🚫",
       };
+      const CHAT_NAMES = {
+        Rick: "Rick",
+        Pomi: "Pomi",
+      };
+      const AUTO_REPLY_ENABLED_KEY = "pomilink_rick_autoreply_on_v1";
+      const AUTO_REPLY_TEXT_KEY = "pomilink_rick_autoreply_text_v1";
+      const GEMINI_KEY_STORAGE = "pomilink_gemini_api_key_v1";
+      const GEMINI_CHAT_STORAGE = "pomilink_gemini_history_v1";
+      const RICH_UPDATES_STORAGE = "pomilink_rich_updates_v1";
 
       const COUPLE_PROMPTS = [
         "What is your favorite memory of us together?",
@@ -2078,18 +2461,16 @@
           const manifest = {
             name: "PomiLink",
             short_name: "PomiLink",
-            start_url: "./",
             display: "standalone",
             background_color: "#0b0f19",
             theme_color: "#0b0f19",
             icons: [{ src: dataUrl, sizes: "128x128", type: "image/svg+xml" }],
           };
-          const blob = new Blob([JSON.stringify(manifest)], {
-            type: "application/manifest+json",
-          });
           const link = document.createElement("link");
           link.rel = "manifest";
-          link.href = URL.createObjectURL(blob);
+          link.href =
+            "data:application/manifest+json;charset=utf-8," +
+            encodeURIComponent(JSON.stringify(manifest));
           document.head.appendChild(link);
         } catch (e) {}
       })();
@@ -2208,6 +2589,9 @@
       let nudgeRef = null;
       let moodsRef = null;
       let statusRef = null;
+      let richUpdatesRef = null;
+      let tttOnlineRef = null;
+      let rickAutoReplyRef = null;
       let weatherRef = null;
       let typingRef = null;
       let userPinsRef = null;
@@ -2216,6 +2600,29 @@
       let presenceInterval = null;
       let typingTimeout = null;
       let isUnlocked = false;
+
+      let rickAutoReplyEnabled =
+        localStorage.getItem(AUTO_REPLY_ENABLED_KEY) === "true";
+      let rickAutoReplyText =
+        localStorage.getItem(AUTO_REPLY_TEXT_KEY) ||
+        "Hey Pomi ❤️ Rick is offline right now, I'll reply as soon as I'm back!";
+      let lastAutoRepliedPartnerMsgId = null;
+
+      let richUpdatesMap = JSON.parse(
+        localStorage.getItem(RICH_UPDATES_STORAGE) || "{}",
+      );
+      let statusComposerType = "text";
+      let pendingStatusMediaUrl = null;
+      let pendingStatusMediaType = null;
+      let statusVoiceRecorder = null;
+      let statusVoiceChunks = [];
+      let statusVoiceTimerId = null;
+      let statusVoiceSecs = 0;
+
+      let geminiHistory = JSON.parse(
+        localStorage.getItem(GEMINI_CHAT_STORAGE) ||
+          '[{"role":"ai","text":"Hi! I am Gemini AI inside PomiLink ✨ Ask me anything, write romantic notes, translate, or get ideas!"}]',
+      );
 
       let mediaRecorder = null;
       let audioChunks = [];
@@ -2226,7 +2633,7 @@
         localStorage.getItem(GAME_STATS_KEY) ||
           '{"tttPomiWins":0,"tttBotWins":0,"tttRickWins":0,"rpsScore":0,"heartBest":0}',
       );
-      let tttMode = "bot";
+      let tttMode = "online";
       let tttTurn = "P";
       let tttBoard = Array(9).fill(null);
       let tttWinCombo = null;
@@ -2243,6 +2650,10 @@
 
       function getRoleIcon(role) {
         return ROLE_ICONS[role] || "❌";
+      }
+
+      function getChatName(role) {
+        return CHAT_NAMES[role] || role;
       }
 
       // Chat Pet Widget (Dog / Cat)
@@ -2519,15 +2930,20 @@
         if (badge) badge.textContent = moodText || "✨ Vibing";
       }
 
+      function syncVanishSettingsUI() {
+        const lbl = document.getElementById("vanishStatusLabel");
+        if (lbl) {
+          lbl.textContent = vanishModeEnabled ? "ON" : "OFF";
+          lbl.className = vanishModeEnabled
+            ? "text-[11px] text-purple-300 font-bold"
+            : "text-[11px] text-slate-400";
+        }
+      }
+
       function toggleVanishMode() {
         vanishModeEnabled = !vanishModeEnabled;
-        const btn = document.getElementById("vanishToggleBtn");
+        syncVanishSettingsUI();
         const input = document.getElementById("msgInput");
-        if (btn) {
-          btn.className = vanishModeEnabled
-            ? "p-2.5 rounded-2xl bg-purple-500/30 border border-purple-400/60 text-purple-200 text-xs shrink-0 transition active:scale-95"
-            : "p-2.5 rounded-2xl bg-white/[0.07] hover:bg-white/[0.13] border border-white/10 text-slate-300 text-xs shrink-0 transition active:scale-95";
-        }
         if (input) {
           input.placeholder = vanishModeEnabled
             ? "Vanish message (15s)..."
@@ -2578,7 +2994,7 @@
           const top = document.createElement("div");
           top.className =
             "flex items-center justify-between text-[10px] text-amber-300 font-semibold";
-          top.innerHTML = `<span>${getRoleIcon(m.sender)} ${pinnedMsgId === id ? "📌" : ""} ${m.starred ? "⭐" : ""}</span><span class="text-slate-400">${m.time || ""}</span>`;
+          top.innerHTML = `<span>${getChatName(m.sender)} ${pinnedMsgId === id ? "📌" : ""} ${m.starred ? "⭐" : ""}</span><span class="text-slate-400">${m.time || ""}</span>`;
           card.appendChild(top);
 
           if (m.type === "image" && m.mediaUrl) {
@@ -2604,10 +3020,10 @@
         const rpsEl = document.getElementById("rpsScoreText");
         const bestEl = document.getElementById("heartBestText");
         if (tttEl) {
-          if (tttMode === "2p") {
-            tttEl.textContent = `🚫: ${gameStats.tttPomiWins || 0} | ❌: ${gameStats.tttRickWins || 0}`;
+          if (tttMode === "online" || tttMode === "2p") {
+            tttEl.textContent = `Pomi: ${gameStats.tttPomiWins || 0} | Rick: ${gameStats.tttRickWins || 0}`;
           } else {
-            tttEl.textContent = `🚫: ${gameStats.tttPomiWins || 0} | Bot: ${gameStats.tttBotWins || 0}`;
+            tttEl.textContent = `Pomi: ${gameStats.tttPomiWins || 0} | Bot: ${gameStats.tttBotWins || 0}`;
           }
         }
         if (rpsEl) rpsEl.textContent = "Score: " + (gameStats.rpsScore || 0);
@@ -2618,11 +3034,13 @@
       function switchPomiGame(tab) {
         const panels = {
           ttt: document.getElementById("gamePanelTTT"),
+          quiz: document.getElementById("gamePanelQuiz"),
           rps: document.getElementById("gamePanelRPS"),
           heart: document.getElementById("gamePanelHeart"),
         };
         const tabs = {
           ttt: document.getElementById("tabGameTTT"),
+          quiz: document.getElementById("tabGameQuiz"),
           rps: document.getElementById("tabGameRPS"),
           heart: document.getElementById("tabGameHeart"),
         };
@@ -2632,11 +3050,12 @@
           if (tabs[k]) {
             tabs[k].className =
               k === tab
-                ? "py-2 px-1.5 rounded-xl bg-rose-500/25 border border-rose-400/45 text-[11px] font-semibold text-white"
-                : "py-2 px-1.5 rounded-xl border border-transparent text-[11px] font-medium text-slate-400 hover:text-slate-200";
+                ? "py-2 px-1 rounded-xl bg-rose-500/25 border border-rose-400/45 text-[10px] font-semibold text-white"
+                : "py-2 px-1 rounded-xl border border-transparent text-[10px] font-medium text-slate-400 hover:text-slate-200";
           }
         });
 
+        if (tab === "quiz") renderQuizQuestion();
         if (tab !== "heart") stopHeartCatchTimers();
         saveGameStats();
       }
@@ -2704,7 +3123,37 @@
         });
       }
 
-      function finalizeTTTOutcome(res) {
+      function syncOnlineTTTToFirebase() {
+        if (!tttOnlineRef) return;
+        tttOnlineRef.set({
+          board: tttBoard,
+          turn: tttTurn,
+          over: tttOver,
+          winCombo: tttWinCombo || null,
+          pomiWins: gameStats.tttPomiWins || 0,
+          rickWins: gameStats.tttRickWins || 0,
+          updatedBy: senderRole,
+          ts: Date.now(),
+        });
+      }
+
+      function getOnlineTTTStatusText() {
+        if (tttOver) {
+          const res = checkTTTResult(tttBoard);
+          if (res && res.winner === "P") return "Pomi wins! 🎉";
+          if (res && res.winner === "O") return "Rick wins! 🎉";
+          return "Draw match! 🤝";
+        }
+        const turnName = tttTurn === "P" ? "Pomi (❤️)" : "Rick (✨)";
+        const isMyTurn =
+          (senderRole === "Pomi" && tttTurn === "P") ||
+          (senderRole === "Rick" && tttTurn === "O");
+        return isMyTurn
+          ? `Your turn (${turnName})`
+          : `Waiting for ${turnName}...`;
+      }
+
+      function finalizeTTTOutcome(res, syncRemote = true) {
         const statusEl = document.getElementById("tttStatus");
         tttOver = true;
         tttWinCombo = res.line;
@@ -2713,12 +3162,12 @@
         if (res.winner === "P") {
           gameStats.tttPomiWins = (gameStats.tttPomiWins || 0) + 1;
           saveGameStats();
-          if (statusEl) statusEl.textContent = "🚫 wins! 🎉";
+          if (statusEl) statusEl.textContent = "Pomi wins! 🎉";
         } else if (res.winner === "O") {
-          if (tttMode === "2p") {
+          if (tttMode === "2p" || tttMode === "online") {
             gameStats.tttRickWins = (gameStats.tttRickWins || 0) + 1;
             saveGameStats();
-            if (statusEl) statusEl.textContent = "❌ wins! 🎉";
+            if (statusEl) statusEl.textContent = "Rick wins! 🎉";
           } else {
             gameStats.tttBotWins = (gameStats.tttBotWins || 0) + 1;
             saveGameStats();
@@ -2727,31 +3176,52 @@
         } else {
           if (statusEl) statusEl.textContent = "Draw match! 🤝";
         }
+        if (tttMode === "online" && syncRemote) syncOnlineTTTToFirebase();
       }
 
       function handleTTTMove(idx) {
         if (tttOver || tttBoard[idx]) return;
         const statusEl = document.getElementById("tttStatus");
 
+        if (tttMode === "online") {
+          const myMark = senderRole === "Pomi" ? "P" : "O";
+          if (tttTurn !== myMark) {
+            if (statusEl)
+              statusEl.textContent = `Wait! It's ${tttTurn === "P" ? "Pomi" : "Rick"}'s turn`;
+            return;
+          }
+          tttBoard[idx] = myMark;
+          const res = checkTTTResult(tttBoard);
+          if (res) {
+            finalizeTTTOutcome(res, true);
+            return;
+          }
+          tttTurn = tttTurn === "P" ? "O" : "P";
+          renderTTTBoard();
+          if (statusEl) statusEl.textContent = getOnlineTTTStatusText();
+          syncOnlineTTTToFirebase();
+          return;
+        }
+
         if (tttMode === "2p") {
           tttBoard[idx] = tttTurn;
           const res = checkTTTResult(tttBoard);
           if (res) {
-            finalizeTTTOutcome(res);
+            finalizeTTTOutcome(res, false);
             return;
           }
           tttTurn = tttTurn === "P" ? "O" : "P";
           renderTTTBoard();
           if (statusEl)
             statusEl.textContent =
-              tttTurn === "P" ? "🚫 turn (❤️)" : "❌ turn (✨)";
+              tttTurn === "P" ? "Pomi turn (❤️)" : "Rick turn (✨)";
           return;
         }
 
         tttBoard[idx] = "P";
         let res = checkTTTResult(tttBoard);
         if (res) {
-          finalizeTTTOutcome(res);
+          finalizeTTTOutcome(res, false);
           return;
         }
         renderTTTBoard();
@@ -2761,7 +3231,7 @@
           tttBoard[botIdx] = "O";
           res = checkTTTResult(tttBoard);
           if (res) {
-            finalizeTTTOutcome(res);
+            finalizeTTTOutcome(res, false);
             return;
           }
         }
@@ -2771,28 +3241,38 @@
 
       function setTTTMode(mode) {
         tttMode = mode;
+        const onlineBtn = document.getElementById("tttModeOnlineBtn");
         const botBtn = document.getElementById("tttModeBotBtn");
         const twoPBtn = document.getElementById("tttMode2PBtn");
         const playersLabel = document.getElementById("tttPlayersLabel");
 
-        if (mode === "2p") {
-          if (twoPBtn)
-            twoPBtn.className =
-              "py-1.5 rounded-xl bg-rose-500/20 border border-rose-400/40 text-[11px] font-semibold text-rose-100";
-          if (botBtn)
-            botBtn.className =
-              "py-1.5 rounded-xl bg-white/[0.05] border border-white/10 text-[11px] font-medium text-slate-300";
-          if (playersLabel) playersLabel.textContent = "🚫 (❤️) vs ❌ (✨)";
-        } else {
-          if (botBtn)
-            botBtn.className =
-              "py-1.5 rounded-xl bg-rose-500/20 border border-rose-400/40 text-[11px] font-semibold text-rose-100";
-          if (twoPBtn)
-            twoPBtn.className =
-              "py-1.5 rounded-xl bg-white/[0.05] border border-white/10 text-[11px] font-medium text-slate-300";
-          if (playersLabel) playersLabel.textContent = "🚫 (❤️) vs Bot (✨)";
+        const activeCls =
+          "py-1.5 rounded-xl bg-rose-500/20 border border-rose-400/40 text-[10px] font-semibold text-rose-100";
+        const idleCls =
+          "py-1.5 rounded-xl bg-white/[0.05] border border-white/10 text-[10px] font-medium text-slate-300";
+
+        if (onlineBtn)
+          onlineBtn.className =
+            mode === "online"
+              ? "py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-400/45 text-[10px] font-semibold text-emerald-100"
+              : idleCls;
+        if (botBtn) botBtn.className = mode === "bot" ? activeCls : idleCls;
+        if (twoPBtn) twoPBtn.className = mode === "2p" ? activeCls : idleCls;
+
+        if (playersLabel) {
+          if (mode === "online")
+            playersLabel.textContent = "🌐 Pomi (❤️) vs Rick (✨)";
+          else if (mode === "2p")
+            playersLabel.textContent = "Pomi (❤️) vs Rick (✨)";
+          else playersLabel.textContent = "Pomi (❤️) vs Bot (✨)";
         }
-        resetTTTGame(false);
+        if (mode !== "online") resetTTTGame(false);
+        else {
+          saveGameStats();
+          renderTTTBoard();
+          const statusEl = document.getElementById("tttStatus");
+          if (statusEl) statusEl.textContent = getOnlineTTTStatusText();
+        }
       }
 
       function resetTTTGame(resetScores = false) {
@@ -2806,11 +3286,671 @@
         tttTurn = "P";
         tttOver = false;
         const statusEl = document.getElementById("tttStatus");
-        if (statusEl)
-          statusEl.textContent =
-            tttMode === "2p" ? "🚫 turn (❤️)" : "Your turn (❤️)";
+        if (statusEl) {
+          if (tttMode === "online")
+            statusEl.textContent = getOnlineTTTStatusText();
+          else if (tttMode === "2p") statusEl.textContent = "Pomi turn (❤️)";
+          else statusEl.textContent = "Your turn (❤️)";
+        }
         saveGameStats();
         renderTTTBoard();
+        if (tttMode === "online") syncOnlineTTTToFirebase();
+      }
+
+      // Quiz Game Logic
+      const QUIZ_QUESTIONS = [
+        {
+          q: "Which planet is known as the Red Planet?",
+          opts: ["Venus", "Mars", "Jupiter", "Saturn"],
+          ans: 1,
+        },
+        {
+          q: "What is the capital of India?",
+          opts: ["Mumbai", "Kolkata", "New Delhi", "Chennai"],
+          ans: 2,
+        },
+        {
+          q: "How many colors are there in a rainbow?",
+          opts: ["5", "6", "7", "8"],
+          ans: 2,
+        },
+        {
+          q: "Which animal is known as the Ship of the Desert?",
+          opts: ["Horse", "Camel", "Elephant", "Lion"],
+          ans: 1,
+        },
+        {
+          q: "What is the largest ocean on Earth?",
+          opts: [
+            "Indian Ocean",
+            "Atlantic Ocean",
+            "Arctic Ocean",
+            "Pacific Ocean",
+          ],
+          ans: 3,
+        },
+        {
+          q: "Which gas do plants absorb from the atmosphere?",
+          opts: ["Oxygen", "Nitrogen", "Carbon Dioxide", "Hydrogen"],
+          ans: 2,
+        },
+        {
+          q: "Who wrote the national anthem of India 'Jana Gana Mana'?",
+          opts: [
+            "Bankim Chandra",
+            "Rabindranath Tagore",
+            "Sarojini Naidu",
+            "Subhas Bose",
+          ],
+          ans: 1,
+        },
+        {
+          q: "Which festival is known as the Festival of Lights?",
+          opts: ["Holi", "Diwali", "Eid", "Durga Puja"],
+          ans: 1,
+        },
+        {
+          q: "How many days are there in a leap year?",
+          opts: ["364", "365", "366", "367"],
+          ans: 2,
+        },
+        {
+          q: "What is the hardest natural substance on Earth?",
+          opts: ["Gold", "Iron", "Diamond", "Platinum"],
+          ans: 2,
+        },
+      ];
+      let quizIdx = 0;
+      let quizScore = 0;
+      let quizLocked = false;
+
+      function renderQuizQuestion() {
+        const qText = document.getElementById("quizQuestionText");
+        const optsBox = document.getElementById("quizOptionsBox");
+        const progText = document.getElementById("quizProgressText");
+        const scoreText = document.getElementById("quizScoreText");
+        const fbText = document.getElementById("quizFeedbackText");
+        if (!qText || !optsBox) return;
+
+        if (quizIdx >= QUIZ_QUESTIONS.length) {
+          if (progText) progText.textContent = "Completed!";
+          if (scoreText)
+            scoreText.textContent = `Score: ${quizScore} / ${QUIZ_QUESTIONS.length}`;
+          qText.textContent = `🎉 Quiz Finished! You scored ${quizScore} out of ${QUIZ_QUESTIONS.length}!`;
+          optsBox.innerHTML = "";
+          if (fbText) fbText.textContent = "Tap Restart Quiz to play again!";
+          return;
+        }
+
+        quizLocked = false;
+        const item = QUIZ_QUESTIONS[quizIdx];
+        if (progText)
+          progText.textContent = `Question ${quizIdx + 1} / ${QUIZ_QUESTIONS.length}`;
+        if (scoreText) scoreText.textContent = `Score: ${quizScore}`;
+        qText.textContent = item.q;
+        if (fbText) fbText.textContent = "";
+        optsBox.innerHTML = "";
+
+        item.opts.forEach((opt, i) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className =
+            "w-full py-2 px-3 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-left text-xs text-slate-100 transition";
+          btn.textContent = `${String.fromCharCode(65 + i)}. ${opt}`;
+          btn.onclick = () => answerQuizOption(i, btn);
+          optsBox.appendChild(btn);
+        });
+      }
+
+      function answerQuizOption(choiceIdx, btnEl) {
+        if (quizLocked || quizIdx >= QUIZ_QUESTIONS.length) return;
+        quizLocked = true;
+        const item = QUIZ_QUESTIONS[quizIdx];
+        const fbText = document.getElementById("quizFeedbackText");
+        const allBtns = document.querySelectorAll("#quizOptionsBox button");
+
+        if (choiceIdx === item.ans) {
+          quizScore++;
+          btnEl.className =
+            "w-full py-2 px-3 rounded-xl bg-emerald-500/30 border border-emerald-400 text-left text-xs font-bold text-emerald-100";
+          if (fbText) fbText.textContent = "✅ Correct!";
+        } else {
+          btnEl.className =
+            "w-full py-2 px-3 rounded-xl bg-rose-500/30 border border-rose-400 text-left text-xs font-bold text-rose-100";
+          if (allBtns[item.ans]) {
+            allBtns[item.ans].className =
+              "w-full py-2 px-3 rounded-xl bg-emerald-500/25 border border-emerald-400/70 text-left text-xs font-semibold text-emerald-100";
+          }
+          if (fbText) fbText.textContent = `❌ Correct: ${item.opts[item.ans]}`;
+        }
+
+        setTimeout(() => {
+          quizIdx++;
+          renderQuizQuestion();
+        }, 1000);
+      }
+
+      function restartQuizGame() {
+        quizIdx = 0;
+        quizScore = 0;
+        renderQuizQuestion();
+      }
+
+      // Rick-Only Offline Auto-Reply Logic
+      function syncRickAutoReplyUI() {
+        const box = document.getElementById("rickAutoReplyBox");
+        const btn = document.getElementById("autoReplyToggleBtn");
+        const inp = document.getElementById("autoReplyCustomMsg");
+        if (!box) return;
+
+        if (senderRole === "Rick") {
+          box.classList.remove("hidden");
+        } else {
+          box.classList.add("hidden");
+          return;
+        }
+
+        if (btn) {
+          btn.textContent = rickAutoReplyEnabled ? "ON" : "OFF";
+          btn.className = rickAutoReplyEnabled
+            ? "px-2.5 py-1 rounded-xl bg-sky-500/30 border border-sky-400/60 text-[11px] font-bold text-sky-100"
+            : "px-2.5 py-1 rounded-xl bg-white/[0.08] border border-white/15 text-[11px] font-semibold text-slate-300";
+        }
+        if (inp) inp.value = rickAutoReplyText;
+      }
+
+      function toggleRickAutoReply() {
+        if (senderRole !== "Rick") return;
+        rickAutoReplyEnabled = !rickAutoReplyEnabled;
+        localStorage.setItem(
+          AUTO_REPLY_ENABLED_KEY,
+          String(rickAutoReplyEnabled),
+        );
+        syncRickAutoReplyUI();
+        if (rickAutoReplyRef) {
+          rickAutoReplyRef.set({
+            enabled: rickAutoReplyEnabled,
+            text: rickAutoReplyText,
+          });
+        }
+      }
+
+      function saveRickAutoReplyText(val) {
+        if (senderRole !== "Rick") return;
+        const clean = (val || "").trim();
+        if (!clean) return;
+        rickAutoReplyText = clean;
+        localStorage.setItem(AUTO_REPLY_TEXT_KEY, rickAutoReplyText);
+        if (rickAutoReplyRef) {
+          rickAutoReplyRef.set({
+            enabled: rickAutoReplyEnabled,
+            text: rickAutoReplyText,
+          });
+        }
+      }
+
+      // Gemini AI Assistant Logic
+      function toggleGeminiKeyBox() {
+        const box = document.getElementById("geminiKeySetupBox");
+        if (!box) return;
+        box.classList.toggle("hidden");
+        const inp = document.getElementById("geminiApiKeyInput");
+        if (inp) inp.value = localStorage.getItem(GEMINI_KEY_STORAGE) || "";
+      }
+
+      function saveGeminiApiKey() {
+        const inp = document.getElementById("geminiApiKeyInput");
+        if (!inp) return;
+        const k = inp.value.trim();
+        if (k) localStorage.setItem(GEMINI_KEY_STORAGE, k);
+        else localStorage.removeItem(GEMINI_KEY_STORAGE);
+        document.getElementById("geminiKeySetupBox").classList.add("hidden");
+      }
+
+      function clearGeminiHistory() {
+        geminiHistory = [
+          {
+            role: "ai",
+            text: "Chat cleared ✨ How can I help you today?",
+          },
+        ];
+        localStorage.setItem(
+          GEMINI_CHAT_STORAGE,
+          JSON.stringify(geminiHistory),
+        );
+        renderGeminiHistory();
+      }
+
+      function renderGeminiHistory() {
+        const box = document.getElementById("geminiChatMessages");
+        if (!box) return;
+        box.innerHTML = "";
+        geminiHistory.forEach((item) => {
+          const isUser = item.role === "user";
+          const row = document.createElement("div");
+          row.className =
+            "flex flex-col " + (isUser ? "items-end" : "items-start");
+          const bubble = document.createElement("div");
+          bubble.className = isUser
+            ? "max-w-[85%] px-3 py-2 rounded-2xl rounded-br-sm bg-gradient-to-r from-sky-500 to-indigo-500 text-xs text-white whitespace-pre-wrap break-words"
+            : "max-w-[88%] px-3 py-2 rounded-2xl rounded-bl-sm bg-white/[0.08] border border-white/12 text-xs text-slate-100 whitespace-pre-wrap break-words";
+          bubble.textContent = item.text;
+          row.appendChild(bubble);
+
+          if (!isUser) {
+            const sendBtn = document.createElement("button");
+            sendBtn.type = "button";
+            sendBtn.className =
+              "mt-1 text-[10px] text-sky-300 hover:underline px-1";
+            sendBtn.textContent = "↗ Send to Chat";
+            sendBtn.onclick = () => {
+              const now = new Date();
+              pushMessageItem({
+                sender: senderRole,
+                type: "text",
+                text: item.text,
+                ts: Date.now(),
+                time: now.toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                }),
+              });
+              closeModal("geminiModal");
+            };
+            row.appendChild(sendBtn);
+          }
+
+          box.appendChild(row);
+        });
+        box.scrollTop = box.scrollHeight;
+      }
+
+      function generateLocalGeminiReply(prompt) {
+        const p = prompt.toLowerCase();
+        if (
+          p.includes("love") ||
+          p.includes("shayari") ||
+          p.includes("romantic") ||
+          p.includes("pomi")
+        ) {
+          return '❤️ Here is a sweet note:\n"Every moment with you feels like my favorite song. No matter how busy the day gets, my heart always finds its way back to you."';
+        }
+        if (p.includes("joke") || p.includes("funny")) {
+          return "😄 Why don't scientists trust atoms?\nBecause they make up everything!";
+        }
+        if (p.includes("date") || p.includes("plan")) {
+          return "✨ Cozy Date Ideas:\n1. Sunset walk + street snacks\n2. Watch a favorite movie together on call\n3. Cook or order each other's favorite comfort food!";
+        }
+        if (p.includes("hi") || p.includes("hello") || p.includes("hey")) {
+          return `Hello ${getChatName(senderRole)}! ✨ I'm Gemini AI. Ask me for sweet messages, ideas, answers, or tips anytime!`;
+        }
+        return `✨ Gemini Insight on "${prompt}":\nHere is a clear summary & idea — stay positive, keep things simple, and take one step at a time. (Tip: Tap 🔑 Key at top-right if you want to connect your personal Gemini API key for live web-scale answers.)`;
+      }
+
+      async function sendGeminiPrompt(e) {
+        e.preventDefault();
+        const inp = document.getElementById("geminiPromptInput");
+        const prompt = (inp ? inp.value : "").trim();
+        if (!prompt) return;
+        inp.value = "";
+
+        geminiHistory.push({ role: "user", text: prompt });
+        geminiHistory.push({ role: "ai", text: "✨ Thinking..." });
+        renderGeminiHistory();
+
+        const apiKey = localStorage.getItem(GEMINI_KEY_STORAGE);
+        let replyText = "";
+
+        if (apiKey) {
+          try {
+            const resp = await fetch(
+              `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(apiKey)}`,
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  contents: [{ parts: [{ text: prompt }] }],
+                }),
+              },
+            );
+            const data = await resp.json();
+            replyText =
+              data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+              generateLocalGeminiReply(prompt);
+          } catch (err) {
+            replyText = generateLocalGeminiReply(prompt);
+          }
+        } else {
+          await new Promise((r) => setTimeout(r, 350));
+          replyText = generateLocalGeminiReply(prompt);
+        }
+
+        geminiHistory[geminiHistory.length - 1] = {
+          role: "ai",
+          text: replyText,
+        };
+        localStorage.setItem(
+          GEMINI_CHAT_STORAGE,
+          JSON.stringify(geminiHistory),
+        );
+        renderGeminiHistory();
+      }
+
+      // Dedicated "Updates" Status Page Logic (Text, Image, Video, Voice)
+      function openUpdatesPage() {
+        const badge = document.getElementById("updatesActiveUserBadge");
+        if (badge) badge.textContent = getChatName(senderRole);
+        const dot = document.getElementById("updatesUnreadDot");
+        if (dot) dot.classList.add("hidden");
+        switchStatusComposerType("text");
+        renderRichUpdatesFeed();
+        document.getElementById("updatesPage").classList.remove("hidden");
+      }
+
+      function closeUpdatesPage() {
+        stopStatusVoiceRecord(true);
+        document.getElementById("updatesPage").classList.add("hidden");
+      }
+
+      function switchStatusComposerType(type) {
+        statusComposerType = type;
+        pendingStatusMediaUrl = null;
+        pendingStatusMediaType = null;
+        const prevBox = document.getElementById("statusMediaPreviewBox");
+        if (prevBox) {
+          prevBox.innerHTML = "";
+          prevBox.classList.add("hidden");
+        }
+
+        const tabs = {
+          text: document.getElementById("stTabText"),
+          image: document.getElementById("stTabImage"),
+          video: document.getElementById("stTabVideo"),
+          voice: document.getElementById("stTabVoice"),
+        };
+        const comps = {
+          text: document.getElementById("stCompText"),
+          image: document.getElementById("stCompImage"),
+          video: document.getElementById("stCompVideo"),
+          voice: document.getElementById("stCompVoice"),
+        };
+
+        Object.keys(tabs).forEach((k) => {
+          if (comps[k]) comps[k].classList.toggle("hidden", k !== type);
+          if (tabs[k]) {
+            tabs[k].className =
+              k === type
+                ? "py-2 rounded-xl bg-emerald-500/25 border border-emerald-400/50 text-xs font-semibold text-white"
+                : "py-2 rounded-xl border border-transparent text-xs font-medium text-slate-400";
+          }
+        });
+      }
+
+      function previewStatusMediaFile(e, kind) {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const prevBox = document.getElementById("statusMediaPreviewBox");
+
+        if (kind === "image") {
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            const img = new Image();
+            img.onload = () => {
+              const canvas = document.createElement("canvas");
+              const maxW = 720;
+              const scale = Math.min(1, maxW / img.width);
+              canvas.width = img.width * scale;
+              canvas.height = img.height * scale;
+              canvas
+                .getContext("2d")
+                .drawImage(img, 0, 0, canvas.width, canvas.height);
+              pendingStatusMediaUrl = canvas.toDataURL("image/jpeg", 0.75);
+              pendingStatusMediaType = "image";
+              if (prevBox) {
+                prevBox.innerHTML = `<img src="${pendingStatusMediaUrl}" class="max-h-44 mx-auto rounded-xl object-cover" />`;
+                prevBox.classList.remove("hidden");
+              }
+            };
+            img.src = ev.target.result;
+          };
+          reader.readAsDataURL(file);
+        } else if (kind === "video") {
+          if (file.size > 4200000) {
+            alert("Please choose a short video under 4 MB.");
+            e.target.value = "";
+            return;
+          }
+          const reader = new FileReader();
+          reader.onload = () => {
+            pendingStatusMediaUrl = reader.result;
+            pendingStatusMediaType = "video";
+            if (prevBox) {
+              prevBox.innerHTML = `<video src="${pendingStatusMediaUrl}" controls class="max-h-44 mx-auto rounded-xl"></video>`;
+              prevBox.classList.remove("hidden");
+            }
+          };
+          reader.readAsDataURL(file);
+        }
+        e.target.value = "";
+      }
+
+      async function toggleStatusVoiceRecord() {
+        const btn = document.getElementById("statusVoiceRecBtn");
+        const timerEl = document.getElementById("statusVoiceTimer");
+        if (statusVoiceRecorder && statusVoiceRecorder.state === "recording") {
+          stopStatusVoiceRecord(false);
+          return;
+        }
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            audio: true,
+          });
+          statusVoiceChunks = [];
+          statusVoiceRecorder = new MediaRecorder(stream);
+          statusVoiceRecorder.ondataavailable = (ev) => {
+            if (ev.data.size > 0) statusVoiceChunks.push(ev.data);
+          };
+          statusVoiceRecorder.onstop = () => {
+            stream.getTracks().forEach((t) => t.stop());
+            if (!statusVoiceChunks.length) return;
+            const blob = new Blob(statusVoiceChunks, { type: "audio/webm" });
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              pendingStatusMediaUrl = reader.result;
+              pendingStatusMediaType = "voice";
+              const prevBox = document.getElementById("statusMediaPreviewBox");
+              if (prevBox) {
+                prevBox.innerHTML = `<audio controls src="${pendingStatusMediaUrl}" class="w-full h-9"></audio>`;
+                prevBox.classList.remove("hidden");
+              }
+            };
+            reader.readAsDataURL(blob);
+          };
+
+          statusVoiceRecorder.start();
+          statusVoiceSecs = 0;
+          if (btn) btn.textContent = "⏹️ Tap to Stop Recording";
+          if (timerEl) {
+            timerEl.textContent = "Recording... 0:00";
+            timerEl.classList.remove("hidden");
+          }
+          statusVoiceTimerId = setInterval(() => {
+            statusVoiceSecs++;
+            const mins = Math.floor(statusVoiceSecs / 60);
+            const secs = String(statusVoiceSecs % 60).padStart(2, "0");
+            if (timerEl) timerEl.textContent = `Recording... ${mins}:${secs}`;
+            if (statusVoiceSecs >= 30) stopStatusVoiceRecord(false);
+          }, 1000);
+        } catch (err) {
+          alert("Microphone permission unavailable.");
+        }
+      }
+
+      function stopStatusVoiceRecord(cancel = false) {
+        clearInterval(statusVoiceTimerId);
+        const btn = document.getElementById("statusVoiceRecBtn");
+        const timerEl = document.getElementById("statusVoiceTimer");
+        if (btn) btn.textContent = "🎙️ Tap to Record Voice Status";
+        if (timerEl) timerEl.classList.add("hidden");
+        if (statusVoiceRecorder && statusVoiceRecorder.state === "recording") {
+          if (cancel) {
+            statusVoiceChunks = [];
+            statusVoiceRecorder.onstop = () => {};
+          }
+          statusVoiceRecorder.stop();
+        }
+      }
+
+      function publishRichStatusUpdate() {
+        const now = new Date();
+        const item = {
+          sender: senderRole,
+          kind: statusComposerType,
+          ts: Date.now(),
+          time: now.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        };
+
+        if (statusComposerType === "text") {
+          const txt = (
+            document.getElementById("statusTextBody").value || ""
+          ).trim();
+          if (!txt) return;
+          item.text = txt;
+          document.getElementById("statusTextBody").value = "";
+        } else if (statusComposerType === "image") {
+          if (!pendingStatusMediaUrl || pendingStatusMediaType !== "image") {
+            alert("Please select an image first.");
+            return;
+          }
+          item.mediaUrl = pendingStatusMediaUrl;
+          item.caption = (
+            document.getElementById("statusImageCaption").value || ""
+          ).trim();
+          document.getElementById("statusImageCaption").value = "";
+        } else if (statusComposerType === "video") {
+          if (!pendingStatusMediaUrl || pendingStatusMediaType !== "video") {
+            alert("Please select a video first.");
+            return;
+          }
+          item.mediaUrl = pendingStatusMediaUrl;
+          item.caption = (
+            document.getElementById("statusVideoCaption").value || ""
+          ).trim();
+          document.getElementById("statusVideoCaption").value = "";
+        } else if (statusComposerType === "voice") {
+          if (!pendingStatusMediaUrl || pendingStatusMediaType !== "voice") {
+            alert("Please record a voice status first.");
+            return;
+          }
+          item.mediaUrl = pendingStatusMediaUrl;
+        }
+
+        pendingStatusMediaUrl = null;
+        pendingStatusMediaType = null;
+        const prevBox = document.getElementById("statusMediaPreviewBox");
+        if (prevBox) {
+          prevBox.innerHTML = "";
+          prevBox.classList.add("hidden");
+        }
+
+        if (richUpdatesRef) {
+          richUpdatesRef.push(item);
+        } else {
+          const id = "st_" + Date.now();
+          richUpdatesMap[id] = item;
+          localStorage.setItem(
+            RICH_UPDATES_STORAGE,
+            JSON.stringify(richUpdatesMap),
+          );
+          renderRichUpdatesFeed();
+        }
+      }
+
+      function deleteRichUpdate(id) {
+        if (richUpdatesRef) {
+          richUpdatesRef.child(id).remove();
+        } else {
+          delete richUpdatesMap[id];
+          localStorage.setItem(
+            RICH_UPDATES_STORAGE,
+            JSON.stringify(richUpdatesMap),
+          );
+          renderRichUpdatesFeed();
+        }
+      }
+
+      function renderRichUpdatesFeed() {
+        const list = document.getElementById("richUpdatesFeedList");
+        if (!list) return;
+        list.innerHTML = "";
+
+        const entries = Object.entries(richUpdatesMap)
+          .filter(([, u]) => u && Date.now() - (u.ts || 0) < 86400000)
+          .sort((a, b) => (b[1].ts || 0) - (a[1].ts || 0));
+
+        if (!entries.length) {
+          list.innerHTML = `<div class="text-center text-xs text-slate-400 py-8 rounded-2xl bg-white/[0.03] border border-white/10">No updates yet. Post a Text, Image, Video, or Voice status above!</div>`;
+          return;
+        }
+
+        entries.forEach(([id, u]) => {
+          const card = document.createElement("div");
+          card.className =
+            "p-3.5 rounded-2xl glass-modal border border-white/12 space-y-2";
+
+          const top = document.createElement("div");
+          top.className = "flex items-center justify-between text-xs";
+          top.innerHTML = `
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-emerald-300">${getChatName(u.sender)}</span>
+              <span class="text-[10px] text-slate-400">${u.time || ""}</span>
+            </div>
+            ${u.sender === senderRole ? `<button type="button" onclick="deleteRichUpdate('${id}')" class="text-[11px] text-rose-400 hover:underline">Delete</button>` : ""}
+          `;
+          card.appendChild(top);
+
+          if (u.kind === "image" && u.mediaUrl) {
+            const img = document.createElement("img");
+            img.src = u.mediaUrl;
+            img.className = "w-full max-h-64 rounded-xl object-cover";
+            card.appendChild(img);
+            if (u.caption) {
+              const cap = document.createElement("p");
+              cap.className = "text-xs text-slate-200";
+              cap.textContent = u.caption;
+              card.appendChild(cap);
+            }
+          } else if (u.kind === "video" && u.mediaUrl) {
+            const vid = document.createElement("video");
+            vid.src = u.mediaUrl;
+            vid.controls = true;
+            vid.className = "w-full max-h-64 rounded-xl bg-black";
+            card.appendChild(vid);
+            if (u.caption) {
+              const cap = document.createElement("p");
+              cap.className = "text-xs text-slate-200";
+              cap.textContent = u.caption;
+              card.appendChild(cap);
+            }
+          } else if (u.kind === "voice" && u.mediaUrl) {
+            const aud = document.createElement("audio");
+            aud.src = u.mediaUrl;
+            aud.controls = true;
+            aud.className = "w-full h-9";
+            card.appendChild(aud);
+          } else {
+            const box = document.createElement("div");
+            box.className =
+              "p-3 rounded-xl bg-gradient-to-br from-rose-500/20 to-indigo-500/20 border border-white/10 text-sm text-white whitespace-pre-wrap";
+            box.textContent = u.text || "";
+            card.appendChild(box);
+          }
+
+          list.appendChild(card);
+        });
       }
 
       function playRPS(userChoice) {
@@ -3264,10 +4404,10 @@
         try {
           const partner = getPartnerName();
           document.getElementById("partnerTitle").textContent =
-            getRoleIcon(partner);
+            getChatName(partner);
           refreshProfileAvatars();
           document.getElementById("youAreText").textContent =
-            `${getRoleIcon(senderRole)} • Locked`;
+            `${getChatName(senderRole)} • Private Chat`;
         } catch (e) {}
       }
 
@@ -3348,7 +4488,12 @@
       function openModal(id) {
         if (id === "pinModal") selectPinEditTarget(senderRole);
         if (id === "dpModal") refreshProfileAvatars();
-        if (id === "gamesModal") saveGameStats();
+        if (id === "gamesModal") {
+          saveGameStats();
+          if (tttMode === "online") syncOnlineTTTToFirebase();
+        }
+        if (id === "geminiModal") renderGeminiHistory();
+        if (id === "settingsModal") syncRickAutoReplyUI();
         if (id === "statusModal") {
           const inp = document.getElementById("statusInputField");
           if (inp) inp.value = sharedStatusText || "";
@@ -3655,7 +4800,7 @@
 
       function sendNudgePoke() {
         const partner = getPartnerName();
-        showBurstAnimation("👉", getRoleIcon(partner));
+        showBurstAnimation("👉", getChatName(partner));
         if (nudgeRef) nudgeRef.set({ sender: senderRole, ts: Date.now() });
       }
 
@@ -3923,9 +5068,15 @@
       }
 
       setInterval(() => {
-        if (Object.values(messagesMap).some((m) => m && m.vanish)) {
-          renderMessages();
-        }
+        Object.entries(messagesMap).forEach(([id, m]) => {
+          if (m && m.vanish && Date.now() - (m.ts || 0) > 15000) {
+            const row = document.getElementById("msg_row_" + id);
+            const bubble = row && row.querySelector(".rounded-2xl");
+            if (bubble && !bubble.classList.contains("vanish-expired")) {
+              bubble.classList.add("vanish-expired");
+            }
+          }
+        });
       }, 2000);
 
       function pushMessageItem(item) {
@@ -3942,6 +5093,30 @@
         if (msgRef) {
           msgRef
             .push(item)
+            .then(() => {
+              if (
+                senderRole === "Pomi" &&
+                !partnerOnlineState &&
+                rickAutoReplyEnabled &&
+                rickAutoReplyText &&
+                !item.isAutoReply
+              ) {
+                const arNow = new Date();
+                msgRef.push({
+                  sender: "Rick",
+                  type: "text",
+                  text: "🤖 [Auto-Reply]: " + rickAutoReplyText,
+                  isAutoReply: true,
+                  seen: false,
+                  delivered: true,
+                  ts: Date.now() + 400,
+                  time: arNow.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }),
+                });
+              }
+            })
             .catch((err) =>
               showDbError("Firebase write error: " + err.message),
             );
@@ -4191,7 +5366,7 @@
           const isTyping = Boolean(snap.val());
           const bar = document.getElementById("typingBar");
           document.getElementById("typingLabel").textContent =
-            getRoleIcon(partner) + t("typing");
+            getChatName(partner) + t("typing");
           if (isTyping) bar.classList.remove("hidden");
           else bar.classList.add("hidden");
         });
@@ -4265,11 +5440,15 @@
                     }
                   });
                 }
+                const prevJson = JSON.stringify(messagesMap);
+                const nextJson = JSON.stringify(nextMap);
                 seenMsgIds = new Set(keys);
                 isFirstSnapshot = false;
                 messagesMap = nextMap;
                 markVisiblePartnerMessagesSeen();
-                renderMessages();
+                if (prevJson !== nextJson) {
+                  renderMessages();
+                }
               },
               (err) => showDbError("Firebase error: " + err.message),
             );
@@ -4296,8 +5475,69 @@
                 n.sender !== senderRole &&
                 Date.now() - (n.ts || 0) < 3000
               ) {
-                showBurstAnimation("👉", getRoleIcon(n.sender));
+                showBurstAnimation("👉", getChatName(n.sender));
               }
+            });
+
+            // Live Online Tic-Tac-Toe Sync
+            tttOnlineRef = db.ref("rooms/" + ROOM_ID + "/tttOnline");
+            tttOnlineRef.off();
+            tttOnlineRef.on("value", (snap) => {
+              const g = snap.val();
+              if (!g || tttMode !== "online") return;
+              if (Array.isArray(g.board) && g.board.length === 9) {
+                tttBoard = g.board.map((c) =>
+                  c === "P" || c === "O" ? c : null,
+                );
+              }
+              tttTurn = g.turn === "O" ? "O" : "P";
+              tttOver = Boolean(g.over);
+              tttWinCombo = Array.isArray(g.winCombo) ? g.winCombo : null;
+              if (typeof g.pomiWins === "number")
+                gameStats.tttPomiWins = g.pomiWins;
+              if (typeof g.rickWins === "number")
+                gameStats.tttRickWins = g.rickWins;
+              saveGameStats();
+              renderTTTBoard();
+              const statusEl = document.getElementById("tttStatus");
+              if (statusEl) statusEl.textContent = getOnlineTTTStatusText();
+            });
+
+            // Rich Updates (Text, Image, Video, Voice Status) Sync
+            richUpdatesRef = db.ref("rooms/" + ROOM_ID + "/richUpdates");
+            richUpdatesRef.off();
+            richUpdatesRef.on("value", (snap) => {
+              richUpdatesMap = snap.val() || {};
+              localStorage.setItem(
+                RICH_UPDATES_STORAGE,
+                JSON.stringify(richUpdatesMap),
+              );
+              renderRichUpdatesFeed();
+              const hasPartnerStatus = Object.values(richUpdatesMap).some(
+                (u) =>
+                  u &&
+                  u.sender !== senderRole &&
+                  Date.now() - (u.ts || 0) < 86400000,
+              );
+              const dot = document.getElementById("updatesUnreadDot");
+              if (dot && hasPartnerStatus) dot.classList.remove("hidden");
+            });
+
+            // Rick-Only Auto-Reply Sync (triggers when Pomi messages while Rick is offline)
+            rickAutoReplyRef = db.ref("rooms/" + ROOM_ID + "/rickAutoReply");
+            if (senderRole === "Rick") {
+              rickAutoReplyRef.set({
+                enabled: rickAutoReplyEnabled,
+                text: rickAutoReplyText,
+              });
+            }
+            rickAutoReplyRef.off();
+            rickAutoReplyRef.on("value", (snap) => {
+              const cfg = snap.val();
+              if (!cfg) return;
+              rickAutoReplyEnabled = Boolean(cfg.enabled);
+              if (cfg.text) rickAutoReplyText = cfg.text;
+              if (senderRole === "Rick") syncRickAutoReplyUI();
             });
 
             startPresenceAndTypingSync();
@@ -4332,6 +5572,7 @@
         renderSharedStatusBanner();
         syncPetSettingsUI();
         syncFocusSettingsUI();
+        syncVanishSettingsUI();
         changeLanguage(currentLang);
         highlightMoodChips();
         refreshProfileAvatars();
