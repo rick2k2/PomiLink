@@ -56,6 +56,7 @@
       }
       .chat-scroll::-webkit-scrollbar {
         width: 4px;
+        height: 4px;
       }
       .chat-scroll::-webkit-scrollbar-thumb {
         background: rgba(148, 163, 184, 0.25);
@@ -71,8 +72,8 @@
       .glass-modal {
         background: linear-gradient(
           165deg,
-          rgba(19, 27, 46, 0.95) 0%,
-          rgba(10, 15, 28, 0.97) 100%
+          rgba(19, 27, 46, 0.96) 0%,
+          rgba(10, 15, 28, 0.98) 100%
         );
         backdrop-filter: blur(24px) saturate(160%);
         -webkit-backdrop-filter: blur(24px) saturate(160%);
@@ -99,7 +100,7 @@
         transform: scale(0.95);
       }
 
-      /* Dark & Romantic Themes */
+      /* Themes */
       .theme-midnight-rose {
         background:
           radial-gradient(
@@ -147,8 +148,6 @@
           ),
           linear-gradient(180deg, #0b0616 0%, #190e2b 100%);
       }
-
-      /* Light Themes */
       .theme-daylight-cloud {
         background:
           radial-gradient(
@@ -167,8 +166,6 @@
           ),
           linear-gradient(180deg, #fff7f0 0%, #ffe6eb 100%);
       }
-
-      /* Pattern Themes */
       .theme-dot-pattern {
         background-color: #090e1c;
         background-image: radial-gradient(
@@ -194,6 +191,20 @@
         background-repeat: no-repeat;
       }
 
+      /* Shared Mood & Weather Ambient Edge Tints */
+      .weather-sunny {
+        box-shadow: inset 0 3px 0 0 rgba(251, 191, 36, 0.55);
+      }
+      .weather-rain {
+        box-shadow: inset 0 3px 0 0 rgba(56, 189, 248, 0.55);
+      }
+      .weather-night {
+        box-shadow: inset 0 3px 0 0 rgba(167, 139, 250, 0.55);
+      }
+      .weather-lowbat {
+        box-shadow: inset 0 3px 0 0 rgba(244, 63, 94, 0.55);
+      }
+
       .light-ui .received-bubble {
         background: rgba(255, 255, 255, 0.94) !important;
         color: #0f172a !important;
@@ -215,23 +226,27 @@
         transition: none;
       }
 
-      /* 5-second Splash Animation */
+      .vanish-expired {
+        filter: blur(8px);
+        opacity: 0.45;
+        transition:
+          filter 0.35s ease,
+          opacity 0.35s ease;
+      }
+
+      /* 3-second Splash Animation */
       @keyframes splashIconAnim {
         0% {
           opacity: 0;
           transform: scale(0.78) rotate(-8deg);
         }
-        20% {
+        25% {
           opacity: 1;
           transform: scale(1.04) rotate(0deg);
         }
-        50% {
+        60% {
           opacity: 1;
-          transform: scale(0.98) rotate(2deg);
-        }
-        80% {
-          opacity: 1;
-          transform: scale(1.03) rotate(0deg);
+          transform: scale(0.99) rotate(1deg);
         }
         100% {
           opacity: 1;
@@ -241,18 +256,13 @@
       @keyframes splashTitleAnim {
         0% {
           opacity: 0;
-          transform: translateY(14px);
+          transform: translateY(12px);
           letter-spacing: 0.02em;
         }
-        25% {
+        30% {
           opacity: 1;
           transform: translateY(0);
           letter-spacing: 0.08em;
-        }
-        75% {
-          opacity: 1;
-          transform: translateY(0);
-          letter-spacing: 0.1em;
         }
         100% {
           opacity: 1;
@@ -273,17 +283,17 @@
       }
 
       .splash-icon-box {
-        animation: splashIconAnim 5s ease-in-out forwards;
+        animation: splashIconAnim 3s ease-in-out forwards;
         box-shadow:
           0 20px 50px -12px rgba(244, 63, 94, 0.22),
           inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
       }
       .splash-title-text {
-        animation: splashTitleAnim 5s ease-in-out forwards;
+        animation: splashTitleAnim 3s ease-in-out forwards;
       }
       .splash-ring-stroke {
         stroke-dasharray: 44 12;
-        animation: splashRingPulse 2.5s ease-in-out infinite;
+        animation: splashRingPulse 1.8s ease-in-out infinite;
       }
 
       @keyframes bubbleIn {
@@ -340,7 +350,7 @@
   <body
     class="w-full h-[100dvh] overflow-hidden bg-[#0b0f19] text-slate-100 select-none"
   >
-    <!-- 5-Second Splash Screen -->
+    <!-- 3-Second Splash Screen -->
     <div
       id="splashScreen"
       class="fixed inset-0 z-50 w-full h-[100dvh] flex flex-col items-center justify-center bg-gradient-to-b from-[#0b0f19] via-[#11182c] to-[#090d16] px-6"
@@ -450,7 +460,7 @@
               id="activeRoleLabel"
               class="text-xs text-rose-300/90 mt-1 font-medium"
             >
-              Logging in as: Rick
+              ❌
             </p>
           </div>
 
@@ -461,17 +471,19 @@
               type="button"
               id="roleRickBtn"
               onclick="setSenderRole('Rick')"
-              class="py-2 rounded-xl bg-gradient-to-r from-rose-500/30 to-indigo-500/30 border border-rose-400/50 text-xs font-semibold text-white transition"
+              title="Rick"
+              class="py-2 rounded-xl bg-gradient-to-r from-rose-500/30 to-indigo-500/30 border border-rose-400/50 text-base font-bold text-white transition"
             >
-              I am Rick
+              ❌
             </button>
             <button
               type="button"
               id="rolePomiBtn"
               onclick="setSenderRole('Pomi')"
-              class="py-2 rounded-xl border border-transparent text-xs font-medium text-slate-400 hover:text-slate-200 transition"
+              title="Pomi"
+              class="py-2 rounded-xl border border-transparent text-base font-bold text-slate-300 hover:text-white transition"
             >
-              I am Pomi
+              🚫
             </button>
           </div>
 
@@ -612,7 +624,7 @@
                 ></span>
               </div>
               <div class="min-w-0">
-                <div class="flex items-center gap-1.5">
+                <div class="flex items-center gap-1.5 flex-wrap">
                   <h1
                     id="partnerTitle"
                     class="font-display font-bold text-sm sm:text-base text-white truncate"
@@ -621,13 +633,19 @@
                   </h1>
                   <span
                     id="partnerStatusText"
-                    class="text-[10px] px-2 py-0.5 rounded-full bg-white/[0.08] border border-white/10 text-slate-300 truncate max-w-[170px]"
+                    class="text-[10px] px-2 py-0.5 rounded-full bg-white/[0.08] border border-white/10 text-slate-300 truncate max-w-[130px]"
                   >
                     Offline
                   </span>
+                  <span
+                    id="partnerMoodBadge"
+                    class="text-[10px] px-2 py-0.5 rounded-full bg-rose-500/15 border border-rose-400/30 text-rose-200 truncate max-w-[125px]"
+                  >
+                    ✨ Vibing
+                  </span>
                 </div>
                 <p id="youAreText" class="text-[11px] text-slate-400 truncate">
-                  You: Rick • Role Locked
+                  ❌ • Locked
                 </p>
               </div>
             </div>
@@ -635,9 +653,28 @@
             <div class="flex items-center gap-1.5 shrink-0">
               <button
                 type="button"
+                onclick="
+                  openModal('memoryModal');
+                  renderMemoryVault();
+                "
+                title="Memories"
+                class="px-2 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/25 text-amber-200 text-xs transition active:scale-95"
+              >
+                📸
+              </button>
+              <button
+                type="button"
+                onclick="sendNudgePoke()"
+                title="Nudge / Poke"
+                class="px-2 py-1.5 rounded-xl bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-400/25 text-indigo-200 text-xs transition active:scale-95"
+              >
+                👉
+              </button>
+              <button
+                type="button"
                 onclick="sendLoveBurst()"
                 title="Heart"
-                class="px-2.5 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-400/25 text-rose-400 text-xs transition active:scale-95"
+                class="px-2 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-400/25 text-rose-400 text-xs transition active:scale-95"
               >
                 ❤️
               </button>
@@ -645,7 +682,7 @@
                 type="button"
                 onclick="openModal('settingsModal')"
                 title="Settings"
-                class="px-2.5 py-1.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] border border-white/10 text-slate-100 text-xs transition active:scale-95"
+                class="px-2 py-1.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] border border-white/10 text-slate-100 text-xs transition active:scale-95"
               >
                 ⚙️
               </button>
@@ -653,7 +690,148 @@
           </div>
         </header>
 
-        <!-- Multi-Select Action Bar: Left = ONLY message count number; Right = Edit, Delete, Pin, Star -->
+        <!-- Shared Mood & Weather Canvas Strip -->
+        <div
+          class="px-3.5 py-1.5 bg-slate-950/45 border-b border-white/5 shrink-0"
+        >
+          <div
+            class="w-full max-w-4xl mx-auto flex items-center gap-1.5 overflow-x-auto chat-scroll"
+          >
+            <span class="text-[10px] text-slate-400 shrink-0">Vibe:</span>
+            <button
+              type="button"
+              data-mood="✨ Vibing"
+              onclick="setMyMood('✨ Vibing')"
+              class="mood-chip px-2 py-0.5 rounded-full text-[10px] bg-white/[0.06] border border-white/10 text-slate-200 shrink-0"
+            >
+              ✨ Vibing
+            </button>
+            <button
+              type="button"
+              data-mood="❤️ Missing you"
+              onclick="setMyMood('❤️ Missing you')"
+              class="mood-chip px-2 py-0.5 rounded-full text-[10px] bg-white/[0.06] border border-white/10 text-slate-200 shrink-0"
+            >
+              ❤️ Missing you
+            </button>
+            <button
+              type="button"
+              data-mood="😴 Sleepy"
+              onclick="setMyMood('😴 Sleepy')"
+              class="mood-chip px-2 py-0.5 rounded-full text-[10px] bg-white/[0.06] border border-white/10 text-slate-200 shrink-0"
+            >
+              😴 Sleepy
+            </button>
+            <button
+              type="button"
+              data-mood="🎵 Music"
+              onclick="setMyMood('🎵 Music')"
+              class="mood-chip px-2 py-0.5 rounded-full text-[10px] bg-white/[0.06] border border-white/10 text-slate-200 shrink-0"
+            >
+              🎵 Music
+            </button>
+            <button
+              type="button"
+              data-mood="🎮 Gaming"
+              onclick="setMyMood('🎮 Gaming')"
+              class="mood-chip px-2 py-0.5 rounded-full text-[10px] bg-white/[0.06] border border-white/10 text-slate-200 shrink-0"
+            >
+              🎮 Gaming
+            </button>
+
+            <span class="text-[10px] text-slate-500 shrink-0 mx-0.5">|</span>
+            <span class="text-[10px] text-slate-400 shrink-0">Sky:</span>
+            <button
+              type="button"
+              data-weather="sunny"
+              onclick="setWeatherCanvas('sunny')"
+              class="weather-chip px-2 py-0.5 rounded-full text-[10px] bg-white/[0.06] border border-white/10 text-amber-200 shrink-0"
+            >
+              ☀️ Sunny
+            </button>
+            <button
+              type="button"
+              data-weather="rain"
+              onclick="setWeatherCanvas('rain')"
+              class="weather-chip px-2 py-0.5 rounded-full text-[10px] bg-white/[0.06] border border-white/10 text-sky-200 shrink-0"
+            >
+              🌧️ Rain
+            </button>
+            <button
+              type="button"
+              data-weather="night"
+              onclick="setWeatherCanvas('night')"
+              class="weather-chip px-2 py-0.5 rounded-full text-[10px] bg-white/[0.06] border border-white/10 text-purple-200 shrink-0"
+            >
+              🌙 Night
+            </button>
+            <button
+              type="button"
+              data-weather="lowbat"
+              onclick="setWeatherCanvas('lowbat')"
+              class="weather-chip px-2 py-0.5 rounded-full text-[10px] bg-white/[0.06] border border-white/10 text-rose-200 shrink-0"
+            >
+              🔋 Low
+            </button>
+          </div>
+        </div>
+
+        <!-- Shared Status Banner (when set) -->
+        <div
+          id="sharedStatusBanner"
+          class="hidden px-3.5 py-1 bg-indigo-500/15 border-b border-indigo-400/20 shrink-0"
+        >
+          <div
+            class="w-full max-w-4xl mx-auto flex items-center justify-between gap-2 text-[11px] text-indigo-100"
+          >
+            <span id="sharedStatusText" class="truncate">📢 ...</span>
+            <button
+              type="button"
+              onclick="openModal('statusModal')"
+              class="text-[10px] text-indigo-300 underline shrink-0"
+            >
+              Update
+            </button>
+          </div>
+        </div>
+
+        <!-- Daily Couple Prompt Card -->
+        <div
+          id="couplePromptBanner"
+          class="px-3.5 py-1.5 bg-gradient-to-r from-rose-500/10 via-purple-500/10 to-indigo-500/10 border-b border-white/10 shrink-0"
+        >
+          <div
+            class="w-full max-w-4xl mx-auto flex items-center justify-between gap-2 text-[11px]"
+          >
+            <div class="min-w-0 flex items-center gap-1.5">
+              <span class="shrink-0">💌</span>
+              <span
+                id="dailyPromptText"
+                class="text-rose-100/95 truncate font-medium"
+              >
+                What is your favorite memory of us together?
+              </span>
+            </div>
+            <div class="flex items-center gap-1 shrink-0">
+              <button
+                type="button"
+                onclick="sendPromptToChat()"
+                class="px-2 py-0.5 rounded-lg bg-rose-500/25 hover:bg-rose-500/35 border border-rose-400/40 text-[10px] font-semibold text-white"
+              >
+                Ask
+              </button>
+              <button
+                type="button"
+                onclick="cycleCouplePrompt()"
+                class="px-2 py-0.5 rounded-lg bg-white/[0.08] hover:bg-white/[0.14] text-[10px] text-slate-200"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Multi-Select Action Bar -->
         <div
           id="actionMenuBar"
           class="hidden px-3.5 py-2 glass-modal border-b border-rose-400/30 shrink-0 z-30"
@@ -669,6 +847,14 @@
             </span>
 
             <div class="flex items-center gap-1.5 flex-wrap justify-end">
+              <button
+                type="button"
+                id="menuCopyBtn"
+                onclick="copySelectedMessages()"
+                class="px-2.5 py-1 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/30 text-xs text-emerald-200 font-medium transition"
+              >
+                📋 Copy
+              </button>
               <button
                 type="button"
                 id="menuEditBtn"
@@ -704,7 +890,7 @@
               <button
                 type="button"
                 onclick="clearSelectionMode()"
-                class="px-2 py-1 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] text-xs text-slate-400 transition"
+                class="px-2.5 py-1 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] text-xs text-slate-400 transition"
               >
                 ✕
               </button>
@@ -855,6 +1041,28 @@
 
             <button
               type="button"
+              onclick="
+                openModal('doodleModal');
+                initDoodleCanvas();
+              "
+              title="Co-Draw Doodle"
+              class="p-2.5 rounded-2xl bg-white/[0.07] hover:bg-white/[0.13] border border-white/10 text-pink-300 text-xs shrink-0 transition active:scale-95"
+            >
+              🎨
+            </button>
+
+            <button
+              type="button"
+              id="vanishToggleBtn"
+              onclick="toggleVanishMode()"
+              title="Vanish Mode (15s)"
+              class="p-2.5 rounded-2xl bg-white/[0.07] hover:bg-white/[0.13] border border-white/10 text-slate-300 text-xs shrink-0 transition active:scale-95"
+            >
+              👻
+            </button>
+
+            <button
+              type="button"
               onclick="document.getElementById('photoInput').click()"
               title="Gallery"
               class="p-2.5 rounded-2xl bg-white/[0.07] hover:bg-white/[0.13] border border-white/10 text-indigo-300 text-xs shrink-0 transition active:scale-95"
@@ -900,18 +1108,240 @@
         </form>
       </div>
 
-      <!-- Love Burst Overlay -->
+      <!-- Love Burst / Nudge Overlay -->
       <div
         id="loveBurstOverlay"
         class="pointer-events-none hidden fixed inset-0 z-50 flex items-center justify-center bg-rose-950/20 backdrop-blur-[2px]"
       >
         <div class="animate-heart-pop flex flex-col items-center">
-          <span class="text-7xl drop-shadow-2xl">❤️</span>
+          <span id="burstEmoji" class="text-7xl drop-shadow-2xl">❤️</span>
           <span
+            id="burstLabel"
             class="mt-2 px-3 py-1 rounded-full bg-slate-950/85 border border-rose-400/30 text-xs text-rose-200"
           >
             ❤️
           </span>
+        </div>
+      </div>
+
+      <!-- Co-Draw / Quick Doodle Pad Modal -->
+      <div
+        id="doodleModal"
+        class="hidden fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-md flex items-center justify-center p-4"
+      >
+        <div
+          class="w-full max-w-sm glass-modal border border-white/15 rounded-3xl p-4 space-y-3"
+        >
+          <div
+            class="flex items-center justify-between border-b border-white/10 pb-2"
+          >
+            <h3 class="font-display font-bold text-sm text-white">
+              🎨 Co-Draw / Quick Doodle
+            </h3>
+            <button
+              type="button"
+              onclick="closeModal('doodleModal')"
+              class="px-2.5 py-1 rounded-xl bg-white/[0.06] text-xs text-slate-300"
+            >
+              Close
+            </button>
+          </div>
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-1.5">
+              <button
+                type="button"
+                onclick="setDoodleColor('#fb7185')"
+                class="w-6 h-6 rounded-full bg-rose-400 ring-2 ring-white/30"
+              ></button>
+              <button
+                type="button"
+                onclick="setDoodleColor('#818cf8')"
+                class="w-6 h-6 rounded-full bg-indigo-400"
+              ></button>
+              <button
+                type="button"
+                onclick="setDoodleColor('#34d399')"
+                class="w-6 h-6 rounded-full bg-emerald-400"
+              ></button>
+              <button
+                type="button"
+                onclick="setDoodleColor('#fbbf24')"
+                class="w-6 h-6 rounded-full bg-amber-400"
+              ></button>
+              <button
+                type="button"
+                onclick="setDoodleColor('#ffffff')"
+                class="w-6 h-6 rounded-full bg-white"
+              ></button>
+            </div>
+            <button
+              type="button"
+              onclick="clearDoodleCanvas()"
+              class="px-2.5 py-1 rounded-xl bg-white/[0.08] text-xs text-slate-200"
+            >
+              Clear
+            </button>
+          </div>
+          <canvas
+            id="doodleCanvas"
+            width="290"
+            height="210"
+            class="w-full h-52 rounded-2xl bg-slate-950 border border-white/15 touch-none"
+          ></canvas>
+          <button
+            type="button"
+            onclick="sendDoodleToChat()"
+            class="w-full py-2.5 rounded-2xl bg-gradient-to-r from-rose-500 to-indigo-500 text-xs font-semibold text-white shadow-lg"
+          >
+            Send Doodle to Chat
+          </button>
+        </div>
+      </div>
+
+      <!-- Status Share Modal -->
+      <div
+        id="statusModal"
+        class="hidden fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-md flex items-center justify-center p-4"
+      >
+        <div
+          class="w-full max-w-sm glass-modal border border-white/15 rounded-3xl p-4 space-y-3"
+        >
+          <div
+            class="flex items-center justify-between border-b border-white/10 pb-2"
+          >
+            <h3 class="font-display font-bold text-sm text-white">
+              📢 Share Status
+            </h3>
+            <button
+              type="button"
+              onclick="closeModal('statusModal')"
+              class="px-2.5 py-1 rounded-xl bg-white/[0.06] text-xs text-slate-300"
+            >
+              Close
+            </button>
+          </div>
+          <input
+            id="statusInputField"
+            type="text"
+            maxlength="90"
+            placeholder="What's on your mind right now?"
+            class="w-full px-3.5 py-2.5 rounded-2xl bg-white/[0.06] border border-white/12 text-xs text-white focus:outline-none focus:border-rose-400/50"
+          />
+          <div class="flex gap-2">
+            <button
+              type="button"
+              onclick="publishSharedStatus()"
+              class="flex-1 py-2.5 rounded-2xl bg-gradient-to-r from-rose-500 to-indigo-500 text-xs font-semibold text-white"
+            >
+              Share Status
+            </button>
+            <button
+              type="button"
+              onclick="clearSharedStatus()"
+              class="px-3 py-2.5 rounded-2xl bg-white/[0.08] text-xs text-slate-300"
+            >
+              Clear
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Time-Capsule / "Open When..." Letters Modal -->
+      <div
+        id="timeCapsuleModal"
+        class="hidden fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-md flex items-center justify-center p-4"
+      >
+        <div
+          class="w-full max-w-sm glass-modal border border-white/15 rounded-3xl p-4 space-y-3 max-h-[88dvh] overflow-y-auto chat-scroll"
+        >
+          <div
+            class="flex items-center justify-between border-b border-white/10 pb-2"
+          >
+            <div>
+              <h3 class="font-display font-bold text-sm text-white">
+                ⏳ Time-Capsule &amp; "Open When..."
+              </h3>
+              <p class="text-[10px] text-rose-300/90">
+                Special notes for the right moment
+              </p>
+            </div>
+            <button
+              type="button"
+              onclick="closeModal('timeCapsuleModal')"
+              class="px-2.5 py-1 rounded-xl bg-white/[0.06] text-xs text-slate-300"
+            >
+              Close
+            </button>
+          </div>
+
+          <select
+            id="openWhenTagSelect"
+            class="w-full px-3 py-2 rounded-2xl bg-white/[0.06] border border-white/15 text-xs text-white focus:outline-none"
+          >
+            <option value="Open when you miss me ❤️" class="bg-slate-900">
+              Open when you miss me ❤️
+            </option>
+            <option value="Open when you're tired 😴" class="bg-slate-900">
+              Open when you're tired 😴
+            </option>
+            <option value="Open when you smile 😊" class="bg-slate-900">
+              Open when you smile 😊
+            </option>
+            <option value="Time Capsule (1 min lock) ⏳" class="bg-slate-900">
+              Time Capsule (1 min lock) ⏳
+            </option>
+          </select>
+
+          <textarea
+            id="capsuleNoteInput"
+            rows="2"
+            placeholder="Write a special letter or note..."
+            class="w-full px-3.5 py-2 rounded-2xl bg-white/[0.06] border border-white/12 text-xs text-white focus:outline-none focus:border-rose-400/50"
+          ></textarea>
+
+          <button
+            type="button"
+            onclick="saveTimeCapsuleLetter()"
+            class="w-full py-2.5 rounded-2xl bg-gradient-to-r from-rose-500 to-indigo-500 text-xs font-semibold text-white"
+          >
+            Save Letter
+          </button>
+
+          <div id="capsuleLettersList" class="space-y-2 pt-1"></div>
+        </div>
+      </div>
+
+      <!-- Memory Vault Modal -->
+      <div
+        id="memoryModal"
+        class="hidden fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-md flex items-center justify-center p-4"
+      >
+        <div
+          class="w-full max-w-sm glass-modal border border-white/15 rounded-3xl p-4 space-y-3 max-h-[85dvh] flex flex-col"
+        >
+          <div
+            class="flex items-center justify-between border-b border-white/10 pb-2.5 shrink-0"
+          >
+            <div>
+              <h3 class="font-display font-bold text-sm text-white">
+                📸 Our Memory Vault
+              </h3>
+              <p class="text-[11px] text-amber-300/90">
+                Starred &amp; pinned special moments
+              </p>
+            </div>
+            <button
+              type="button"
+              onclick="closeModal('memoryModal')"
+              class="px-2.5 py-1 rounded-xl bg-white/[0.06] text-xs text-slate-300 hover:text-white"
+            >
+              Close
+            </button>
+          </div>
+          <div
+            id="memoryVaultList"
+            class="space-y-2 overflow-y-auto chat-scroll flex-1 pr-0.5"
+          ></div>
         </div>
       </div>
 
@@ -941,7 +1371,6 @@
             </button>
           </div>
 
-          <!-- Game Switcher -->
           <div
             class="grid grid-cols-3 gap-1.5 p-1 rounded-2xl bg-slate-950/60 border border-white/10"
           >
@@ -971,7 +1400,6 @@
             </button>
           </div>
 
-          <!-- Game 1: Enhanced Tic-Tac-Toe (vs Bot + 2P Rick vs Pomi) -->
           <div id="gamePanelTTT" class="space-y-2.5 pt-1">
             <div class="grid grid-cols-2 gap-1.5">
               <button
@@ -988,16 +1416,16 @@
                 onclick="setTTTMode('2p')"
                 class="py-1.5 rounded-xl bg-white/[0.05] border border-white/10 text-[11px] font-medium text-slate-300"
               >
-                Rick vs Pomi (2P)
+                🚫 vs ❌ (2P)
               </button>
             </div>
 
             <div
               class="flex items-center justify-between text-[11px] text-slate-300 px-1"
             >
-              <span id="tttPlayersLabel">Pomi (❤️) vs Bot (✨)</span>
+              <span id="tttPlayersLabel">🚫 (❤️) vs Bot (✨)</span>
               <span id="tttScoreText" class="text-rose-300 font-semibold"
-                >Pomi: 0 | Bot: 0</span
+                >🚫: 0 | Bot: 0</span
               >
             </div>
 
@@ -1031,7 +1459,6 @@
             </div>
           </div>
 
-          <!-- Game 2: Rock Paper Scissors -->
           <div id="gamePanelRPS" class="hidden space-y-3 pt-1 text-center">
             <div
               class="flex items-center justify-between text-xs text-slate-300"
@@ -1074,7 +1501,6 @@
             </div>
           </div>
 
-          <!-- Game 3: Heart Catch -->
           <div id="gamePanelHeart" class="hidden space-y-3 pt-1 text-center">
             <div
               class="flex items-center justify-between text-xs text-slate-300"
@@ -1129,7 +1555,7 @@
             class="flex items-center justify-between border-b border-white/10 pb-2.5"
           >
             <h3 class="font-display font-bold text-sm text-white">
-              Profile Photos (Rick &amp; Pomi)
+              Profile Photos (❌ &amp; 🚫)
             </h3>
             <button
               type="button"
@@ -1154,9 +1580,9 @@
                 id="rickDpPreview"
                 class="w-16 h-16 rounded-2xl bg-rose-500/20 border border-rose-400/40 flex items-center justify-center font-bold text-lg text-white overflow-hidden"
               >
-                R
+                ❌
               </div>
-              <span class="text-xs font-semibold text-white">Rick DP</span>
+              <span class="text-xs font-semibold text-white">❌ DP</span>
               <button
                 type="button"
                 onclick="pickDpFor('Rick')"
@@ -1179,9 +1605,9 @@
                 id="pomiDpPreview"
                 class="w-16 h-16 rounded-2xl bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center font-bold text-lg text-white overflow-hidden"
               >
-                P
+                🚫
               </div>
-              <span class="text-xs font-semibold text-white">Pomi DP</span>
+              <span class="text-xs font-semibold text-white">🚫 DP</span>
               <button
                 type="button"
                 onclick="pickDpFor('Pomi')"
@@ -1221,6 +1647,119 @@
               Close
             </button>
           </div>
+
+          <!-- Chat Pet Widget Setting (Dog / Cat) -->
+          <div
+            class="p-3 rounded-2xl bg-white/[0.05] border border-white/10 space-y-2"
+          >
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-white"
+                >🐾 Chat Pet Widget</span
+              >
+              <button
+                type="button"
+                id="petWidgetToggleBtn"
+                onclick="togglePetWidget()"
+                class="px-2.5 py-1 rounded-xl bg-white/[0.08] border border-white/15 text-[11px] font-semibold text-slate-200"
+              >
+                OFF
+              </button>
+            </div>
+            <div class="grid grid-cols-2 gap-1.5">
+              <button
+                type="button"
+                id="petChoiceDogBtn"
+                onclick="setPetSpecies('dog')"
+                class="py-1.5 rounded-xl bg-rose-500/20 border border-rose-400/40 text-[11px] font-semibold text-rose-100"
+              >
+                🐶 Cute Dog
+              </button>
+              <button
+                type="button"
+                id="petChoiceCatBtn"
+                onclick="setPetSpecies('cat')"
+                class="py-1.5 rounded-xl bg-white/[0.05] border border-white/10 text-[11px] font-medium text-slate-300"
+              >
+                🐱 Cute Cat
+              </button>
+            </div>
+          </div>
+
+          <!-- Chat Sound On / Off -->
+          <button
+            type="button"
+            id="chatSoundToggleBtn"
+            onclick="toggleChatSound()"
+            class="w-full py-2.5 px-3.5 rounded-2xl bg-white/[0.06] hover:bg-white/[0.11] border border-white/10 text-xs font-semibold text-emerald-200 text-left flex items-center justify-between transition"
+          >
+            <span>🔊 Chat Sound</span>
+            <span id="chatSoundStatusLabel" class="text-[11px] text-emerald-300"
+              >ON</span
+            >
+          </button>
+
+          <!-- Focus / Do Not Disturb Together Mode -->
+          <button
+            type="button"
+            id="focusModeToggleBtn"
+            onclick="toggleFocusMode()"
+            class="w-full py-2.5 px-3.5 rounded-2xl bg-white/[0.06] hover:bg-white/[0.11] border border-white/10 text-xs font-semibold text-purple-200 text-left flex items-center justify-between transition"
+          >
+            <span>🧘 Focus / DND Mode</span>
+            <span id="focusModeStatusLabel" class="text-[11px] text-slate-400"
+              >OFF</span
+            >
+          </button>
+
+          <!-- Status Share -->
+          <button
+            type="button"
+            onclick="
+              closeModal('settingsModal');
+              openModal('statusModal');
+            "
+            class="w-full py-2.5 px-3.5 rounded-2xl bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-400/30 text-xs font-semibold text-indigo-200 text-left transition"
+          >
+            📢 Share Status
+          </button>
+
+          <!-- Co-Draw Doodle Pad -->
+          <button
+            type="button"
+            onclick="
+              closeModal('settingsModal');
+              openModal('doodleModal');
+              initDoodleCanvas();
+            "
+            class="w-full py-2.5 px-3.5 rounded-2xl bg-pink-500/15 hover:bg-pink-500/25 border border-pink-400/30 text-xs font-semibold text-pink-200 text-left transition"
+          >
+            🎨 Co-Draw / Quick Doodle Pad
+          </button>
+
+          <!-- Time-Capsule / Open When -->
+          <button
+            type="button"
+            onclick="
+              closeModal('settingsModal');
+              openModal('timeCapsuleModal');
+              renderTimeCapsuleLetters();
+            "
+            class="w-full py-2.5 px-3.5 rounded-2xl bg-violet-500/15 hover:bg-violet-500/25 border border-violet-400/30 text-xs font-semibold text-violet-200 text-left transition"
+          >
+            ⏳ Time-Capsule / "Open When..."
+          </button>
+
+          <button
+            type="button"
+            onclick="
+              closeModal('settingsModal');
+              openModal('memoryModal');
+              renderMemoryVault();
+            "
+            class="w-full py-2.5 px-3.5 rounded-2xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/30 text-xs font-semibold text-amber-200 text-left transition"
+          >
+            📸 Our Memory Vault
+          </button>
           <button
             type="button"
             onclick="
@@ -1240,7 +1779,7 @@
             "
             class="w-full py-2.5 px-3.5 rounded-2xl bg-rose-500/15 hover:bg-rose-500/20 border border-rose-400/30 text-xs font-semibold text-rose-200 text-left transition"
           >
-            🖼️ Profile Photo / DP (Rick &amp; Pomi)
+            🖼️ Profile Photo / DP (❌ &amp; 🚫)
           </button>
           <button
             type="button"
@@ -1289,7 +1828,7 @@
             "
             class="w-full py-2.5 px-3.5 rounded-2xl bg-white/[0.06] hover:bg-white/[0.11] border border-white/10 text-xs font-medium text-white text-left transition"
           >
-            🔑 Change Personal PIN (Rick &amp; Pomi)
+            🔑 Change Personal PIN (❌ &amp; 🚫)
           </button>
           <button
             type="button"
@@ -1341,21 +1880,21 @@
               type="button"
               id="pinTargetRickBtn"
               onclick="selectPinEditTarget('Rick')"
-              class="py-2 rounded-xl bg-rose-500/25 border border-rose-400/50 text-xs font-semibold text-white"
+              class="py-2 rounded-xl bg-rose-500/25 border border-rose-400/50 text-sm font-bold text-white"
             >
-              Rick's PIN
+              ❌ PIN
             </button>
             <button
               type="button"
               id="pinTargetPomiBtn"
               onclick="selectPinEditTarget('Pomi')"
-              class="py-2 rounded-xl border border-transparent text-xs font-medium text-slate-400"
+              class="py-2 rounded-xl border border-transparent text-sm font-bold text-slate-400"
             >
-              Pomi's PIN
+              🚫 PIN
             </button>
           </div>
           <p id="pinEditProfileLabel" class="text-[11px] text-rose-300 px-1">
-            Updating PIN for: Rick
+            ❌
           </p>
           <input
             id="currentPinField"
@@ -1482,19 +2021,41 @@
       };
 
       const ROOM_ID = "rick_pomi_private_room";
-      const STORAGE_KEY = "pomilink_messages_v16";
-      const USER_PINS_KEY = "pomilink_user_pins_v16";
-      const THEME_KEY = "pomilink_theme_v16";
-      const WALLPAPER_KEY = "pomilink_wallpaper_v16";
-      const PINNED_MSG_KEY = "pomilink_pinned_msg_v16";
-      const LANG_KEY = "pomilink_lang_v16";
-      const DP_KEY = "pomilink_profiles_dp_v16";
-      const GAME_STATS_KEY = "pomilink_pomi_games_v16";
+      const STORAGE_KEY = "pomilink_messages_v19";
+      const USER_PINS_KEY = "pomilink_user_pins_v19";
+      const THEME_KEY = "pomilink_theme_v19";
+      const WALLPAPER_KEY = "pomilink_wallpaper_v19";
+      const PINNED_MSG_KEY = "pomilink_pinned_msg_v19";
+      const LANG_KEY = "pomilink_lang_v19";
+      const DP_KEY = "pomilink_profiles_dp_v19";
+      const GAME_STATS_KEY = "pomilink_pomi_games_v19";
+      const MOOD_KEY = "pomilink_my_mood_v19";
+      const PET_ENABLED_KEY = "pomilink_pet_enabled_v19";
+      const PET_SPECIES_KEY = "pomilink_pet_species_v19";
+      const SOUND_ENABLED_KEY = "pomilink_sound_enabled_v19";
+      const FOCUS_MODE_KEY = "pomilink_focus_mode_v19";
+      const WEATHER_KEY = "pomilink_weather_v19";
+      const STATUS_KEY = "pomilink_shared_status_v19";
+      const CAPSULE_KEY = "pomilink_time_capsule_v19";
 
       const DEFAULT_USER_PINS = {
         Rick: "1111",
         Pomi: "2222",
       };
+
+      const ROLE_ICONS = {
+        Rick: "❌",
+        Pomi: "🚫",
+      };
+
+      const COUPLE_PROMPTS = [
+        "What is your favorite memory of us together?",
+        "If we could travel anywhere this weekend, where would we go?",
+        "What song reminds you of me right now?",
+        "What is one thing that always makes you smile?",
+        "Coffee date or late-night movie & snacks?",
+      ];
+      let promptIdx = 0;
 
       (function setupDiscreetPWA() {
         try {
@@ -1536,7 +2097,6 @@
       const I18N = {
         en: {
           enterPin: "Enter Personal PIN",
-          loggingAs: "Logging in as: ",
           online: "● Online",
           lastSeenPrefix: "Last seen ",
           offline: "Offline",
@@ -1548,7 +2108,6 @@
         },
         bn: {
           enterPin: "নিজের PIN দিন",
-          loggingAs: "লগইন হচ্ছে: ",
           online: "● অনলাইন",
           lastSeenPrefix: "সর্বশেষ দেখা ",
           offline: "অফলাইন",
@@ -1560,7 +2119,6 @@
         },
         hi: {
           enterPin: "अपना PIN डालें",
-          loggingAs: "लॉगिन: ",
           online: "● ऑनलाइन",
           lastSeenPrefix: "आखिरी बार देखा ",
           offline: "ऑफ़लाइन",
@@ -1584,6 +2142,12 @@
       ];
 
       const LIGHT_THEMES = ["theme-daylight-cloud", "theme-sunny-peach"];
+      const WEATHER_CLASSES = [
+        "weather-sunny",
+        "weather-rain",
+        "weather-night",
+        "weather-lowbat",
+      ];
 
       function loadUserPins() {
         try {
@@ -1609,6 +2173,19 @@
       let pinnedMsgId = localStorage.getItem(PINNED_MSG_KEY) || null;
       let profilesDp = JSON.parse(localStorage.getItem(DP_KEY) || "{}");
       let targetDpRole = "Rick";
+      let myMood = localStorage.getItem(MOOD_KEY) || "✨ Vibing";
+      let vanishModeEnabled = false;
+
+      let petWidgetEnabled = localStorage.getItem(PET_ENABLED_KEY) === "true";
+      let petSpecies = localStorage.getItem(PET_SPECIES_KEY) || "dog";
+      let chatSoundEnabled =
+        localStorage.getItem(SOUND_ENABLED_KEY) !== "false";
+      let focusModeEnabled = localStorage.getItem(FOCUS_MODE_KEY) === "true";
+      let weatherCanvas = localStorage.getItem(WEATHER_KEY) || "sunny";
+      let sharedStatusText = localStorage.getItem(STATUS_KEY) || "";
+      let timeCapsuleLetters = JSON.parse(
+        localStorage.getItem(CAPSULE_KEY) || "[]",
+      );
 
       let pinBuffer = "";
       let senderRole = "Rick";
@@ -1628,6 +2205,10 @@
       let db = null;
       let msgRef = null;
       let burstRef = null;
+      let nudgeRef = null;
+      let moodsRef = null;
+      let statusRef = null;
+      let weatherRef = null;
       let typingRef = null;
       let userPinsRef = null;
       let pinnedMsgRef = null;
@@ -1641,7 +2222,6 @@
       let recTimerInterval = null;
       let recSeconds = 0;
 
-      // Games state
       let gameStats = JSON.parse(
         localStorage.getItem(GAME_STATS_KEY) ||
           '{"tttPomiWins":0,"tttBotWins":0,"tttRickWins":0,"rpsScore":0,"heartBest":0}',
@@ -1657,6 +2237,367 @@
       let heartScore = 0;
       let heartTimeLeft = 10;
 
+      let doodleColor = "#fb7185";
+      let isDrawingDoodle = false;
+      let lastDoodlePt = null;
+
+      function getRoleIcon(role) {
+        return ROLE_ICONS[role] || "❌";
+      }
+
+      // Chat Pet Widget (Dog / Cat)
+      function syncPetSettingsUI() {
+        const toggleBtn = document.getElementById("petWidgetToggleBtn");
+        const dogBtn = document.getElementById("petChoiceDogBtn");
+        const catBtn = document.getElementById("petChoiceCatBtn");
+
+        if (toggleBtn) {
+          toggleBtn.textContent = petWidgetEnabled ? "ON" : "OFF";
+          toggleBtn.className = petWidgetEnabled
+            ? "px-2.5 py-1 rounded-xl bg-rose-500/25 border border-rose-400/50 text-[11px] font-semibold text-rose-100"
+            : "px-2.5 py-1 rounded-xl bg-white/[0.08] border border-white/15 text-[11px] font-semibold text-slate-300";
+        }
+        if (dogBtn && catBtn) {
+          if (petSpecies === "dog") {
+            dogBtn.className =
+              "py-1.5 rounded-xl bg-rose-500/20 border border-rose-400/40 text-[11px] font-semibold text-rose-100";
+            catBtn.className =
+              "py-1.5 rounded-xl bg-white/[0.05] border border-white/10 text-[11px] font-medium text-slate-300";
+          } else {
+            catBtn.className =
+              "py-1.5 rounded-xl bg-rose-500/20 border border-rose-400/40 text-[11px] font-semibold text-rose-100";
+            dogBtn.className =
+              "py-1.5 rounded-xl bg-white/[0.05] border border-white/10 text-[11px] font-medium text-slate-300";
+          }
+        }
+      }
+
+      function togglePetWidget() {
+        petWidgetEnabled = !petWidgetEnabled;
+        localStorage.setItem(PET_ENABLED_KEY, String(petWidgetEnabled));
+        syncPetSettingsUI();
+        renderMessages();
+      }
+
+      function setPetSpecies(species) {
+        petSpecies = species === "cat" ? "cat" : "dog";
+        localStorage.setItem(PET_SPECIES_KEY, petSpecies);
+        syncPetSettingsUI();
+        renderMessages();
+      }
+
+      function syncSoundSettingsUI() {
+        const label = document.getElementById("chatSoundStatusLabel");
+        if (label) {
+          label.textContent =
+            chatSoundEnabled && !focusModeEnabled ? "ON" : "OFF";
+          label.className =
+            chatSoundEnabled && !focusModeEnabled
+              ? "text-[11px] text-emerald-300"
+              : "text-[11px] text-rose-300";
+        }
+      }
+
+      function toggleChatSound() {
+        chatSoundEnabled = !chatSoundEnabled;
+        localStorage.setItem(SOUND_ENABLED_KEY, String(chatSoundEnabled));
+        syncSoundSettingsUI();
+      }
+
+      function syncFocusSettingsUI() {
+        const label = document.getElementById("focusModeStatusLabel");
+        if (label) {
+          label.textContent = focusModeEnabled ? "ON" : "OFF";
+          label.className = focusModeEnabled
+            ? "text-[11px] text-purple-300"
+            : "text-[11px] text-slate-400";
+        }
+        const promptBanner = document.getElementById("couplePromptBanner");
+        if (promptBanner) {
+          promptBanner.classList.toggle("hidden", focusModeEnabled);
+        }
+        syncSoundSettingsUI();
+      }
+
+      function toggleFocusMode() {
+        focusModeEnabled = !focusModeEnabled;
+        localStorage.setItem(FOCUS_MODE_KEY, String(focusModeEnabled));
+        syncFocusSettingsUI();
+      }
+
+      function applyWeatherCanvas(w) {
+        weatherCanvas = w || "sunny";
+        localStorage.setItem(WEATHER_KEY, weatherCanvas);
+        const shell = document.getElementById("appShell");
+        if (shell) {
+          shell.classList.remove(...WEATHER_CLASSES);
+          shell.classList.add("weather-" + weatherCanvas);
+        }
+        document.querySelectorAll(".weather-chip").forEach((chip) => {
+          const active = chip.getAttribute("data-weather") === weatherCanvas;
+          chip.classList.toggle("ring-1", active);
+          chip.classList.toggle("ring-white/60", active);
+          chip.classList.toggle("bg-white/[0.14]", active);
+        });
+      }
+
+      function setWeatherCanvas(w) {
+        applyWeatherCanvas(w);
+        if (weatherRef) weatherRef.set(weatherCanvas);
+      }
+
+      function renderSharedStatusBanner() {
+        const banner = document.getElementById("sharedStatusBanner");
+        const textEl = document.getElementById("sharedStatusText");
+        if (!banner || !textEl) return;
+        if (sharedStatusText && sharedStatusText.trim()) {
+          textEl.textContent = "📢 " + sharedStatusText.trim();
+          banner.classList.remove("hidden");
+        } else {
+          banner.classList.add("hidden");
+        }
+      }
+
+      function publishSharedStatus() {
+        const input = document.getElementById("statusInputField");
+        const val = (input ? input.value : "").trim();
+        sharedStatusText = val;
+        localStorage.setItem(STATUS_KEY, sharedStatusText);
+        if (statusRef) statusRef.set(sharedStatusText || null);
+        renderSharedStatusBanner();
+        closeModal("statusModal");
+      }
+
+      function clearSharedStatus() {
+        sharedStatusText = "";
+        localStorage.setItem(STATUS_KEY, "");
+        const input = document.getElementById("statusInputField");
+        if (input) input.value = "";
+        if (statusRef) statusRef.set(null);
+        renderSharedStatusBanner();
+        closeModal("statusModal");
+      }
+
+      function setDoodleColor(hex) {
+        doodleColor = hex;
+      }
+
+      function initDoodleCanvas() {
+        const canvas = document.getElementById("doodleCanvas");
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.lineWidth = 3.5;
+
+        const getPt = (e) => {
+          const rect = canvas.getBoundingClientRect();
+          const clientX =
+            e.touches && e.touches[0] ? e.touches[0].clientX : e.clientX;
+          const clientY =
+            e.touches && e.touches[0] ? e.touches[0].clientY : e.clientY;
+          return {
+            x: ((clientX - rect.left) / rect.width) * canvas.width,
+            y: ((clientY - rect.top) / rect.height) * canvas.height,
+          };
+        };
+
+        canvas.onpointerdown = (e) => {
+          isDrawingDoodle = true;
+          lastDoodlePt = getPt(e);
+        };
+        canvas.onpointermove = (e) => {
+          if (!isDrawingDoodle || !lastDoodlePt) return;
+          const pt = getPt(e);
+          ctx.strokeStyle = doodleColor;
+          ctx.beginPath();
+          ctx.moveTo(lastDoodlePt.x, lastDoodlePt.y);
+          ctx.lineTo(pt.x, pt.y);
+          ctx.stroke();
+          lastDoodlePt = pt;
+        };
+        canvas.onpointerup = () => {
+          isDrawingDoodle = false;
+          lastDoodlePt = null;
+        };
+        canvas.onpointerleave = () => {
+          isDrawingDoodle = false;
+          lastDoodlePt = null;
+        };
+      }
+
+      function clearDoodleCanvas() {
+        const canvas = document.getElementById("doodleCanvas");
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+
+      function sendDoodleToChat() {
+        const canvas = document.getElementById("doodleCanvas");
+        if (!canvas) return;
+        const dataUrl = canvas.toDataURL("image/png");
+        const now = new Date();
+        pushMessageItem({
+          sender: senderRole,
+          type: "image",
+          mediaUrl: dataUrl,
+          ts: Date.now(),
+          time: now.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        });
+        clearDoodleCanvas();
+        closeModal("doodleModal");
+      }
+
+      function renderTimeCapsuleLetters() {
+        const list = document.getElementById("capsuleLettersList");
+        if (!list) return;
+        list.innerHTML = "";
+
+        if (!timeCapsuleLetters.length) {
+          list.innerHTML = `<div class="text-center text-xs text-slate-400 py-4">No letters saved yet.</div>`;
+          return;
+        }
+
+        timeCapsuleLetters.forEach((item) => {
+          const isTimerCapsule = String(item.tag || "").includes("1 min lock");
+          const unlocked =
+            !isTimerCapsule || Date.now() - (item.createdAt || 0) >= 60000;
+
+          const card = document.createElement("div");
+          card.className =
+            "p-2.5 rounded-2xl bg-white/[0.05] border border-white/10 space-y-1";
+          card.innerHTML = `
+            <div class="flex items-center justify-between text-[10px] text-rose-300 font-semibold">
+              <span>${item.tag}</span>
+              <span class="text-slate-400">${getRoleIcon(item.by) || ""}</span>
+            </div>
+            <p class="text-xs text-slate-100">${unlocked ? item.body : "🔒 Locked for 1 minute..."}</p>
+          `;
+          list.appendChild(card);
+        });
+      }
+
+      function saveTimeCapsuleLetter() {
+        const tagEl = document.getElementById("openWhenTagSelect");
+        const noteEl = document.getElementById("capsuleNoteInput");
+        const body = (noteEl ? noteEl.value : "").trim();
+        if (!body) return;
+
+        timeCapsuleLetters.unshift({
+          tag: tagEl ? tagEl.value : "Open when you miss me ❤️",
+          body,
+          by: senderRole,
+          createdAt: Date.now(),
+        });
+        localStorage.setItem(CAPSULE_KEY, JSON.stringify(timeCapsuleLetters));
+        if (noteEl) noteEl.value = "";
+        renderTimeCapsuleLetters();
+      }
+
+      function highlightMoodChips() {
+        document.querySelectorAll(".mood-chip").forEach((chip) => {
+          const active = chip.getAttribute("data-mood") === myMood;
+          chip.className = active
+            ? "mood-chip px-2 py-0.5 rounded-full text-[10px] bg-rose-500/25 border border-rose-400/50 text-white font-semibold shrink-0"
+            : "mood-chip px-2 py-0.5 rounded-full text-[10px] bg-white/[0.06] border border-white/10 text-slate-200 shrink-0";
+        });
+      }
+
+      function setMyMood(moodLabel) {
+        myMood = moodLabel;
+        localStorage.setItem(MOOD_KEY, myMood);
+        highlightMoodChips();
+        if (moodsRef) moodsRef.child(senderRole).set(myMood);
+      }
+
+      function updatePartnerMoodBadge(moodText) {
+        const badge = document.getElementById("partnerMoodBadge");
+        if (badge) badge.textContent = moodText || "✨ Vibing";
+      }
+
+      function toggleVanishMode() {
+        vanishModeEnabled = !vanishModeEnabled;
+        const btn = document.getElementById("vanishToggleBtn");
+        const input = document.getElementById("msgInput");
+        if (btn) {
+          btn.className = vanishModeEnabled
+            ? "p-2.5 rounded-2xl bg-purple-500/30 border border-purple-400/60 text-purple-200 text-xs shrink-0 transition active:scale-95"
+            : "p-2.5 rounded-2xl bg-white/[0.07] hover:bg-white/[0.13] border border-white/10 text-slate-300 text-xs shrink-0 transition active:scale-95";
+        }
+        if (input) {
+          input.placeholder = vanishModeEnabled
+            ? "Vanish message (15s)..."
+            : t("placeholder");
+        }
+      }
+
+      function cycleCouplePrompt() {
+        promptIdx = (promptIdx + 1) % COUPLE_PROMPTS.length;
+        const el = document.getElementById("dailyPromptText");
+        if (el) el.textContent = COUPLE_PROMPTS[promptIdx];
+      }
+
+      function sendPromptToChat() {
+        const q = COUPLE_PROMPTS[promptIdx] || COUPLE_PROMPTS[0];
+        const now = new Date();
+        pushMessageItem({
+          sender: senderRole,
+          type: "text",
+          text: `💌 Prompt: ${q}`,
+          ts: Date.now(),
+          time: now.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        });
+      }
+
+      function renderMemoryVault() {
+        const list = document.getElementById("memoryVaultList");
+        if (!list) return;
+        list.innerHTML = "";
+
+        const memories = Object.entries(messagesMap)
+          .filter(([id, m]) => Boolean(m && (m.starred || pinnedMsgId === id)))
+          .sort((a, b) => (b[1].ts || 0) - (a[1].ts || 0));
+
+        if (!memories.length) {
+          list.innerHTML = `<div class="text-center text-xs text-slate-400 py-8">Long-press any message and tap ⭐ Star or 📌 Pin to save memories here.</div>`;
+          return;
+        }
+
+        memories.forEach(([id, m]) => {
+          const card = document.createElement("div");
+          card.className =
+            "p-3 rounded-2xl bg-white/[0.05] border border-white/10 space-y-1.5";
+
+          const top = document.createElement("div");
+          top.className =
+            "flex items-center justify-between text-[10px] text-amber-300 font-semibold";
+          top.innerHTML = `<span>${getRoleIcon(m.sender)} ${pinnedMsgId === id ? "📌" : ""} ${m.starred ? "⭐" : ""}</span><span class="text-slate-400">${m.time || ""}</span>`;
+          card.appendChild(top);
+
+          if (m.type === "image" && m.mediaUrl) {
+            const img = document.createElement("img");
+            img.src = m.mediaUrl;
+            img.alt = "Memory photo";
+            img.className = "max-h-36 rounded-xl object-cover";
+            card.appendChild(img);
+          } else {
+            const body = document.createElement("p");
+            body.className = "text-xs text-slate-100 break-words";
+            body.textContent = getMessageSummary(m);
+            card.appendChild(body);
+          }
+
+          list.appendChild(card);
+        });
+      }
+
       function saveGameStats() {
         localStorage.setItem(GAME_STATS_KEY, JSON.stringify(gameStats));
         const tttEl = document.getElementById("tttScoreText");
@@ -1664,9 +2605,9 @@
         const bestEl = document.getElementById("heartBestText");
         if (tttEl) {
           if (tttMode === "2p") {
-            tttEl.textContent = `Pomi: ${gameStats.tttPomiWins || 0} | Rick: ${gameStats.tttRickWins || 0}`;
+            tttEl.textContent = `🚫: ${gameStats.tttPomiWins || 0} | ❌: ${gameStats.tttRickWins || 0}`;
           } else {
-            tttEl.textContent = `Pomi: ${gameStats.tttPomiWins || 0} | Bot: ${gameStats.tttBotWins || 0}`;
+            tttEl.textContent = `🚫: ${gameStats.tttPomiWins || 0} | Bot: ${gameStats.tttBotWins || 0}`;
           }
         }
         if (rpsEl) rpsEl.textContent = "Score: " + (gameStats.rpsScore || 0);
@@ -1696,13 +2637,10 @@
           }
         });
 
-        if (tab !== "heart") {
-          stopHeartCatchTimers();
-        }
+        if (tab !== "heart") stopHeartCatchTimers();
         saveGameStats();
       }
 
-      // Tic-Tac-Toe logic
       function checkTTTResult(board) {
         const lines = [
           [0, 1, 2],
@@ -1775,12 +2713,12 @@
         if (res.winner === "P") {
           gameStats.tttPomiWins = (gameStats.tttPomiWins || 0) + 1;
           saveGameStats();
-          if (statusEl) statusEl.textContent = "Pomi wins! 🎉";
+          if (statusEl) statusEl.textContent = "🚫 wins! 🎉";
         } else if (res.winner === "O") {
           if (tttMode === "2p") {
             gameStats.tttRickWins = (gameStats.tttRickWins || 0) + 1;
             saveGameStats();
-            if (statusEl) statusEl.textContent = "Rick wins! 🎉";
+            if (statusEl) statusEl.textContent = "❌ wins! 🎉";
           } else {
             gameStats.tttBotWins = (gameStats.tttBotWins || 0) + 1;
             saveGameStats();
@@ -1804,10 +2742,9 @@
           }
           tttTurn = tttTurn === "P" ? "O" : "P";
           renderTTTBoard();
-          if (statusEl) {
+          if (statusEl)
             statusEl.textContent =
-              tttTurn === "P" ? "Pomi's turn (❤️)" : "Rick's turn (✨)";
-          }
+              tttTurn === "P" ? "🚫 turn (❤️)" : "❌ turn (✨)";
           return;
         }
 
@@ -1845,7 +2782,7 @@
           if (botBtn)
             botBtn.className =
               "py-1.5 rounded-xl bg-white/[0.05] border border-white/10 text-[11px] font-medium text-slate-300";
-          if (playersLabel) playersLabel.textContent = "Pomi (❤️) vs Rick (✨)";
+          if (playersLabel) playersLabel.textContent = "🚫 (❤️) vs ❌ (✨)";
         } else {
           if (botBtn)
             botBtn.className =
@@ -1853,7 +2790,7 @@
           if (twoPBtn)
             twoPBtn.className =
               "py-1.5 rounded-xl bg-white/[0.05] border border-white/10 text-[11px] font-medium text-slate-300";
-          if (playersLabel) playersLabel.textContent = "Pomi (❤️) vs Bot (✨)";
+          if (playersLabel) playersLabel.textContent = "🚫 (❤️) vs Bot (✨)";
         }
         resetTTTGame(false);
       }
@@ -1869,15 +2806,13 @@
         tttTurn = "P";
         tttOver = false;
         const statusEl = document.getElementById("tttStatus");
-        if (statusEl) {
+        if (statusEl)
           statusEl.textContent =
-            tttMode === "2p" ? "Pomi's turn (❤️)" : "Your turn (❤️)";
-        }
+            tttMode === "2p" ? "🚫 turn (❤️)" : "Your turn (❤️)";
         saveGameStats();
         renderTTTBoard();
       }
 
-      // Rock Paper Scissors logic
       function playRPS(userChoice) {
         const choices = ["rock", "paper", "scissors"];
         const icons = { rock: "🪨", paper: "📄", scissors: "✂️" };
@@ -1904,7 +2839,6 @@
         }
       }
 
-      // Heart Catch logic
       function stopHeartCatchTimers() {
         clearInterval(heartTimerId);
         clearInterval(heartMoveId);
@@ -2008,6 +2942,7 @@
         }
       }
 
+      // 3-Second Splash Screen
       function startSplashSequence() {
         const splash = document.getElementById("splashScreen");
         setTimeout(() => {
@@ -2019,10 +2954,8 @@
               splash.style.display = "none";
             }, 250);
           }
-          if (!isUnlocked) {
-            showLockScreen();
-          }
-        }, 5000);
+          if (!isUnlocked) showLockScreen();
+        }, 3000);
       }
 
       function renderPinDots() {
@@ -2082,7 +3015,8 @@
           if (pinBuffer === expectedPin) {
             unlockApp();
           } else {
-            if (errEl) errEl.textContent = `Wrong PIN for ${senderRole}.`;
+            if (errEl)
+              errEl.textContent = `Wrong PIN (${getRoleIcon(senderRole)})`;
             pinBuffer = "";
             setTimeout(renderPinDots, 160);
           }
@@ -2115,7 +3049,7 @@
         if (dpDataUrl) {
           el.innerHTML = `<img src="${dpDataUrl}" alt="${name} DP" class="w-full h-full object-cover" />`;
         } else {
-          el.textContent = (name || "?").charAt(0);
+          el.textContent = getRoleIcon(name);
         }
       }
 
@@ -2182,6 +3116,7 @@
       }
 
       function playChime() {
+        if (!chatSoundEnabled || focusModeEnabled) return;
         try {
           const AudioCtx = window.AudioContext || window.webkitAudioContext;
           if (!AudioCtx) return;
@@ -2215,7 +3150,9 @@
 
       function showSystemAlert(title, body) {
         playChime();
-        if (navigator.vibrate) navigator.vibrate([120, 60, 120]);
+        if (!focusModeEnabled && navigator.vibrate)
+          navigator.vibrate([120, 60, 120]);
+        if (focusModeEnabled) return;
         if (
           !("Notification" in window) ||
           Notification.permission !== "granted"
@@ -2234,8 +3171,10 @@
           document.getElementById("chatLangSelect").value = lang;
           document.getElementById("enterPinTitle").textContent = t("enterPin");
           document.getElementById("activeRoleLabel").textContent =
-            t("loggingAs") + senderRole;
-          document.getElementById("msgInput").placeholder = t("placeholder");
+            getRoleIcon(senderRole);
+          document.getElementById("msgInput").placeholder = vanishModeEnabled
+            ? "Vanish message (15s)..."
+            : t("placeholder");
           document.getElementById("clearChatBtn").textContent = t("clearChat");
           updatePartnerPresenceUI();
           renderMessages();
@@ -2324,10 +3263,11 @@
       function updatePartnerHeaderUI() {
         try {
           const partner = getPartnerName();
-          document.getElementById("partnerTitle").textContent = partner;
+          document.getElementById("partnerTitle").textContent =
+            getRoleIcon(partner);
           refreshProfileAvatars();
           document.getElementById("youAreText").textContent =
-            "You: " + senderRole + " • Role Locked";
+            `${getRoleIcon(senderRole)} • Locked`;
         } catch (e) {}
       }
 
@@ -2345,7 +3285,7 @@
             dot.className =
               "absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-slate-500 ring-2 ring-slate-950";
             badge.className =
-              "text-[10px] px-2 py-0.5 rounded-full bg-white/[0.08] border border-white/10 text-slate-300 truncate max-w-[170px]";
+              "text-[10px] px-2 py-0.5 rounded-full bg-white/[0.08] border border-white/10 text-slate-300 truncate max-w-[130px]";
             badge.textContent = formatLastSeen(partnerLastSeenTs);
           }
         } catch (e) {}
@@ -2359,23 +3299,24 @@
         if (errEl) errEl.textContent = "";
 
         document.getElementById("activeRoleLabel").textContent =
-          t("loggingAs") + role;
+          getRoleIcon(role);
         const rBtn = document.getElementById("roleRickBtn");
         const pBtn = document.getElementById("rolePomiBtn");
         if (role === "Rick") {
           rBtn.className =
-            "py-2 rounded-xl bg-gradient-to-r from-rose-500/30 to-indigo-500/30 border border-rose-400/50 text-xs font-semibold text-white transition";
+            "py-2 rounded-xl bg-gradient-to-r from-rose-500/30 to-indigo-500/30 border border-rose-400/50 text-base font-bold text-white transition";
           pBtn.className =
-            "py-2 rounded-xl border border-transparent text-xs font-medium text-slate-400 hover:text-slate-200 transition";
+            "py-2 rounded-xl border border-transparent text-base font-bold text-slate-300 hover:text-white transition";
         } else {
           pBtn.className =
-            "py-2 rounded-xl bg-gradient-to-r from-rose-500/30 to-indigo-500/30 border border-rose-400/50 text-xs font-semibold text-white transition";
+            "py-2 rounded-xl bg-gradient-to-r from-rose-500/30 to-indigo-500/30 border border-rose-400/50 text-base font-bold text-white transition";
           rBtn.className =
-            "py-2 rounded-xl border border-transparent text-xs font-medium text-slate-400 hover:text-slate-200 transition";
+            "py-2 rounded-xl border border-transparent text-base font-bold text-slate-300 hover:text-white transition";
         }
         updatePartnerHeaderUI();
         if (isUnlocked) {
           startPresenceAndTypingSync();
+          markVisiblePartnerMessagesSeen();
           renderMessages();
         }
       }
@@ -2389,39 +3330,35 @@
 
         if (role === "Rick") {
           rBtn.className =
-            "py-2 rounded-xl bg-rose-500/25 border border-rose-400/50 text-xs font-semibold text-white";
+            "py-2 rounded-xl bg-rose-500/25 border border-rose-400/50 text-sm font-bold text-white";
           pBtn.className =
-            "py-2 rounded-xl border border-transparent text-xs font-medium text-slate-400";
+            "py-2 rounded-xl border border-transparent text-sm font-bold text-slate-400";
         } else {
           pBtn.className =
-            "py-2 rounded-xl bg-rose-500/25 border border-rose-400/50 text-xs font-semibold text-white";
+            "py-2 rounded-xl bg-rose-500/25 border border-rose-400/50 text-sm font-bold text-white";
           rBtn.className =
-            "py-2 rounded-xl border border-transparent text-xs font-medium text-slate-400";
+            "py-2 rounded-xl border border-transparent text-sm font-bold text-slate-400";
         }
-        if (label) label.textContent = `Updating PIN for: ${role}`;
+        if (label) label.textContent = getRoleIcon(role);
         if (msg) msg.textContent = "";
         document.getElementById("currentPinField").value = "";
         document.getElementById("newPinField").value = "";
       }
 
       function openModal(id) {
-        if (id === "pinModal") {
-          selectPinEditTarget(senderRole);
-        }
-        if (id === "dpModal") {
-          refreshProfileAvatars();
-        }
-        if (id === "gamesModal") {
-          saveGameStats();
+        if (id === "pinModal") selectPinEditTarget(senderRole);
+        if (id === "dpModal") refreshProfileAvatars();
+        if (id === "gamesModal") saveGameStats();
+        if (id === "statusModal") {
+          const inp = document.getElementById("statusInputField");
+          if (inp) inp.value = sharedStatusText || "";
         }
         const el = document.getElementById(id);
         if (el) el.classList.remove("hidden");
       }
 
       function closeModal(id) {
-        if (id === "gamesModal") {
-          stopHeartCatchTimers();
-        }
+        if (id === "gamesModal") stopHeartCatchTimers();
         const el = document.getElementById(id);
         if (el) el.classList.add("hidden");
       }
@@ -2450,7 +3387,7 @@
         ).trim();
 
         if (cur !== currentTargetPin) {
-          msg.textContent = `Wrong current PIN for ${pinEditTarget}`;
+          msg.textContent = `Wrong current PIN (${getRoleIcon(pinEditTarget)})`;
           return;
         }
         if (!/^\d{4}$/.test(next)) {
@@ -2471,6 +3408,42 @@
         }
 
         closeModal("pinModal");
+      }
+
+      // Copy / Paste Facility
+      function copySelectedMessages() {
+        if (selectedMsgIds.size === 0) return;
+        const lines = Array.from(selectedMsgIds)
+          .map((id) => messagesMap[id])
+          .filter(Boolean)
+          .sort((a, b) => (a.ts || 0) - (b.ts || 0))
+          .map((m) => m.text || getMessageSummary(m))
+          .filter(Boolean);
+
+        const combined = lines.join("\n");
+        if (!combined) return;
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard
+            .writeText(combined)
+            .catch(() => fallbackCopyText(combined));
+        } else {
+          fallbackCopyText(combined);
+        }
+        clearSelectionMode();
+      }
+
+      function fallbackCopyText(text) {
+        try {
+          const ta = document.createElement("textarea");
+          ta.value = text;
+          ta.style.position = "fixed";
+          ta.style.opacity = "0";
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand("copy");
+          document.body.removeChild(ta);
+        } catch (e) {}
       }
 
       // Multi-select helpers
@@ -2511,14 +3484,9 @@
 
       function toggleMessageSelection(msgId) {
         if (!messagesMap[msgId]) return;
-        if (selectedMsgIds.has(msgId)) {
-          selectedMsgIds.delete(msgId);
-        } else {
-          selectedMsgIds.add(msgId);
-        }
-        if (selectedMsgIds.size === 0) {
-          isSelectionMode = false;
-        }
+        if (selectedMsgIds.has(msgId)) selectedMsgIds.delete(msgId);
+        else selectedMsgIds.add(msgId);
+        if (selectedMsgIds.size === 0) isSelectionMode = false;
         updateActionMenuBar();
         renderMessages();
       }
@@ -2590,19 +3558,16 @@
         ids.forEach((id) => {
           if (!messagesMap[id]) return;
           const nextStar = anyUnstarred;
-          if (msgRef) {
+          if (msgRef)
             msgRef
               .child(id)
               .child("starred")
               .set(nextStar || null);
-          } else {
-            messagesMap[id].starred = nextStar;
-          }
+          else messagesMap[id].starred = nextStar;
         });
 
-        if (!msgRef) {
+        if (!msgRef)
           localStorage.setItem(STORAGE_KEY, JSON.stringify(messagesMap));
-        }
         clearSelectionMode();
       }
 
@@ -2616,16 +3581,12 @@
         }
 
         ids.forEach((id) => {
-          if (msgRef) {
-            msgRef.child(id).remove();
-          } else {
-            delete messagesMap[id];
-          }
+          if (msgRef) msgRef.child(id).remove();
+          else delete messagesMap[id];
         });
 
-        if (!msgRef) {
+        if (!msgRef)
           localStorage.setItem(STORAGE_KEY, JSON.stringify(messagesMap));
-        }
         clearSelectionMode();
       }
 
@@ -2641,10 +3602,7 @@
         const m = messagesMap[msgId];
         if (!m) return;
         cancelEditMessage();
-        replyToMsg = {
-          id: msgId,
-          preview: getMessageSummary(m),
-        };
+        replyToMsg = { id: msgId, preview: getMessageSummary(m) };
         document.getElementById("replyTargetPreview").textContent =
           replyToMsg.preview;
         document.getElementById("replyComposerBar").classList.remove("hidden");
@@ -2677,18 +3635,62 @@
         closeModal("settingsModal");
       }
 
-      function showLoveBurst() {
+      function showBurstAnimation(emoji = "❤️", label = "❤️") {
         const overlay = document.getElementById("loveBurstOverlay");
+        const emEl = document.getElementById("burstEmoji");
+        const lbEl = document.getElementById("burstLabel");
+        if (emEl) emEl.textContent = emoji;
+        if (lbEl) lbEl.textContent = label;
         overlay.classList.remove("hidden");
         playChime();
-        if (navigator.vibrate) navigator.vibrate([70, 35, 70]);
+        if (!focusModeEnabled && navigator.vibrate)
+          navigator.vibrate([70, 35, 70]);
         setTimeout(() => overlay.classList.add("hidden"), 900);
       }
 
       function sendLoveBurst() {
-        showLoveBurst();
+        showBurstAnimation("❤️", "❤️");
         if (burstRef) burstRef.set({ sender: senderRole, ts: Date.now() });
       }
+
+      function sendNudgePoke() {
+        const partner = getPartnerName();
+        showBurstAnimation("👉", getRoleIcon(partner));
+        if (nudgeRef) nudgeRef.set({ sender: senderRole, ts: Date.now() });
+      }
+
+      // Mark partner messages as seen when chat is active/visible
+      function markVisiblePartnerMessagesSeen() {
+        if (!isUnlocked) return;
+        const partner = getPartnerName();
+        let changedLocal = false;
+
+        Object.entries(messagesMap).forEach(([id, m]) => {
+          if (m && m.sender === partner && !m.seen) {
+            if (msgRef) {
+              msgRef
+                .child(id)
+                .child("seen")
+                .set(true)
+                .catch(() => {});
+            } else {
+              messagesMap[id].seen = true;
+              changedLocal = true;
+            }
+          }
+        });
+
+        if (changedLocal) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(messagesMap));
+          renderMessages();
+        }
+      }
+
+      document.addEventListener("visibilitychange", () => {
+        if (!document.hidden && isUnlocked) {
+          markVisiblePartnerMessagesSeen();
+        }
+      });
 
       function renderMessages() {
         const inner = document.getElementById("messagesInner");
@@ -2708,11 +3710,15 @@
           return;
         }
 
+        const petEmoji = petSpecies === "cat" ? "🐱" : "🐶";
+
         entries.forEach(([id, m]) => {
           const mine = m.sender === senderRole;
           const isPinned = pinnedMsgId === id;
           const isStarred = Boolean(m.starred);
           const isSelected = selectedMsgIds.has(id);
+          const isVanish = Boolean(m.vanish);
+          const isExpired = isVanish && Date.now() - (m.ts || 0) > 15000;
 
           const wrap = document.createElement("div");
           wrap.id = "msg_row_" + id;
@@ -2723,8 +3729,20 @@
 
           const swipeTrack = document.createElement("div");
           swipeTrack.className =
-            "msg-swipe-track relative max-w-[82%] flex flex-col " +
-            (mine ? "items-end" : "items-start");
+            "msg-swipe-track relative max-w-[84%] flex items-end gap-1.5 " +
+            (mine ? "flex-row-reverse" : "flex-row");
+
+          if (petWidgetEnabled) {
+            const petBadge = document.createElement("span");
+            petBadge.className =
+              "text-base leading-none pb-1 shrink-0 select-none";
+            petBadge.title =
+              petSpecies === "cat"
+                ? "Cute Cat holding chat"
+                : "Cute Dog holding chat";
+            petBadge.textContent = petEmoji;
+            swipeTrack.appendChild(petBadge);
+          }
 
           let touchStartX = 0;
           let touchStartY = 0;
@@ -2753,7 +3771,8 @@
 
               holdTimer = setTimeout(() => {
                 longPressTriggered = true;
-                if (navigator.vibrate) navigator.vibrate(40);
+                if (!focusModeEnabled && navigator.vibrate)
+                  navigator.vibrate(40);
                 enterSelectionWithMessage(id);
               }, 450);
             },
@@ -2784,11 +3803,9 @@
             clearHold();
             swipeTrack.classList.remove("swiping");
             swipeTrack.style.transform = "translateX(0px)";
-            if (didSwipe && Math.abs(currentDx) >= 44) {
-              startReplyTo(id);
-            } else if (!didSwipe && !longPressTriggered && isSelectionMode) {
+            if (didSwipe && Math.abs(currentDx) >= 44) startReplyTo(id);
+            else if (!didSwipe && !longPressTriggered && isSelectionMode)
               toggleMessageSelection(id);
-            }
             currentDx = 0;
           });
 
@@ -2799,9 +3816,8 @@
           });
 
           swipeTrack.addEventListener("click", () => {
-            if (isSelectionMode && !didSwipe && !longPressTriggered) {
+            if (isSelectionMode && !didSwipe && !longPressTriggered)
               toggleMessageSelection(id);
-            }
           });
 
           swipeTrack.addEventListener("contextmenu", (ev) => {
@@ -2811,10 +3827,11 @@
 
           const bubble = document.createElement("div");
           bubble.className =
-            "relative w-full px-3.5 py-2.5 rounded-2xl text-sm break-words " +
+            "relative px-3.5 py-2.5 rounded-2xl text-sm break-words " +
             (mine
               ? "rounded-br-sm bg-gradient-to-br from-rose-500 via-pink-500 to-indigo-500 text-white shadow-lg shadow-rose-950/35"
-              : "received-bubble rounded-bl-sm bg-white/[0.08] backdrop-blur-md border border-white/12 text-slate-100 shadow-md shadow-black/20");
+              : "received-bubble rounded-bl-sm bg-white/[0.08] backdrop-blur-md border border-white/12 text-slate-100 shadow-md shadow-black/20") +
+            (isExpired ? " vanish-expired" : "");
 
           if (m.replyTo && m.replyTo.preview) {
             const qBox = document.createElement("div");
@@ -2852,21 +3869,48 @@
             bubble.appendChild(link);
           } else {
             const txt = document.createElement("div");
-            txt.textContent = m.text || "";
+            txt.textContent = isExpired ? "👻 Vanished note" : m.text || "";
             bubble.appendChild(txt);
           }
 
           const flags = [];
+          if (isVanish) flags.push("👻");
           if (isStarred) flags.push("⭐");
           if (isPinned) flags.push("📌");
           if (m.edited) flags.push("edited");
 
           const timeEl = document.createElement("div");
           timeEl.className =
-            "bubble-time mt-1 text-[10px] leading-none text-right " +
+            "bubble-time mt-1 text-[10px] leading-none text-right flex items-center justify-end gap-1 " +
             (mine ? "text-white/80" : "text-slate-400");
-          timeEl.textContent =
+
+          const metaSpan = document.createElement("span");
+          metaSpan.textContent =
             (m.time || "") + (flags.length ? " " + flags.join(" ") : "");
+          timeEl.appendChild(metaSpan);
+
+          // Single / Double Tick with Seen Color (Blue when seen, Grey otherwise)
+          if (mine) {
+            const tickSpan = document.createElement("span");
+            const isSeen = Boolean(m.seen);
+            const isDelivered = Boolean(msgRef || m.delivered);
+            if (isSeen) {
+              tickSpan.textContent = "✓✓";
+              tickSpan.className =
+                "font-bold text-[#38bdf8] drop-shadow-[0_0_5px_rgba(56,189,248,0.65)]";
+              tickSpan.title = "Seen";
+            } else if (isDelivered) {
+              tickSpan.textContent = "✓✓";
+              tickSpan.className = "font-semibold text-white/60";
+              tickSpan.title = "Delivered";
+            } else {
+              tickSpan.textContent = "✓";
+              tickSpan.className = "font-semibold text-white/60";
+              tickSpan.title = "Sent";
+            }
+            timeEl.appendChild(tickSpan);
+          }
+
           bubble.appendChild(timeEl);
 
           swipeTrack.appendChild(bubble);
@@ -2878,19 +3922,29 @@
         if (box) box.scrollTop = box.scrollHeight;
       }
 
+      setInterval(() => {
+        if (Object.values(messagesMap).some((m) => m && m.vanish)) {
+          renderMessages();
+        }
+      }, 2000);
+
       function pushMessageItem(item) {
+        if (vanishModeEnabled) {
+          item.vanish = true;
+        }
         if (replyToMsg) {
-          item.replyTo = {
-            id: replyToMsg.id,
-            preview: replyToMsg.preview,
-          };
+          item.replyTo = { id: replyToMsg.id, preview: replyToMsg.preview };
           cancelReply();
         }
+        item.seen = false;
+        item.delivered = true;
 
         if (msgRef) {
-          msgRef.push(item).catch((err) => {
-            showDbError("Firebase write error: " + err.message);
-          });
+          msgRef
+            .push(item)
+            .catch((err) =>
+              showDbError("Firebase write error: " + err.message),
+            );
         } else {
           const id = "m_" + Date.now();
           messagesMap[id] = item;
@@ -3102,13 +4156,33 @@
         partnerPresenceRef.off();
         partnerPresenceRef.on("value", (snap) => {
           const data = snap.val();
-          if (data && data.lastSeen) {
-            partnerLastSeenTs = data.lastSeen;
-          }
+          if (data && data.lastSeen) partnerLastSeenTs = data.lastSeen;
           partnerOnlineState =
             Boolean(data && data.online) &&
             Date.now() - (data.lastSeen || 0) < 30000;
           updatePartnerPresenceUI();
+        });
+
+        moodsRef = db.ref("rooms/" + ROOM_ID + "/moods");
+        moodsRef.child(senderRole).set(myMood);
+        moodsRef.child(partner).off();
+        moodsRef.child(partner).on("value", (snap) => {
+          updatePartnerMoodBadge(snap.val() || "✨ Vibing");
+        });
+
+        statusRef = db.ref("rooms/" + ROOM_ID + "/sharedStatus");
+        statusRef.off();
+        statusRef.on("value", (snap) => {
+          sharedStatusText = snap.val() || "";
+          localStorage.setItem(STATUS_KEY, sharedStatusText);
+          renderSharedStatusBanner();
+        });
+
+        weatherRef = db.ref("rooms/" + ROOM_ID + "/weatherCanvas");
+        weatherRef.off();
+        weatherRef.on("value", (snap) => {
+          const w = snap.val();
+          if (w) applyWeatherCanvas(w);
         });
 
         typingRef = db.ref("rooms/" + ROOM_ID + "/typing");
@@ -3117,7 +4191,7 @@
           const isTyping = Boolean(snap.val());
           const bar = document.getElementById("typingBar");
           document.getElementById("typingLabel").textContent =
-            partner + t("typing");
+            getRoleIcon(partner) + t("typing");
           if (isTyping) bar.classList.remove("hidden");
           else bar.classList.add("hidden");
         });
@@ -3147,12 +4221,10 @@
             userPinsRef.on("value", (snap) => {
               const remotePins = snap.val() || {};
               const nextPins = loadUserPins();
-              if (/^\d{4}$/.test(String(remotePins.Rick || ""))) {
+              if (/^\d{4}$/.test(String(remotePins.Rick || "")))
                 nextPins.Rick = String(remotePins.Rick);
-              }
-              if (/^\d{4}$/.test(String(remotePins.Pomi || ""))) {
+              if (/^\d{4}$/.test(String(remotePins.Pomi || "")))
                 nextPins.Pomi = String(remotePins.Pomi);
-              }
               userPins = nextPins;
               localStorage.setItem(USER_PINS_KEY, JSON.stringify(userPins));
             });
@@ -3196,11 +4268,10 @@
                 seenMsgIds = new Set(keys);
                 isFirstSnapshot = false;
                 messagesMap = nextMap;
+                markVisiblePartnerMessagesSeen();
                 renderMessages();
               },
-              (err) => {
-                showDbError("Firebase error: " + err.message);
-              },
+              (err) => showDbError("Firebase error: " + err.message),
             );
 
             burstRef = db.ref("rooms/" + ROOM_ID + "/loveBurst");
@@ -3212,7 +4283,20 @@
                 b.sender !== senderRole &&
                 Date.now() - (b.ts || 0) < 3000
               ) {
-                showLoveBurst();
+                showBurstAnimation("❤️", "❤️");
+              }
+            });
+
+            nudgeRef = db.ref("rooms/" + ROOM_ID + "/nudgePoke");
+            nudgeRef.off();
+            nudgeRef.on("value", (snap) => {
+              const n = snap.val();
+              if (
+                n &&
+                n.sender !== senderRole &&
+                Date.now() - (n.ts || 0) < 3000
+              ) {
+                showBurstAnimation("👉", getRoleIcon(n.sender));
               }
             });
 
@@ -3234,19 +4318,22 @@
           userPinsRef.once("value").then((snap) => {
             const remotePins = snap.val() || {};
             const nextPins = loadUserPins();
-            if (/^\d{4}$/.test(String(remotePins.Rick || ""))) {
+            if (/^\d{4}$/.test(String(remotePins.Rick || "")))
               nextPins.Rick = String(remotePins.Rick);
-            }
-            if (/^\d{4}$/.test(String(remotePins.Pomi || ""))) {
+            if (/^\d{4}$/.test(String(remotePins.Pomi || "")))
               nextPins.Pomi = String(remotePins.Pomi);
-            }
             userPins = nextPins;
             localStorage.setItem(USER_PINS_KEY, JSON.stringify(userPins));
           });
         }
         const savedTheme = localStorage.getItem(THEME_KEY);
         if (savedTheme) applyTheme(savedTheme);
+        applyWeatherCanvas(weatherCanvas);
+        renderSharedStatusBanner();
+        syncPetSettingsUI();
+        syncFocusSettingsUI();
         changeLanguage(currentLang);
+        highlightMoodChips();
         refreshProfileAvatars();
         saveGameStats();
         renderTTTBoard();
