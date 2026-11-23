@@ -874,6 +874,12 @@
       #privacyShield { display:none; position:fixed; inset:0; z-index:999999; background:#020617; color:#e2e8f0; align-items:center; justify-content:center; text-align:center; padding:24px; }
       #privacyShield.active { display:flex; }
 </style>
+<style>
+@keyframes pomiLoveScreenShake { 0%,100%{transform:translate3d(0,0,0)} 15%{transform:translate3d(-3px,1px,0)} 30%{transform:translate3d(3px,-1px,0)} 45%{transform:translate3d(-2px,1px,0)} 60%{transform:translate3d(2px,0,0)} 75%{transform:translate3d(-1px,-1px,0)} }
+body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
+@media (prefers-reduced-motion: reduce) { body.love-screen-shake { animation:none; } }
+</style>
+
   </head>
   <body
     class="w-full h-[100dvh] overflow-hidden bg-[#0b0f19] text-slate-100 select-none"
@@ -7088,16 +7094,41 @@
         else if (emoji === "👉") playToneSequence([[520,0,.10],[760,.13,.13],[520,.28,.12]],.22,"triangle");
         else playToneSequence([[659,0,.16],[784,.18,.16],[988,.36,.24]],.20,"sine");
         if (!focusModeEnabled && navigator.vibrate) navigator.vibrate([70,35,70]);
+        if (emoji === "❤️") triggerLoveScreenEffect();
         setTimeout(() => { if(overlay) overlay.classList.add("hidden"); }, 1100);
       }
-      function speakLoveToPomi() {
+      function speakLoveMessage(fromRole) {
         try {
-          if ("speechSynthesis" in window && typeof SpeechSynthesisUtterance !== "undefined") {
-            window.speechSynthesis.cancel();
-            const line = new SpeechSynthesisUtterance("I love you, Pomi.");
-            line.lang = "en-IN"; line.rate = 0.92; line.pitch = 1.12; line.volume = 1;
+          if (!("speechSynthesis" in window) || typeof SpeechSynthesisUtterance === "undefined") return;
+          const from = fromRole === "Pomi" ? "Pomi" : "Rick";
+          const to = from === "Rick" ? "Pomi" : "Rick";
+          const line = new SpeechSynthesisUtterance(`I love you, ${to}.`);
+          line.lang = "en-IN";
+          line.rate = 0.92;
+          line.pitch = from === "Pomi" ? 1.28 : 0.88;
+          line.volume = 1;
+          const chooseVoice = () => {
+            const voices = window.speechSynthesis.getVoices ? window.speechSynthesis.getVoices() : [];
+            const english = voices.filter(v => /^en(-|_)/i.test(v.lang || ""));
+            const genderHints = from === "Pomi"
+              ? /female|woman|zira|samantha|karen|susan|hazel|veena|heera|priya/i
+              : /male|man|david|mark|daniel|james|rishi|guy/i;
+            const preferred = english.find(v => genderHints.test(v.name || ""));
+            const fallback = english.find(v => /en-IN/i.test(v.lang || "")) || english[0];
+            if (preferred || fallback) line.voice = preferred || fallback;
             window.speechSynthesis.speak(line);
-          }
+          };
+          window.speechSynthesis.cancel();
+          chooseVoice();
+        } catch(e) {}
+      }
+      function triggerLoveScreenEffect() {
+        try {
+          document.body.classList.remove("love-screen-shake");
+          void document.body.offsetWidth;
+          document.body.classList.add("love-screen-shake");
+          setTimeout(() => document.body.classList.remove("love-screen-shake"), 650);
+          if (navigator.vibrate && !focusModeEnabled) navigator.vibrate([90, 45, 120, 45, 90]);
         } catch(e) {}
       }
       function playAffectionCue(kind) {
@@ -7136,8 +7167,10 @@
       }
       function sendLoveBurst() {
         playAffectionCue('love');
-        showBurstAnimation("❤️", "I love you Pomi ❤️");
-        speakLoveToPomi();
+        const targetName = senderRole === "Pomi" ? "Rick" : "Pomi";
+        showBurstAnimation("❤️", `I love you ${targetName} ❤️`);
+        speakLoveMessage(senderRole);
+        triggerLoveScreenEffect();
         if (burstRef) burstRef.set({ sender: senderRole, ts: Date.now(), kind:"love" });
       }
       function sendNudgePoke() {
@@ -7970,7 +8003,14 @@
               ) {
                 if (b.kind === "rose") { playAffectionCue('rose'); showRoseFloat("🌹"); }
                 else if (b.kind === "hug") { playAffectionCue('hug'); showBurstAnimation("🤗", "A warm hug for you ❤️"); }
-                else { playAffectionCue('love'); showBurstAnimation("❤️", "I love you Pomi ❤️"); if (b.kind === "love") speakLoveToPomi(); }
+                else {
+                  playAffectionCue('love');
+                  const fromRole = b.sender === "Pomi" ? "Pomi" : "Rick";
+                  const targetName = fromRole === "Pomi" ? "Rick" : "Pomi";
+                  showBurstAnimation("❤️", `I love you ${targetName} ❤️`);
+                  if (b.kind === "love") speakLoveMessage(fromRole);
+                  triggerLoveScreenEffect();
+                }
               }
             });
 
