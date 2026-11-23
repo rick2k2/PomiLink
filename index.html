@@ -868,11 +868,18 @@
       .updates-layout-horizontal>*{min-width:78%;max-width:78%}
       .updates-layout-list{display:flex!important;flex-direction:column;gap:10px}
       .updates-layout-grid>*{min-width:0}
-    </style>
+    
+      /* Privacy shield: masks the app when the page is backgrounded or loses focus.
+         Web pages cannot block OS-level screenshots or screen recording. */
+      #privacyShield { display:none; position:fixed; inset:0; z-index:999999; background:#020617; color:#e2e8f0; align-items:center; justify-content:center; text-align:center; padding:24px; }
+      #privacyShield.active { display:flex; }
+</style>
   </head>
   <body
     class="w-full h-[100dvh] overflow-hidden bg-[#0b0f19] text-slate-100 select-none"
   >
+  <div id="privacyShield" role="status" aria-live="polite"><div><div style="font-size:42px;margin-bottom:12px">🔒</div><strong>Privacy Screen</strong><p style="font-size:13px;margin-top:8px;color:#94a3b8">Return to PomiLink to continue</p></div></div>
+
     <!-- Pomi's Pet: Favourite Pet Chooser & Name Modal -->
     <div
       id="petChoiceModal"
@@ -3483,6 +3490,7 @@
           >
             🎮 Pomi Mini Games
           </button>
+          <button type="button" onclick="openUserProfile(senderRole)" class="w-full py-2.5 px-3.5 rounded-2xl bg-violet-500/15 hover:bg-violet-500/20 border border-violet-400/30 text-xs font-semibold text-violet-200 text-left transition">👤 My Profile</button>
           <button
             type="button"
             onclick="
@@ -4470,7 +4478,8 @@
       );
 
       let pinBuffer = "";
-      let senderRole = "Rick";
+      const DEVICE_ROLE_KEY = "pomilink_device_role_v1"; // remembers last selected profile only; not an account lock
+      let senderRole = (localStorage.getItem(DEVICE_ROLE_KEY) === "Rick" || localStorage.getItem(DEVICE_ROLE_KEY) === "Pomi") ? localStorage.getItem(DEVICE_ROLE_KEY) : "Rick";
       let messagesMap = {};
       let seenMsgIds = new Set();
       let isFirstSnapshot = true;
@@ -4500,7 +4509,7 @@
       let dpRef = null;
       let presenceInterval = null;
       let typingTimeout = null;
-      let isUnlocked = localStorage.getItem("pomilink_session_unlocked_v1") === "true";
+      let isUnlocked = false; // Always require the account PIN after a fresh page/app launch.
       const NOTIFY_TONE_KEY = "pomilink_notify_tone_v1";
       const NOTIFY_CUSTOM_KEY = "pomilink_notify_custom_v1";
       const UPDATES_LAYOUT_KEY = "pomilink_updates_layout_v1";
@@ -5838,8 +5847,20 @@
       }
 
       function deleteRichUpdate(id) {
+        const update = richUpdatesMap && richUpdatesMap[id];
+        if (!update) return;
+        // Rick (admin) may remove either person's status. Pomi may remove only her own.
+        if (senderRole !== "Rick" && update.sender !== senderRole) {
+          alert("You can delete only your own status.");
+          return;
+        }
+        const ownerName = getChatName(update.sender || "");
+        if (!confirm(`Delete ${ownerName}'s status? This will remove it for both of you.`)) return;
         if (richUpdatesRef) {
-          richUpdatesRef.child(id).remove();
+          richUpdatesRef.child(id).remove().catch((err) => {
+            console.error("Status delete failed:", err);
+            alert("Could not delete this status. Please check your connection or Firebase rules.");
+          });
         } else {
           delete richUpdatesMap[id];
           localStorage.setItem(
@@ -5849,6 +5870,30 @@
           renderRichUpdatesFeed();
         }
       }
+
+      // Automatically expire status updates 24 hours after they were posted.
+      // The client removes expired Firebase records whenever either user opens the app.
+      const RICH_STATUS_TTL_MS = 24 * 60 * 60 * 1000;
+      function pruneExpiredRichUpdates() {
+        const now = Date.now();
+        let localChanged = false;
+        Object.entries(richUpdatesMap || {}).forEach(([id, update]) => {
+          const postedAt = Number(update && update.ts) || 0;
+          if (!update || !postedAt || now - postedAt >= RICH_STATUS_TTL_MS) {
+            if (richUpdatesRef) {
+              richUpdatesRef.child(id).remove().catch(() => {});
+            }
+            delete richUpdatesMap[id];
+            localChanged = true;
+          }
+        });
+        if (localChanged) {
+          localStorage.setItem(RICH_UPDATES_STORAGE, JSON.stringify(richUpdatesMap));
+          renderRichUpdatesFeed();
+        }
+      }
+      // Run on startup/while the app is open; Firebase records are deleted for both users.
+      setInterval(pruneExpiredRichUpdates, 60 * 1000);
 
       function markRichUpdatesSeen() {
         if (!isUnlocked) return;
@@ -5901,7 +5946,7 @@
               <span class="font-bold text-emerald-300">${getChatName(u.sender)}</span>
               <span class="text-[10px] text-slate-400">${u.time || ""}</span>
             </div>
-            ${u.sender === senderRole ? `<button type="button" onclick="deleteRichUpdate('${id}')" class="text-[11px] text-rose-400 hover:underline">Delete</button>` : ""}
+            ${(senderRole === "Rick" || u.sender === senderRole) ? `<button type="button" onclick="deleteRichUpdate('${id}')" class="text-[11px] text-rose-400 hover:underline">Delete</button>` : ""}
           `;
           card.appendChild(top);
 
@@ -6087,8 +6132,12 @@
         }
       }
 
+      // Never persist an unlocked state between app launches.
+      localStorage.removeItem("pomilink_session_unlocked_v1");
       // 3-Second Splash Screen
       function startSplashSequence() {
+        const savedDeviceRole = localStorage.getItem(DEVICE_ROLE_KEY);
+        if (savedDeviceRole === "Rick" || savedDeviceRole === "Pomi") setSenderRole(savedDeviceRole);
         const splash = document.getElementById("splashScreen");
         setTimeout(() => {
           if (splash) {
@@ -6117,7 +6166,7 @@
 
       function unlockApp() {
         isUnlocked = true;
-        localStorage.setItem("pomilink_session_unlocked_v1", "true");
+        localStorage.removeItem("pomilink_session_unlocked_v1");
         pinBuffer = "";
         const errEl = document.getElementById("pinError");
         if (errEl) errEl.textContent = "";
@@ -6223,11 +6272,13 @@
       }
 
       function pickDpFor(role) {
+        if (role !== senderRole) { showToast("You can change only your own profile photo", "🔒"); return; }
         targetDpRole = role;
         document.getElementById("dpFileInput").click();
       }
 
       function handleDpUpload(e) {
+        if (targetDpRole !== senderRole) { showToast("You can change only your own profile photo", "🔒"); e.target.value = ""; return; }
         const file = e.target.files && e.target.files[0];
         if (!file) return;
         const reader = new FileReader();
@@ -6257,6 +6308,7 @@
       }
 
       function resetDpFor(role) {
+        if (role !== senderRole) { showToast("You can change only your own profile photo", "🔒"); return; }
         delete profilesDp[role];
         localStorage.setItem(DP_KEY, JSON.stringify(profilesDp));
         refreshProfileAvatars();
@@ -6508,26 +6560,34 @@
       }
 
       function setSenderRole(role) {
+        // Same-device account switching is allowed, but every selected profile
+        // must still pass its own 4-digit PIN in pressPin() before unlocking.
+        if (role !== "Rick" && role !== "Pomi") return;
         senderRole = role;
+        localStorage.setItem(DEVICE_ROLE_KEY, role);
+        updateClearChatPermission();
         pinBuffer = "";
         renderPinDots();
         const errEl = document.getElementById("pinError");
         if (errEl) errEl.textContent = "";
 
-        document.getElementById("activeRoleLabel").textContent =
-          getRoleIcon(role);
+        const activeLabel = document.getElementById("activeRoleLabel");
+        if (activeLabel) activeLabel.textContent = getRoleIcon(role);
         const rBtn = document.getElementById("roleRickBtn");
         const pBtn = document.getElementById("rolePomiBtn");
-        if (role === "Rick") {
-          rBtn.className =
-            "py-2 rounded-xl bg-gradient-to-r from-rose-500/30 to-indigo-500/30 border border-rose-400/50 text-base font-bold text-white transition";
-          pBtn.className =
-            "py-2 rounded-xl border border-transparent text-base font-bold text-slate-300 hover:text-white transition";
-        } else {
-          pBtn.className =
-            "py-2 rounded-xl bg-gradient-to-r from-rose-500/30 to-indigo-500/30 border border-rose-400/50 text-base font-bold text-white transition";
-          rBtn.className =
-            "py-2 rounded-xl border border-transparent text-base font-bold text-slate-300 hover:text-white transition";
+        if (rBtn) {
+          rBtn.className = role === "Rick"
+            ? "py-2 rounded-xl bg-gradient-to-r from-rose-500/30 to-indigo-500/30 border border-rose-400/50 text-base font-bold text-white transition"
+            : "py-2 rounded-xl border border-transparent text-base font-bold text-slate-300 hover:text-white transition";
+          rBtn.disabled = false;
+          rBtn.classList.remove("opacity-30");
+        }
+        if (pBtn) {
+          pBtn.className = role === "Pomi"
+            ? "py-2 rounded-xl bg-gradient-to-r from-rose-500/30 to-indigo-500/30 border border-rose-400/50 text-base font-bold text-white transition"
+            : "py-2 rounded-xl border border-transparent text-base font-bold text-slate-300 hover:text-white transition";
+          pBtn.disabled = false;
+          pBtn.classList.remove("opacity-30");
         }
         updatePartnerHeaderUI();
         if (isUnlocked) {
@@ -6538,6 +6598,7 @@
       }
 
       function selectPinEditTarget(role) {
+        if (role !== senderRole) { showToast("You can change only your own account PIN", "🔒"); return; }
         pinEditTarget = role;
         const rBtn = document.getElementById("pinTargetRickBtn");
         const pBtn = document.getElementById("pinTargetPomiBtn");
@@ -6579,9 +6640,9 @@
       }
 
       function saveProfileNames() {
-        const r=(document.getElementById("rickDisplayNameInput")?.value||"Rick").trim().slice(0,24)||"Rick";
-        const p=(document.getElementById("pomiDisplayNameInput")?.value||"Pomi").trim().slice(0,24)||"Pomi";
-        CHAT_NAMES.Rick=r; CHAT_NAMES.Pomi=p;
+        const field = document.getElementById(senderRole === "Rick" ? "rickDisplayNameInput" : "pomiDisplayNameInput");
+        const value = (field?.value || senderRole).trim().slice(0,24) || senderRole;
+        CHAT_NAMES[senderRole] = value;
         localStorage.setItem(PROFILE_NAMES_KEY,JSON.stringify(CHAT_NAMES));
         if(profileNamesRef) profileNamesRef.set(CHAT_NAMES).catch(()=>{});
         updatePartnerHeaderUI(); alert("Profile names updated");
@@ -6605,11 +6666,14 @@
         const title = document.getElementById("profilePageName");
         const input = document.getElementById("profilePageNameInput");
         if (title) title.textContent = name;
+        const editPanel = document.getElementById("profilePageEditPanel");
+        if (editPanel) editPanel.classList.toggle("hidden", role !== senderRole);
         if (input && document.activeElement !== input) input.value = name;
         if (img && profilesDp[role]) { img.src = profilesDp[role]; img.classList.remove("hidden"); if(fallback) fallback.classList.add("hidden"); }
         else { if(img) { img.removeAttribute("src"); img.classList.add("hidden"); } if(fallback) { fallback.textContent = getRoleIcon(role); fallback.classList.remove("hidden"); } }
       }
       function saveUserProfileName() {
+        if (profilePageRole !== senderRole) { showToast("This is the other person's profile. It is view-only.", "🔒"); return; }
         const input = document.getElementById("profilePageNameInput");
         const value = (input?.value || "").trim().slice(0,32);
         if (!value) { showToast("Please enter a name", "✏️"); return; }
@@ -6675,6 +6739,7 @@
           row.append(label,del);list.appendChild(row);
         });
       }
+      updateClearChatPermission();
       setInterval(()=>{
         let changed=false;
         chatReminders.forEach(r=>{if(!r.done&&r.at<=Date.now()){r.done=true;changed=true;
@@ -6696,7 +6761,10 @@
         if (id === "dpModal") {
           refreshProfileAvatars();
           const rn=document.getElementById("rickDisplayNameInput"),pn=document.getElementById("pomiDisplayNameInput");
-          if(rn)rn.value=CHAT_NAMES.Rick||"Rick"; if(pn)pn.value=CHAT_NAMES.Pomi||"Pomi";
+          if(rn){rn.value=CHAT_NAMES.Rick||"Rick";rn.disabled=senderRole!=="Rick";rn.classList.toggle("opacity-40",rn.disabled);}
+          if(pn){pn.value=CHAT_NAMES.Pomi||"Pomi";pn.disabled=senderRole!=="Pomi";pn.classList.toggle("opacity-40",pn.disabled);}
+          const dpCards=document.querySelectorAll("#dpModal .grid.grid-cols-2.gap-3.text-center > div");
+          dpCards.forEach((card,index)=>{card.classList.toggle("opacity-40",(index===0?"Rick":"Pomi")!==senderRole);});
         }
         if (id === "reminderModal") renderChatReminders();
         if (id === "gamesModal") {
@@ -6733,6 +6801,7 @@
       }
 
       function savePersonalPin() {
+        if (pinEditTarget !== senderRole) { showToast("You can change only your own account PIN", "🔒"); return; }
         const cur = document.getElementById("currentPinField").value.trim();
         const next = document.getElementById("newPinField").value.trim();
         const msg = document.getElementById("pinChangeMsg");
@@ -6978,7 +7047,18 @@
         if (bar) bar.classList.add("hidden");
       }
 
+      function updateClearChatPermission() {
+        const clearBtn = document.getElementById("clearChatBtn");
+        if (clearBtn) clearBtn.classList.toggle("hidden", senderRole !== "Rick");
+      }
+
       function clearAllChatMessages() {
+        // Only Rick may clear the shared conversation. Enforce this in the action,
+        // not only by hiding the button in the interface.
+        if (senderRole !== "Rick") {
+          showToast("Only Rick can clear all chat messages.", "🔒");
+          return;
+        }
         if (!confirm(t("confirmClear"))) return;
         clearSelectionMode();
         cancelReply();
@@ -7106,11 +7186,20 @@
         }
       }
 
+      const privacyShield = document.getElementById("privacyShield");
+      function setPrivacyShield(active) {
+        if (privacyShield) privacyShield.classList.toggle("active", !!active);
+      }
       document.addEventListener("visibilitychange", () => {
+        setPrivacyShield(document.hidden);
         if (!document.hidden && isUnlocked) {
           markVisiblePartnerMessagesSeen();
         }
       });
+      window.addEventListener("blur", () => setPrivacyShield(true));
+      window.addEventListener("focus", () => setPrivacyShield(false));
+      window.addEventListener("beforeprint", () => setPrivacyShield(true));
+      window.addEventListener("afterprint", () => setPrivacyShield(false));
 
       // Plays a one-shot random effect only inside the chat message viewport.
       const chatAnimationSets = [
@@ -7928,6 +8017,7 @@
             richUpdatesRef.off();
             richUpdatesRef.on("value", (snap) => {
               richUpdatesMap = snap.val() || {};
+              pruneExpiredRichUpdates();
               localStorage.setItem(
                 RICH_UPDATES_STORAGE,
                 JSON.stringify(richUpdatesMap),
@@ -9192,7 +9282,7 @@
         </button>
         <p class="text-xs text-slate-400 mt-3">Tap photo to view full size</p>
         <h2 id="profilePageName" class="text-2xl font-bold mt-5">Pomi</h2>
-        <div class="w-full max-w-sm mt-8 space-y-3">
+        <div id="profilePageEditPanel" class="w-full max-w-sm mt-8 space-y-3">
           <label class="block text-sm text-slate-300" for="profilePageNameInput">Change display name (emoji allowed)</label>
           <input id="profilePageNameInput" maxlength="32" class="w-full rounded-2xl bg-white/10 border border-white/15 px-4 py-3 text-white outline-none focus:border-rose-400" placeholder="Name 😊" />
           <button type="button" onclick="saveUserProfileName()" class="w-full rounded-2xl bg-rose-500 py-3 font-semibold">Save name</button>
