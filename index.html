@@ -2064,10 +2064,7 @@
           </div>
         </div>
 
-        <p class="text-center text-[11px] font-mono text-slate-500">
-          from app developer
-          <span class="text-rose-400">&lt;/&gt;@rick saha 2026</span>
-        </p>
+
       </div>
 
       <!-- Chat Screen -->
@@ -2084,6 +2081,7 @@
               <div class="relative shrink-0">
                 <div
                   id="partnerAvatar"
+                  onclick="openUserProfile(getPartnerName())" role="button" tabindex="0" aria-label="Open profile"
                   class="w-10 h-10 rounded-full bg-gradient-to-tr from-rose-500 to-indigo-500 flex items-center justify-center font-bold text-sm text-white overflow-hidden ring-2 ring-white/15 shadow-md"
                 >
                   P
@@ -2118,7 +2116,7 @@
               </div>
             </div>
 
-            <div class="flex items-center gap-1.5 shrink-0">
+            <div class="flex items-center gap-1 shrink-0">
               <button
                 type="button"
                 onclick="openUpdatesPage()"
@@ -2132,35 +2130,22 @@
                   class="hidden absolute top-0.5 right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-slate-950"
                 ></span>
               </button>
-              <button
-                type="button"
-                onclick="sendNudgePoke()"
-                title="Poke"
-                aria-label="Poke"
-                class="w-9 h-9 rounded-full bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-400/30 text-indigo-300 flex items-center justify-center transition active:scale-95"
-              >
-                <i data-lucide="hand" class="w-4 h-4"></i>
-              </button>
-              <button
-                type="button"
-                onclick="sendRoseToPomi()" title="Send a rose" aria-label="Send a rose" class="w-9 h-9 rounded-full bg-rose-500/15 hover:bg-rose-500/25 border border-rose-400/30 text-rose-300 flex items-center justify-center transition active:scale-95"><span class="text-lg">🌹</span></button>
-              <button
-                                onclick="sendLoveBurst()"
-                title="Love"
-                aria-label="Love"
-                class="w-9 h-9 rounded-full bg-rose-500/15 hover:bg-rose-500/25 border border-rose-400/30 text-rose-400 flex items-center justify-center transition active:scale-95"
-              >
-                <i data-lucide="heart" class="w-4 h-4 fill-rose-400/30"></i>
-              </button>
-              <button
-                type="button"
-                onclick="playRandomChatAnimation()"
-                title="Random chat animation"
-                aria-label="Play random chat animation"
-                class="w-9 h-9 rounded-full bg-fuchsia-500/15 hover:bg-fuchsia-500/25 border border-fuchsia-400/30 text-fuchsia-200 flex items-center justify-center transition active:scale-95"
-              >
-                <i data-lucide="sparkles" class="w-4 h-4"></i>
-              </button>
+              <div class="relative shrink-0" id="affectionMenuWrap">
+                <button type="button" onclick="toggleAffectionMenu()" title="Love & fun" aria-label="Open love and fun actions"
+                  class="w-10 h-10 rounded-full bg-gradient-to-br from-rose-500/25 via-fuchsia-500/20 to-violet-500/25 hover:brightness-125 border border-rose-300/30 text-rose-100 flex items-center justify-center shadow-lg shadow-rose-950/20 transition active:scale-95">
+                  <i data-lucide="heart-handshake" class="w-5 h-5"></i>
+                </button>
+                <div id="affectionMenu" class="hidden absolute right-0 top-12 z-[80] w-56 rounded-2xl border border-white/15 bg-slate-950/95 p-2 shadow-2xl backdrop-blur-xl">
+                  <div class="px-2 pb-1.5 text-[10px] uppercase tracking-widest text-slate-400">Little things for Pomi</div>
+                  <div class="grid grid-cols-2 gap-1.5">
+                    <button type="button" onclick="runAffectionAction('rose')" class="rounded-xl bg-rose-500/15 border border-rose-400/20 px-2 py-2.5 text-sm text-rose-100">🌹 Rose</button>
+                    <button type="button" onclick="runAffectionAction('love')" class="rounded-xl bg-pink-500/15 border border-pink-400/20 px-2 py-2.5 text-sm text-pink-100">❤️ Love</button>
+                    <button type="button" onclick="runAffectionAction('hug')" class="rounded-xl bg-fuchsia-500/15 border border-fuchsia-400/20 px-2 py-2.5 text-sm text-fuchsia-100">🤗 Hug</button>
+                    <button type="button" onclick="runAffectionAction('poke')" class="rounded-xl bg-indigo-500/15 border border-indigo-400/20 px-2 py-2.5 text-sm text-indigo-100">👉 Poke</button>
+                    <button type="button" onclick="runAffectionAction('animation')" class="col-span-2 rounded-xl bg-violet-500/15 border border-violet-400/20 px-2 py-2.5 text-sm text-violet-100">✨ Random Animation</button>
+                  </div>
+                </div>
+              </div>
               <button
                 type="button"
                 onclick="openSocialHub()"
@@ -3300,6 +3285,20 @@
             >
               Close
             </button>
+          </div>
+
+          <button type="button" onclick="toggleDeveloperDetails()" class="w-full py-3 px-3.5 rounded-2xl bg-gradient-to-r from-violet-500/20 to-rose-500/20 hover:brightness-110 border border-violet-300/30 text-xs font-bold text-white text-left flex items-center justify-between">
+            <span>👨‍💻 Developer Details</span><span id="developerDetailsChevron" class="text-base">⌄</span>
+          </button>
+          <div id="developerDetailsPanel" class="hidden rounded-2xl bg-white/[0.05] border border-white/10 p-3">
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <label class="text-slate-400">Name<input id="developerName" value="Rick Saha" readonly class="mt-1 w-full rounded-lg bg-slate-950/70 border border-white/10 p-2 text-white"></label>
+              <label class="text-slate-400">Age<input id="developerAge" value="24" readonly class="mt-1 w-full rounded-lg bg-slate-950/70 border border-white/10 p-2 text-white"></label>
+              <label class="col-span-2 text-slate-400">Email<input id="developerEmail" type="email" placeholder="Add your email address" class="mt-1 w-full rounded-lg bg-slate-950/70 border border-white/10 p-2 text-white"></label>
+              <label class="col-span-2 text-slate-400">Address<input id="developerAddress" placeholder="Add the address you want to display" class="mt-1 w-full rounded-lg bg-slate-950/70 border border-white/10 p-2 text-white"></label>
+              <label class="col-span-2 text-slate-400">Qualification<input id="developerQualification" value="B.Tech — Computer Science & Engineering" readonly class="mt-1 w-full rounded-lg bg-slate-950/70 border border-white/10 p-2 text-white"></label>
+            </div>
+            <p class="mt-2 text-[10px] text-slate-500">Email ও Address এই ডিভাইসে local ভাবে থাকবে।</p>
           </div>
 
           <!-- Chat Pet Widget Setting (Dog / Cat) -->
@@ -6219,6 +6218,7 @@
             "Pomi",
             profilesDp.Pomi,
           );
+          if (document.getElementById("userProfilePage") && !document.getElementById("userProfilePage").classList.contains("hidden")) refreshUserProfilePage();
         } catch (e) {}
       }
 
@@ -6569,6 +6569,15 @@
       let chatReminders = JSON.parse(localStorage.getItem(REMINDERS_KEY) || "[]");
       let profileNamesRef = null;
       let timeCapsuleRef = null;
+      function toggleDeveloperDetails() {
+        const panel = document.getElementById("developerDetailsPanel");
+        const chevron = document.getElementById("developerDetailsChevron");
+        if (!panel) return;
+        const willOpen = panel.classList.contains("hidden");
+        panel.classList.toggle("hidden", !willOpen);
+        if (chevron) chevron.textContent = willOpen ? "⌃" : "⌄";
+      }
+
       function saveProfileNames() {
         const r=(document.getElementById("rickDisplayNameInput")?.value||"Rick").trim().slice(0,24)||"Rick";
         const p=(document.getElementById("pomiDisplayNameInput")?.value||"Pomi").trim().slice(0,24)||"Pomi";
@@ -6576,6 +6585,40 @@
         localStorage.setItem(PROFILE_NAMES_KEY,JSON.stringify(CHAT_NAMES));
         if(profileNamesRef) profileNamesRef.set(CHAT_NAMES).catch(()=>{});
         updatePartnerHeaderUI(); alert("Profile names updated");
+      }
+      let profilePageRole = "Pomi";
+      function openUserProfile(role) {
+        profilePageRole = (role === "Rick" || role === "Pomi") ? role : getPartnerName();
+        refreshUserProfilePage();
+        const page = document.getElementById("userProfilePage");
+        if (page) page.classList.remove("hidden");
+      }
+      function closeUserProfile() {
+        const page = document.getElementById("userProfilePage");
+        if (page) page.classList.add("hidden");
+      }
+      function refreshUserProfilePage() {
+        const role = profilePageRole;
+        const name = CHAT_NAMES[role] || role;
+        const img = document.getElementById("profilePageAvatar");
+        const fallback = document.getElementById("profilePageFallback");
+        const title = document.getElementById("profilePageName");
+        const input = document.getElementById("profilePageNameInput");
+        if (title) title.textContent = name;
+        if (input && document.activeElement !== input) input.value = name;
+        if (img && profilesDp[role]) { img.src = profilesDp[role]; img.classList.remove("hidden"); if(fallback) fallback.classList.add("hidden"); }
+        else { if(img) { img.removeAttribute("src"); img.classList.add("hidden"); } if(fallback) { fallback.textContent = getRoleIcon(role); fallback.classList.remove("hidden"); } }
+      }
+      function saveUserProfileName() {
+        const input = document.getElementById("profilePageNameInput");
+        const value = (input?.value || "").trim().slice(0,32);
+        if (!value) { showToast("Please enter a name", "✏️"); return; }
+        CHAT_NAMES[profilePageRole] = value;
+        localStorage.setItem(PROFILE_NAMES_KEY, JSON.stringify(CHAT_NAMES));
+        if (profileNamesRef) profileNamesRef.set(CHAT_NAMES).catch(err=>showDbError(err.message));
+        refreshUserProfilePage();
+        updatePartnerHeaderUI();
+        showToast("Profile name updated", "✅");
       }
       function openProfilePhotoPreview(role) {
         const url=profilesDp[role]; if(!url)return;
@@ -6646,6 +6689,9 @@
       document.addEventListener("copy",ev=>{if(ev.target.closest("#messagesBox"))ev.preventDefault();});
 
       function openModal(id) {
+        if (id === "settingsModal") {
+          ['developerEmail','developerAddress'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=localStorage.getItem('pomi_'+id)||'';});
+        }
         if (id === "pinModal") selectPinEditTarget(senderRole);
         if (id === "dpModal") {
           refreshProfileAvatars();
@@ -6974,17 +7020,54 @@
           }
         } catch(e) {}
       }
+      function playAffectionCue(kind) {
+        const cues = {
+          rose: [[659,0,.12],[784,.13,.16],[988,.31,.22]],
+          poke: [[880,0,.07],[660,.09,.09]],
+          hug: [[392,0,.18],[523,.16,.22],[659,.36,.26]],
+          love: [[523,0,.14],[659,.16,.14],[784,.32,.24]]
+        };
+        const volumes = {rose:.16,poke:.13,hug:.18,love:.18};
+        playToneSequence(cues[kind] || cues.poke, volumes[kind] || .15, 'sine');
+        try { if (navigator.vibrate) navigator.vibrate(kind === 'poke' ? [35,35,55] : kind === 'hug' ? [45,25,70] : [30,20,30]); } catch(e) {}
+      }
+      function toggleAffectionMenu(force) {
+        const menu=document.getElementById('affectionMenu');
+        if(!menu) return;
+        const shouldOpen = typeof force === 'boolean' ? force : menu.classList.contains('hidden');
+        menu.classList.toggle('hidden', !shouldOpen);
+      }
+      function runAffectionAction(action) {
+        toggleAffectionMenu(false);
+        if(action==='rose') sendRoseToPomi();
+        else if(action==='love') sendLoveBurst();
+        else if(action==='hug') sendHugToPomi();
+        else if(action==='poke') sendNudgePoke();
+        else if(action==='animation') playRandomChatAnimation();
+      }
+      document.addEventListener('click', ev => {
+        const wrap=document.getElementById('affectionMenuWrap');
+        if(wrap && !wrap.contains(ev.target)) toggleAffectionMenu(false);
+      });
+      function sendHugToPomi() {
+        playAffectionCue('hug');
+        showBurstAnimation('🤗', 'A warm hug for you ❤️');
+        if(burstRef) burstRef.set({sender:senderRole,ts:Date.now(),kind:'hug'});
+      }
       function sendLoveBurst() {
+        playAffectionCue('love');
         showBurstAnimation("❤️", "I love you Pomi ❤️");
         speakLoveToPomi();
         if (burstRef) burstRef.set({ sender: senderRole, ts: Date.now(), kind:"love" });
       }
       function sendNudgePoke() {
+        playAffectionCue('poke');
         const partner = getPartnerName();
         showBurstAnimation("👉", getChatName(partner));
         if (nudgeRef) nudgeRef.set({ sender: senderRole, ts: Date.now() });
       }
       function sendRoseToPomi() {
+        playAffectionCue('rose');
         showRoseFloat("🌹");
         if (burstRef) burstRef.set({ sender:senderRole, ts:Date.now(), kind:"rose" });
       }
@@ -7796,8 +7879,9 @@
                 b.sender !== senderRole &&
                 Date.now() - (b.ts || 0) < 3000
               ) {
-                if (b.kind === "rose") showRoseFloat("🌹");
-                else { showBurstAnimation("❤️", "I love you Pomi ❤️"); if (b.kind === "love") speakLoveToPomi(); }
+                if (b.kind === "rose") { playAffectionCue('rose'); showRoseFloat("🌹"); }
+                else if (b.kind === "hug") { playAffectionCue('hug'); showBurstAnimation("🤗", "A warm hug for you ❤️"); }
+                else { playAffectionCue('love'); showBurstAnimation("❤️", "I love you Pomi ❤️"); if (b.kind === "love") speakLoveToPomi(); }
               }
             });
 
@@ -7810,6 +7894,7 @@
                 n.sender !== senderRole &&
                 Date.now() - (n.ts || 0) < 3000
               ) {
+                playAffectionCue('poke');
                 showBurstAnimation("👉", getChatName(n.sender));
               }
             });
@@ -9002,13 +9087,14 @@
 
       // Prime WebAudio on the first real user gesture; mobile browsers suspend audio until this.
       ["pointerdown","touchstart","keydown"].forEach(evt=>document.addEventListener(evt,()=>{const c=getPomiAudioContext();if(c&&c.state==="suspended")c.resume().catch(()=>{});},{once:true,passive:true}));
+      ['developerEmail','developerAddress'].forEach(id=>{const el=document.getElementById(id);if(el){el.addEventListener('change',()=>localStorage.setItem('pomi_'+id,el.value.trim()));}});
       if (window.lucide) lucide.createIcons();
 
       syncDoggyUI();
       syncPetLabelsAndUI();
       startSplashSequence();
     </script>
-    <div class="fixed bottom-1 left-0 right-0 z-20 pointer-events-none text-center text-[9px] text-slate-500/70">PomiLink · Rick Saha</div>
+
   
     <div id="reminderModal" class="hidden fixed inset-0 z-[90] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
       <div class="w-full max-w-sm rounded-3xl bg-slate-900 border border-white/15 p-4 space-y-3">
@@ -9094,8 +9180,29 @@
         try{ if(frame && frame.contentWindow) frame.contentWindow.history.back(); }catch(e){}
       }
     </script>
+    <section id="userProfilePage" class="hidden fixed inset-0 z-[90] bg-slate-950 text-white flex flex-col" aria-label="User profile">
+      <header class="h-16 px-4 flex items-center gap-3 border-b border-white/10 bg-slate-900/90 shrink-0">
+        <button type="button" onclick="closeUserProfile()" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-2xl" aria-label="Back to chat">←</button>
+        <div class="min-w-0"><div class="font-semibold">Profile</div><div class="text-xs text-slate-400">PomiLink</div></div>
+      </header>
+      <div class="flex-1 overflow-y-auto px-5 py-8 flex flex-col items-center">
+        <button type="button" onclick="openProfilePhotoPreview(profilePageRole)" class="w-44 h-44 rounded-full overflow-hidden border-4 border-white/15 shadow-2xl bg-gradient-to-br from-rose-500 to-violet-600 flex items-center justify-center" aria-label="View profile photo">
+          <img id="profilePageAvatar" alt="Profile picture" class="w-full h-full object-cover hidden" />
+          <span id="profilePageFallback" class="text-6xl font-bold">P</span>
+        </button>
+        <p class="text-xs text-slate-400 mt-3">Tap photo to view full size</p>
+        <h2 id="profilePageName" class="text-2xl font-bold mt-5">Pomi</h2>
+        <div class="w-full max-w-sm mt-8 space-y-3">
+          <label class="block text-sm text-slate-300" for="profilePageNameInput">Change display name (emoji allowed)</label>
+          <input id="profilePageNameInput" maxlength="32" class="w-full rounded-2xl bg-white/10 border border-white/15 px-4 py-3 text-white outline-none focus:border-rose-400" placeholder="Name 😊" />
+          <button type="button" onclick="saveUserProfileName()" class="w-full rounded-2xl bg-rose-500 py-3 font-semibold">Save name</button>
+          <button type="button" onclick="pickDpFor(profilePageRole)" class="w-full rounded-2xl bg-white/10 border border-white/15 py-3 font-semibold">Change profile picture</button>
+          <button type="button" onclick="resetDpFor(profilePageRole);refreshUserProfilePage()" class="w-full rounded-2xl bg-white/5 py-2 text-sm text-slate-300">Remove profile picture</button>
+        </div>
+      </div>
+    </section>
     <div id="profilePhotoPreview" class="hidden fixed inset-0 z-[95] bg-black/90 backdrop-blur-md flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
-      <img id="profilePhotoPreviewImg" alt="Profile photo" class="max-w-[92vw] max-h-[86vh] object-contain rounded-2xl shadow-2xl"/>
+      <img id="profilePhotoPreviewImg" alt="Profile photo" onclick="document.getElementById('profilePhotoPreview').classList.add('hidden')" class="max-w-[92vw] max-h-[86vh] object-contain rounded-2xl shadow-2xl"/>
     </div>
 </body>
 </html>
