@@ -6359,6 +6359,31 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
         }
       }
 
+      // Lightweight in-app toast used by chat actions and other UI feedback.
+      function showToast(message, icon = "ℹ️") {
+        try {
+          let toast = document.getElementById("appToastNotice");
+          if (!toast) {
+            toast = document.createElement("div");
+            toast.id = "appToastNotice";
+            toast.setAttribute("role", "status");
+            toast.setAttribute("aria-live", "polite");
+            toast.style.cssText = "position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(12px);z-index:100000;max-width:min(90vw,420px);padding:11px 16px;border-radius:14px;background:rgba(24,24,27,.94);color:#fff;font:600 14px/1.4 system-ui,sans-serif;box-shadow:0 8px 28px rgba(0,0,0,.28);opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease;text-align:center;";
+            document.body.appendChild(toast);
+          }
+          if (toast._hideTimer) clearTimeout(toast._hideTimer);
+          toast.textContent = `${icon ? icon + " " : ""}${String(message ?? "")}`;
+          toast.style.opacity = "1";
+          toast.style.transform = "translateX(-50%) translateY(0)";
+          toast._hideTimer = setTimeout(() => {
+            toast.style.opacity = "0";
+            toast.style.transform = "translateX(-50%) translateY(12px)";
+          }, 2600);
+        } catch (error) {
+          console.warn("Toast display failed:", error);
+        }
+      }
+
       function showDbError(text) {
         const banner = document.getElementById("dbErrorBanner");
         if (!banner) return;
@@ -6760,6 +6785,12 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
       }
 
       // Multi-select helpers
+      function canEditMessage(m) {
+        if (!m || (m.type && m.type !== "text") || m.sender !== senderRole) return false;
+        const sentAt = Number(m.ts || 0);
+        return Number.isFinite(sentAt) && sentAt > 0 && Date.now() - sentAt <= 5 * 60 * 1000;
+      }
+
       function updateActionMenuBar() {
         const bar = document.getElementById("actionMenuBar");
         const countEl = document.getElementById("selectedCountNumber");
@@ -6781,7 +6812,7 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
           if (count === 1) {
             const onlyId = Array.from(selectedMsgIds)[0];
             const m = messagesMap[onlyId];
-            if (m && (!m.type || m.type === "text")) canEdit = true;
+            if (canEditMessage(m)) canEdit = true;
           }
           editBtn.classList.toggle("hidden", !canEdit);
         }
@@ -6815,7 +6846,11 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
         if (selectedMsgIds.size !== 1) return;
         const id = Array.from(selectedMsgIds)[0];
         const m = messagesMap[id];
-        if (!m || (m.type && m.type !== "text")) return;
+        if (!canEditMessage(m)) {
+          alert("You can edit your own text messages only within 5 minutes of sending.");
+          clearSelectionMode();
+          return;
+        }
 
         cancelReply();
         editingMsgId = id;
@@ -6892,21 +6927,25 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
 
       function deleteSelectedMessages() {
         if (selectedMsgIds.size === 0) return;
-        const ids = Array.from(selectedMsgIds);
+        const ids = Array.from(selectedMsgIds).filter(id => Boolean(messagesMap[id]));
+        if (!ids.length) { clearSelectionMode(); return; }
+        if (!confirm(`Delete ${ids.length} selected message${ids.length === 1 ? "" : "s"}? This removes them from the shared chat.`)) return;
         if (pinnedMsgId && ids.includes(pinnedMsgId)) {
           pinnedMsgId = null;
           localStorage.removeItem(PINNED_MSG_KEY);
           if (pinnedMsgRef) pinnedMsgRef.set(null);
         }
 
-        ids.forEach((id) => {
-          if (msgRef) msgRef.child(id).remove();
-          else delete messagesMap[id];
-        });
-
-        if (!msgRef)
+        if (msgRef) {
+          Promise.all(ids.map((id) => msgRef.child(id).remove()))
+            .then(() => { showToast(`${ids.length} messages deleted`, "🗑️"); clearSelectionMode(); })
+            .catch((err) => showDbError("Bulk delete failed: " + err.message));
+        } else {
+          ids.forEach((id) => { delete messagesMap[id]; });
           localStorage.setItem(STORAGE_KEY, JSON.stringify(messagesMap));
-        clearSelectionMode();
+          showToast(`${ids.length} messages deleted`, "🗑️");
+          clearSelectionMode();
+        }
       }
 
       function getMessageSummary(m) {
@@ -7379,7 +7418,6 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
           if (isVanish) flags.push("👻");
           if (isStarred) flags.push("⭐");
           if (isPinned) flags.push("📌");
-          if (m.edited) flags.push("edited");
 
           const timeEl = document.createElement("div");
           timeEl.className =
@@ -7414,6 +7452,12 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
           }
 
           bubble.appendChild(timeEl);
+          if (m.edited) {
+            const editedLabel = document.createElement("div");
+            editedLabel.className = "text-[9px] mt-1 text-right " + (mine ? "text-white/65" : "text-slate-400");
+            editedLabel.textContent = "edited";
+            bubble.appendChild(editedLabel);
+          }
 
           swipeTrack.appendChild(bubble);
 
@@ -7430,6 +7474,8 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
           addTool("Paste","▣","Paste into message box",()=>{pasteToComposer();closeQuickReactionPickers();});
           addTool(isStarred?"Unstar":"Star",isStarred?"★":"☆","Star message",()=>{const next=!Boolean(messagesMap[id]?.starred); if(msgRef) msgRef.child(id).child("starred").set(next||null).catch(err=>showDbError(err.message)); else {messagesMap[id].starred=next;localStorage.setItem(STORAGE_KEY,JSON.stringify(messagesMap));renderMessages();closeQuickReactionPickers();}});
           addTool(isPinned?"Unpin":"Pin",isPinned?"⌖":"📌","Pin message",()=>{if(pinnedMsgId===id){pinnedMsgId=null;localStorage.removeItem(PINNED_MSG_KEY);if(pinnedMsgRef)pinnedMsgRef.set(null);}else{pinnedMsgId=id;localStorage.setItem(PINNED_MSG_KEY,id);if(pinnedMsgRef)pinnedMsgRef.set(id);}renderMessages();closeQuickReactionPickers();});
+          if (mine && canEditMessage(m)) addTool("Edit","✏️","Edit message (within 5 minutes)",()=>{selectedMsgIds.clear();selectedMsgIds.add(id);isSelectionMode=true;openEditSelectedMessage();});
+          addTool("Select","☑","Select message for bulk actions",()=>enterSelectionWithMessage(id));
           addTool("Delete","⌫","Delete message",()=>showMessageDeleteOptions(id,toolbar),"delete");
           wrap.appendChild(toolbar);
 
@@ -7467,6 +7513,23 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
             });
             wrap.appendChild(reactionRow);
           }
+          const messageControls = document.createElement("div");
+          messageControls.className = "flex items-center gap-2 mt-1 px-2 " + (mine ? "self-end" : "self-start");
+          const selectBtn = document.createElement("button");
+          selectBtn.type = "button";
+          selectBtn.className = "text-[10px] px-2 py-1 rounded-lg border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10";
+          selectBtn.textContent = isSelected ? "✓ Selected" : "Select";
+          selectBtn.addEventListener("click", (ev) => { ev.stopPropagation(); if (!isSelectionMode) enterSelectionWithMessage(id); else toggleMessageSelection(id); });
+          messageControls.appendChild(selectBtn);
+          if (mine && canEditMessage(m)) {
+            const editBtn = document.createElement("button");
+            editBtn.type = "button";
+            editBtn.className = "text-[10px] px-2 py-1 rounded-lg border border-sky-400/25 bg-sky-400/10 text-sky-200 hover:bg-sky-400/20";
+            editBtn.textContent = "✏️ Edit";
+            editBtn.addEventListener("click", (ev) => { ev.stopPropagation(); selectedMsgIds.clear(); selectedMsgIds.add(id); isSelectionMode = true; openEditSelectedMessage(); });
+            messageControls.appendChild(editBtn);
+          }
+          wrap.appendChild(messageControls);
           inner.appendChild(wrap);
         });
 
@@ -7547,11 +7610,18 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
 
         if (editingMsgId && messagesMap[editingMsgId]) {
           const targetId = editingMsgId;
+          const targetMessage = messagesMap[targetId];
+          if (!canEditMessage(targetMessage)) {
+            alert("The 5-minute edit window has expired. You can no longer edit this message.");
+            cancelEditMessage();
+            renderMessages();
+            return;
+          }
+          const editData = { text, edited: true, editedAt: Date.now() };
           if (msgRef) {
-            msgRef.child(targetId).update({ text, edited: true });
+            msgRef.child(targetId).update(editData).catch(err => showDbError("Edit failed: " + err.message));
           } else {
-            messagesMap[targetId].text = text;
-            messagesMap[targetId].edited = true;
+            Object.assign(targetMessage, editData);
             localStorage.setItem(STORAGE_KEY, JSON.stringify(messagesMap));
             renderMessages();
           }
