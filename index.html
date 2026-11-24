@@ -880,7 +880,20 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
 @media (prefers-reduced-motion: reduce) { body.love-screen-shake { animation:none; } }
 </style>
 
-  </head>
+  
+<style>
+#messagesBox{position:relative;isolation:isolate}
+#chatWeatherLayer{position:sticky;top:0;height:0;z-index:1;pointer-events:none;overflow:visible}
+#chatWeatherLayer .weather-particle{position:absolute;pointer-events:none;user-select:none;will-change:transform,opacity}
+@keyframes chatRainFall{0%{transform:translateY(-35px);opacity:0}12%{opacity:.8}100%{transform:translateY(75vh);opacity:0}}
+@keyframes chatSunRay{0%,100%{opacity:.08;transform:translateX(-8px)}50%{opacity:.28;transform:translateX(8px)}}
+@keyframes chatCloudDrift{0%,100%{transform:translateX(-12px);opacity:.12}50%{transform:translateX(18px);opacity:.28}}
+@keyframes chatBatteryDrain{0%,100%{opacity:.08}50%{opacity:.25}}
+.status-action-btn{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);border-radius:999px;padding:6px 10px;font-size:11px;color:#e2e8f0}
+.status-reply{font-size:11px;color:#cbd5e1;padding:7px 9px;border-radius:10px;background:rgba(255,255,255,.055);margin-top:5px}
+#statusInsightsModal{z-index:210}
+</style>
+</head>
   <body
     class="w-full h-[100dvh] overflow-hidden bg-[#0b0f19] text-slate-100 select-none"
   >
@@ -2161,15 +2174,6 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
               </div>
               <button
                 type="button"
-                onclick="openSocialHub()"
-                title="Social apps"
-                aria-label="Open social apps"
-                class="w-9 h-9 rounded-full bg-sky-500/15 hover:bg-sky-500/25 border border-sky-400/30 text-sky-200 flex items-center justify-center transition active:scale-95"
-              >
-                <i data-lucide="app-window" class="w-4 h-4"></i>
-              </button>
-              <button
-                type="button"
                 onclick="openModal('settingsModal')"
                 title="Settings"
                 aria-label="Settings"
@@ -2252,6 +2256,15 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
                 class="weather-chip w-7 h-7 rounded-full text-xs bg-white/[0.06] border border-white/10 flex items-center justify-center shrink-0"
               >
                 🌧️
+              </button>
+              <button
+                type="button"
+                data-weather="cloudy"
+                title="Cloudy"
+                onclick="setWeatherCanvas('cloudy')"
+                class="weather-chip w-7 h-7 rounded-full text-xs bg-white/[0.06] border border-white/10 flex items-center justify-center shrink-0"
+              >
+                ☁️
               </button>
               <button
                 type="button"
@@ -2410,6 +2423,7 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
           id="messagesBox"
           class="flex-1 overflow-y-auto px-3.5 py-3 chat-scroll"
         >
+          <div id="chatWeatherLayer" aria-hidden="true"></div>
           <div id="chatFxLayer" aria-hidden="true"></div>
           <div
             id="messagesInner"
@@ -3299,6 +3313,10 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
               Close
             </button>
           </div>
+
+          <button type="button" onclick="openSocialHub()" class="w-full py-3 px-3.5 rounded-2xl bg-sky-500/10 hover:bg-sky-500/20 border border-sky-400/25 text-xs font-bold text-sky-100 text-left flex items-center justify-between">
+            <span>🌐 Social Apps</span><span>Open ↗</span>
+          </button>
 
           <button type="button" onclick="toggleDeveloperDetails()" class="w-full py-3 px-3.5 rounded-2xl bg-gradient-to-r from-violet-500/20 to-rose-500/20 hover:brightness-110 border border-violet-300/30 text-xs font-bold text-white text-left flex items-center justify-between">
             <span>👨‍💻 Developer Details</span><span id="developerDetailsChevron" class="text-base">⌄</span>
@@ -4426,6 +4444,52 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
         },
       };
 
+      // Whole-app UI translation layer. Original text is retained so language can be switched repeatedly.
+      const UI_WORDS = {
+        bn: {
+          "Private Space":"ব্যক্তিগত জায়গা", "Install":"ইনস্টল", "Enter Personal PIN":"নিজের PIN দিন", "Offline":"অফলাইন", "Little things for Pomi":"পোমির জন্য ছোট্ট ভালোবাসা", "🌹 Rose":"🌹 গোলাপ", "❤️ Love":"❤️ ভালোবাসা", "🤗 Hug":"🤗 আলিঙ্গন", "👉 Poke":"👉 খোঁচা", "✨ Random Animation":"✨ এলোমেলো অ্যানিমেশন", "📢 Share Status":"📢 স্ট্যাটাস শেয়ার", "Update":"আপডেট", "What is your favorite memory of us together?":"আমাদের একসঙ্গে কাটানো সবচেয়ে প্রিয় স্মৃতি কোনটি?", "📋 Copy":"📋 কপি", "✏️ Edit":"✏️ এডিট", "📌 Pin":"📌 পিন", "⭐ Star":"⭐ স্টার", "🗑️ Delete":"🗑️ মুছুন", "Pomi is typing...":"পোমি লিখছে...", "Replying to":"উত্তর দিচ্ছেন", "Edit Message":"মেসেজ এডিট করুন", "Cancel":"বাতিল", "Send":"পাঠান", "🎨 Co-Draw / Quick Doodle":"🎨 একসঙ্গে আঁকুন", "Send Doodle to Chat":"আঁকা চ্যাটে পাঠান", "Share Status":"স্ট্যাটাস শেয়ার করুন", "Close":"বন্ধ করুন", "Clear":"মুছুন", "Save":"সেভ করুন", "Save Letter":"চিঠি সেভ করুন", "⏳ Time-Capsule & \"Open When...\"":"⏳ টাইম ক্যাপসুল ও ‘যখন খুলবে...’", "Special notes for the right moment":"সঠিক মুহূর্তের জন্য বিশেষ চিঠি", "Open when you miss me ❤️":"আমাকে মিস করলে খুলবে ❤️", "Open when you're tired 😴":"ক্লান্ত হলে খুলবে 😴", "Open when you smile 😊":"হাসলে খুলবে 😊", "Time Capsule (1 min lock) ⏳":"টাইম ক্যাপসুল (১ মিনিট লক) ⏳", "📸 Our Memory Vault":"📸 আমাদের স্মৃতির ভাণ্ডার", "Starred & pinned special moments":"পছন্দের ও পিন করা বিশেষ মুহূর্ত", "🎮 Pomi Mini Games":"🎮 পোমির ছোট্ট গেম", "Fun break for Pomi":"পোমির মজার বিরতি", "Tic-Tac-Toe":"টিক-ট্যাক-টো", "🧠 Quiz":"🧠 কুইজ", "Rock Paper":"পাথর-কাগজ-কাঁচি", "Heart Catch":"হার্ট ধরো", "Score: 0":"স্কোর: ০", "New Round":"নতুন রাউন্ড", "Reset Score":"স্কোর রিসেট", "Question 1 / 10":"প্রশ্ন ১ / ১০", "Loading question...":"প্রশ্ন লোড হচ্ছে...", "Restart Quiz":"কুইজ আবার শুরু", "Quick Match":"দ্রুত ম্যাচ", "Pick Rock, Paper, or Scissors!":"পাথর, কাগজ অথবা কাঁচি বেছে নাও!", "Catch hearts in 10s!":"১০ সেকেন্ডে হার্ট ধরো!", "Start Game":"খেলা শুরু", "Best Score: 0":"সেরা স্কোর: ০", "Profile Photos (❌ & 🚫)":"প্রোফাইল ছবি (❌ ও 🚫)", "Edit profile names":"প্রোফাইলের নাম এডিট", "Save names":"নাম সেভ করুন", "Settings":"সেটিংস", "🌐 Social Apps":"🌐 সোশ্যাল অ্যাপ", "Open ↗":"খুলুন ↗", "Name":"নাম", "Age":"বয়স", "Email":"ইমেল", "Address":"ঠিকানা", "Qualification":"শিক্ষাগত যোগ্যতা", "🐾 Chat Pet Widget":"🐾 চ্যাট পেট", "🐶 Cute Dog":"🐶 মিষ্টি কুকুর", "🐱 Cute Cat":"🐱 মিষ্টি বিড়াল", "🔊 Chat Sound":"🔊 চ্যাটের শব্দ", "🧘 Focus / DND Mode":"🧘 ফোকাস / DND মোড", "👻 Vanish Mode (15s)":"👻 অদৃশ্য মেসেজ মোড (১৫ সেকেন্ড)", "🤖 Offline Auto-Reply (Only Rick)":"🤖 অফলাইন অটো-রিপ্লাই (শুধু Rick)", "👤 My Profile":"👤 আমার প্রোফাইল", "🖼️ Profile Photo / DP (❌ & 🚫)":"🖼️ প্রোফাইল ছবি / DP (❌ ও 🚫)", "📲 Install on Home Screen":"📲 হোম স্ক্রিনে ইনস্টল", "🔔 Premium Notification Studio":"🔔 প্রিমিয়াম নোটিফিকেশন স্টুডিও", "Choose from 20 loud / soft tones or upload your own audio.":"২০টি জোরে / নরম টোন থেকে বেছে নিন অথবা নিজের অডিও দিন।", "Notification tone":"নোটিফিকেশন টোন", "▶ Preview selected tone":"▶ নির্বাচিত টোন শুনুন", "Custom tone (MP3 / WAV / OGG)":"নিজের টোন (MP3 / WAV / OGG)", "Use built-in tone again":"আবার অ্যাপের টোন ব্যবহার করুন", "Notification permission:":"নোটিফিকেশনের অনুমতি:", "Checking…":"পরীক্ষা করা হচ্ছে…", "✨ Updates display layout":"✨ আপডেট দেখানোর ধরন", "Vertical list":"লম্বা তালিকা", "Side-by-side grid":"পাশাপাশি গ্রিড", "Horizontal swipe":"অনুভূমিক সোয়াইপ", "Made with care · Rick Saha":"ভালোবাসা দিয়ে তৈরি · Rick Saha", "Language / ভাষা / भाषा":"ভাষা", "English":"ইংরেজি", "বাংলা (Bengali)":"বাংলা", "हिन्दी (Hindi)":"হিন্দি", "🔔 Enable Notifications":"🔔 নোটিফিকেশন চালু করুন", "🎨 Themes & Wallpaper":"🎨 থিম ও ওয়ালপেপার", "🔑 Change Personal PIN (❌ & 🚫)":"🔑 ব্যক্তিগত PIN বদলান (❌ ও 🚫)", "🔒 Lock Chat (Switch Profile)":"🔒 চ্যাট লক করুন (প্রোফাইল বদলান)", "🗑️ Clear All Chat":"🗑️ সব চ্যাট মুছুন", "Change Personal PIN":"ব্যক্তিগত PIN বদলান", "Save Personal PIN":"ব্যক্তিগত PIN সেভ করুন", "Midnight Rose":"মিডনাইট রোজ", "Ocean Mist":"সমুদ্রের কুয়াশা", "Velvet Night":"ভেলভেট নাইট", "Daylight Light":"দিনের আলো", "Sunny Light":"রোদেলা আলো", "Dot Pattern":"ডট প্যাটার্ন", "Lattice Pattern":"জালির নকশা", "Upload Custom Wallpaper":"নিজের ওয়ালপেপার আপলোড করুন", "Gemini AI Assistant":"Gemini AI সহকারী", "Direct AI inside PomiLink":"PomiLink-এর ভিতরে AI", "Ask":"জিজ্ঞাসা করুন", "← Back":"← ফিরে যান", "Updates":"আপডেট", "Private Status • Rick & Pomi":"ব্যক্তিগত স্ট্যাটাস • Rick ও Pomi", "Post New Status":"নতুন স্ট্যাটাস দিন", "24h Private Feed":"২৪ ঘণ্টার ব্যক্তিগত ফিড", "✍️ Text":"✍️ লেখা", "🖼️ Image":"🖼️ ছবি", "🎬 Video":"🎬 ভিডিও", "🎙️ Voice":"🎙️ ভয়েস", "Choose Image from Gallery":"গ্যালারি থেকে ছবি বাছুন", "Choose Short Video (Max 4 MB)":"ছোট ভিডিও বাছুন (সর্বোচ্চ ৪ MB)", "🎙️ Tap to Record Voice Status":"🎙️ ভয়েস স্ট্যাটাস রেকর্ড করতে ট্যাপ করুন", "Share Update":"আপডেট শেয়ার করুন", "Recent Updates":"সাম্প্রতিক আপডেট", "← Back to Chat":"← চ্যাটে ফিরুন", "Set reminder":"রিমাইন্ডার সেট করুন", "Social Hub":"সোশ্যাল হাব", "Choose an app":"একটি অ্যাপ বেছে নিন", "Open":"খুলুন", "Back":"ফিরে যান", "Profile":"প্রোফাইল", "Tap photo to view full size":"বড় করে দেখতে ছবিতে ট্যাপ করুন", "Change display name (emoji allowed)":"দেখানোর নাম বদলান (ইমোজি চলবে)", "Save name":"নাম সেভ করুন", "Change profile picture":"প্রোফাইল ছবি বদলান", "Remove profile picture":"প্রোফাইল ছবি সরান", "Dog":"কুকুর", "Cat":"বিড়াল", "Pudding":"পুডিং", "Change DP":"DP বদলান", "Remove":"সরান", "← Chat":"← চ্যাট", "Privacy Screen":"প্রাইভেসি স্ক্রিন", "Return to PomiLink to continue":"চালিয়ে যেতে PomiLink-এ ফিরে যান", "Which is your favourite pet — Dog or Cat?":"তোমার প্রিয় পোষ্য কোনটি — কুকুর না বিড়াল?", "✏️ Set Pet Name":"পোষ্যের নাম দিন", "Happy & Ready to Play!":"খুশি, খেলতে প্রস্তুত!", "Purring & Ready to Play!":"গরগর করছে, খেলতে প্রস্তুত!", "Feed / খাবার":"খাবার দাও", "Ball / খেলা":"বল / খেলা", "Jump / লাফ":"লাফ", "Bark / ডাক":"ঘেউ ঘেউ", "Bath / স্নান":"স্নান", "Fish / খাবার":"মাছ / খাবার", "Yarn / খেলা":"সুতো / খেলা", "Pounce / লাফ":"ঝাঁপ", "Meow / ডাক":"মিউ ডাক", "Purr / আদর":"আদর", "🌐 Online Live":"🌐 অনলাইন লাইভ", "vs Smart Bot":"স্মার্ট বটের বিরুদ্ধে", "Local 2P":"লোকাল ২ জন", "New Round":"নতুন রাউন্ড", "Reset":"রিসেট", "None":"কিছুই নয়", "🎀 Bow":"🎀 ফিতা", "👑 Crown":"👑 মুকুট", "🕶️ Cool":"🕶️ কুল"
+        },
+        hi: {
+          "Private Space":"निजी जगह", "Install":"इंस्टॉल", "Enter Personal PIN":"अपना PIN डालें", "Offline":"ऑफ़लाइन", "Little things for Pomi":"पोमी के लिए छोटी-छोटी बातें", "🌹 Rose":"🌹 गुलाब", "❤️ Love":"❤️ प्यार", "🤗 Hug":"🤗 गले लगाना", "👉 Poke":"👉 छेड़ना", "✨ Random Animation":"✨ रैंडम एनिमेशन", "📢 Share Status":"📢 स्टेटस साझा करें", "Update":"अपडेट", "What is your favorite memory of us together?":"हमारी साथ की सबसे प्यारी याद कौन-सी है?", "📋 Copy":"📋 कॉपी", "✏️ Edit":"✏️ संपादित करें", "📌 Pin":"📌 पिन", "⭐ Star":"⭐ पसंदीदा", "🗑️ Delete":"🗑️ हटाएँ", "Pomi is typing...":"पोमी लिख रही है...", "Replying to":"को जवाब", "Edit Message":"मैसेज संपादित करें", "Cancel":"रद्द करें", "Send":"भेजें", "🎨 Co-Draw / Quick Doodle":"🎨 साथ में ड्रॉ करें", "Send Doodle to Chat":"ड्रॉइंग चैट में भेजें", "Share Status":"स्टेटस साझा करें", "Close":"बंद करें", "Clear":"साफ़ करें", "Save":"सेव करें", "Save Letter":"पत्र सेव करें", "⏳ Time-Capsule & \"Open When...\"":"⏳ टाइम कैप्सूल और ‘जब खोलें...’", "Special notes for the right moment":"सही समय के लिए खास संदेश", "Open when you miss me ❤️":"जब मेरी याद आए तब खोलें ❤️", "Open when you're tired 😴":"जब थक जाएँ तब खोलें 😴", "Open when you smile 😊":"जब मुस्कुराएँ तब खोलें 😊", "Time Capsule (1 min lock) ⏳":"टाइम कैप्सूल (१ मिनट लॉक) ⏳", "📸 Our Memory Vault":"📸 हमारी यादों का खज़ाना", "Starred & pinned special moments":"पसंदीदा और पिन किए हुए खास पल", "🎮 Pomi Mini Games":"🎮 पोमी मिनी गेम्स", "Fun break for Pomi":"पोमी के लिए मज़ेदार ब्रेक", "Tic-Tac-Toe":"टिक-टैक-टो", "🧠 Quiz":"🧠 क्विज़", "Rock Paper":"पत्थर-कागज़-कैंची", "Heart Catch":"दिल पकड़ो", "Score: 0":"स्कोर: ०", "New Round":"नया राउंड", "Reset Score":"स्कोर रीसेट करें", "Question 1 / 10":"प्रश्न १ / १०", "Loading question...":"प्रश्न लोड हो रहा है...", "Restart Quiz":"क्विज़ फिर शुरू करें", "Quick Match":"क्विक मैच", "Pick Rock, Paper, or Scissors!":"पत्थर, कागज़ या कैंची चुनें!", "Catch hearts in 10s!":"१० सेकंड में दिल पकड़ें!", "Start Game":"गेम शुरू करें", "Best Score: 0":"सर्वश्रेष्ठ स्कोर: ०", "Profile Photos (❌ & 🚫)":"प्रोफ़ाइल फ़ोटो (❌ और 🚫)", "Edit profile names":"प्रोफ़ाइल नाम संपादित करें", "Save names":"नाम सेव करें", "Settings":"सेटिंग्स", "🌐 Social Apps":"🌐 सोशल ऐप्स", "Open ↗":"खोलें ↗", "Name":"नाम", "Age":"उम्र", "Email":"ईमेल", "Address":"पता", "Qualification":"योग्यता", "🐾 Chat Pet Widget":"🐾 चैट पेट", "🐶 Cute Dog":"🐶 प्यारा कुत्ता", "🐱 Cute Cat":"🐱 प्यारी बिल्ली", "🔊 Chat Sound":"🔊 चैट की आवाज़", "🧘 Focus / DND Mode":"🧘 फोकस / DND मोड", "👻 Vanish Mode (15s)":"👻 गायब होने वाला मैसेज (१५ सेकंड)", "🤖 Offline Auto-Reply (Only Rick)":"🤖 ऑफ़लाइन ऑटो-रिप्लाई (केवल Rick)", "👤 My Profile":"👤 मेरी प्रोफ़ाइल", "🖼️ Profile Photo / DP (❌ & 🚫)":"🖼️ प्रोफ़ाइल फ़ोटो / DP (❌ और 🚫)", "📲 Install on Home Screen":"📲 होम स्क्रीन पर इंस्टॉल करें", "🔔 Premium Notification Studio":"🔔 प्रीमियम नोटिफ़िकेशन स्टूडियो", "Choose from 20 loud / soft tones or upload your own audio.":"२० तेज़ / धीमे टोन में से चुनें या अपना ऑडियो अपलोड करें।", "Notification tone":"नोटिफ़िकेशन टोन", "▶ Preview selected tone":"▶ चुना हुआ टोन सुनें", "Custom tone (MP3 / WAV / OGG)":"कस्टम टोन (MP3 / WAV / OGG)", "Use built-in tone again":"फिर से डिफ़ॉल्ट टोन इस्तेमाल करें", "Notification permission:":"नोटिफ़िकेशन अनुमति:", "Checking…":"जाँच हो रही है…", "✨ Updates display layout":"✨ अपडेट दिखाने का तरीका", "Vertical list":"लंबी सूची", "Side-by-side grid":"साथ-साथ ग्रिड", "Horizontal swipe":"क्षैतिज स्वाइप", "Made with care · Rick Saha":"प्यार से बनाया · Rick Saha", "Language / ভাষা / भाषा":"भाषा", "English":"अंग्रेज़ी", "বাংলা (Bengali)":"बंगाली", "हिन्दी (Hindi)":"हिन्दी", "🔔 Enable Notifications":"🔔 नोटिफ़िकेशन चालू करें", "🎨 Themes & Wallpaper":"🎨 थीम और वॉलपेपर", "🔑 Change Personal PIN (❌ & 🚫)":"🔑 निजी PIN बदलें (❌ और 🚫)", "🔒 Lock Chat (Switch Profile)":"🔒 चैट लॉक करें (प्रोफ़ाइल बदलें)", "🗑️ Clear All Chat":"🗑️ पूरी चैट साफ़ करें", "Change Personal PIN":"निजी PIN बदलें", "Save Personal PIN":"निजी PIN सेव करें", "Midnight Rose":"मिडनाइट रोज़", "Ocean Mist":"ओशन मिस्ट", "Velvet Night":"वेलवेट नाइट", "Daylight Light":"दिन की रोशनी", "Sunny Light":"धूप वाली रोशनी", "Dot Pattern":"डॉट पैटर्न", "Lattice Pattern":"जाली पैटर्न", "Upload Custom Wallpaper":"अपना वॉलपेपर अपलोड करें", "Gemini AI Assistant":"Gemini AI सहायक", "Direct AI inside PomiLink":"PomiLink में AI", "Ask":"पूछें", "← Back":"← वापस", "Updates":"अपडेट", "Private Status • Rick & Pomi":"निजी स्टेटस • Rick और Pomi", "Post New Status":"नया स्टेटस डालें", "24h Private Feed":"२४ घंटे की निजी फ़ीड", "✍️ Text":"✍️ टेक्स्ट", "🖼️ Image":"🖼️ तस्वीर", "🎬 Video":"🎬 वीडियो", "🎙️ Voice":"🎙️ आवाज़", "Choose Image from Gallery":"गैलरी से तस्वीर चुनें", "Choose Short Video (Max 4 MB)":"छोटा वीडियो चुनें (अधिकतम ४ MB)", "🎙️ Tap to Record Voice Status":"वॉइस स्टेटस रिकॉर्ड करने के लिए टैप करें", "Share Update":"अपडेट साझा करें", "Recent Updates":"हाल के अपडेट", "← Back to Chat":"← चैट पर लौटें", "Set reminder":"रिमाइंडर सेट करें", "Social Hub":"सोशल हब", "Choose an app":"एक ऐप चुनें", "Open":"खोलें", "Back":"वापस", "Profile":"प्रोफ़ाइल", "Tap photo to view full size":"बड़ी तस्वीर देखने के लिए टैप करें", "Change display name (emoji allowed)":"दिखने वाला नाम बदलें (इमोजी मान्य)", "Save name":"नाम सेव करें", "Change profile picture":"प्रोफ़ाइल तस्वीर बदलें", "Remove profile picture":"प्रोफ़ाइल तस्वीर हटाएँ", "Dog":"कुत्ता", "Cat":"बिल्ली", "Pudding":"पुडिंग", "Change DP":"DP बदलें", "Remove":"हटाएँ", "← Chat":"← चैट", "Privacy Screen":"गोपनीयता स्क्रीन", "Return to PomiLink to continue":"जारी रखने के लिए PomiLink पर लौटें", "Which is your favourite pet — Dog or Cat?":"आपका पसंदीदा पालतू कौन है — कुत्ता या बिल्ली?", "✏️ Set Pet Name":"पालतू का नाम रखें", "Happy & Ready to Play!":"खुश है और खेलने को तैयार!", "Purring & Ready to Play!":"गुर्रा रही है और खेलने को तैयार!", "Feed / খাবার":"खाना दें", "Ball / খেলা":"गेंद / खेल", "Jump / লাফ":"कूदें", "Bark / ডাক":"भौंकें", "Bath / স্নান":"नहलाएँ", "Fish / খাবার":"मछली / खाना", "Yarn / খেলা":"धागा / खेल", "Pounce / লাফ":"झपटें", "Meow / ডাক":"म्याऊँ", "Purr / আদর":"प्यार", "🌐 Online Live":"🌐 ऑनलाइन लाइव", "vs Smart Bot":"स्मार्ट बॉट के विरुद्ध", "Local 2P":"लोकल २ खिलाड़ी", "Reset":"रीसेट", "None":"कोई नहीं", "🎀 Bow":"🎀 बो", "👑 Crown":"👑 मुकुट", "🕶️ Cool":"🕶️ कूल"
+        }
+      };
+      function applyFullLanguage() {
+        const lang = UI_WORDS[currentLang] ? currentLang : "en";
+        const map = UI_WORDS[lang] || {};
+        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+        let node;
+        while ((node = walker.nextNode())) {
+          const parent = node.parentElement;
+          if (!parent || /^(SCRIPT|STYLE|TEXTAREA)$/i.test(parent.tagName) || parent.closest("[contenteditable='true']")) continue;
+          if (!node.__pomilinkOriginal) node.__pomilinkOriginal = node.nodeValue;
+          const original = node.__pomilinkOriginal;
+          const trimmed = original.trim();
+          if (!trimmed) continue;
+          const translated = map[trimmed];
+          if (translated) node.nodeValue = original.replace(trimmed, translated);
+          else if (lang === "en") node.nodeValue = original;
+        }
+        document.querySelectorAll("input[placeholder],textarea[placeholder]").forEach(el => {
+          if (!el.dataset.langOriginal) el.dataset.langOriginal = el.placeholder;
+          const v = el.dataset.langOriginal;
+          el.placeholder = map[v] || (lang === "en" ? v : el.placeholder);
+        });
+        document.querySelectorAll("[title]").forEach(el => {
+          if (!el.dataset.langTitle) el.dataset.langTitle = el.title;
+          const v = el.dataset.langTitle; el.title = map[v] || (lang === "en" ? v : el.title);
+        });
+        const lock = document.getElementById("lockLangSelect"); if (lock) lock.value = lang;
+        const settings = document.getElementById("chatLangSelect"); if (settings) settings.value = lang;
+      }
+      let languageObserver = null;
+      function watchLanguageNodes() {
+        if (languageObserver || !document.body) return;
+        languageObserver = new MutationObserver(records => {
+          if (records.some(r => r.addedNodes && r.addedNodes.length)) applyFullLanguage();
+        });
+        languageObserver.observe(document.body, { childList: true, subtree: true });
+      }
+
       const ALL_THEMES = [
         "theme-midnight-rose",
         "theme-ocean-mist",
@@ -4502,6 +4566,7 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
       let db = null;
       let msgRef = null;
       let burstRef = null;
+      let chatAnimationRef = null;
       let nudgeRef = null;
       let moodsRef = null;
       let statusRef = null;
@@ -4662,26 +4727,42 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
         syncFocusSettingsUI();
       }
 
+      function renderChatWeatherEffect() {
+        const layer = document.getElementById("chatWeatherLayer");
+        const box = document.getElementById("messagesBox");
+        if (!layer || !box) return;
+        layer.innerHTML = "";
+        const width = Math.max(240, box.clientWidth || 320);
+        if (weatherCanvas === "sunny") {
+          const ray=document.createElement("div"); ray.textContent="☀️";
+          ray.style.cssText=`position:absolute;left:8px;top:12px;font-size:64px;opacity:.2;filter:blur(.2px);animation:chatSunRay 4s ease-in-out infinite`; layer.appendChild(ray);
+          for(let i=0;i<5;i++){const glow=document.createElement("i");glow.style.cssText=`position:absolute;left:${i*22-20}px;top:0;width:18px;height:65vh;background:linear-gradient(180deg,rgba(251,191,36,.12),transparent);transform:rotate(12deg);animation:chatSunRay ${3+i*.4}s ease-in-out infinite`;layer.appendChild(glow);}
+        } else if (weatherCanvas === "rain") {
+          for(let i=0;i<34;i++){const drop=document.createElement("i");drop.className="weather-particle";drop.textContent="💧";drop.style.cssText=`left:${Math.random()*width}px;top:${-30-Math.random()*180}px;font-size:${10+Math.random()*9}px;animation:chatRainFall ${1.2+Math.random()*1.5}s linear ${Math.random()*2}s infinite`;layer.appendChild(drop);}
+          const cloud=document.createElement("div");cloud.textContent="☁️";cloud.style.cssText="position:absolute;right:12px;top:12px;font-size:46px;opacity:.2;animation:chatCloudDrift 8s ease-in-out infinite";layer.appendChild(cloud);
+        } else if (weatherCanvas === "cloudy") {
+          for(let i=0;i<5;i++){const cloud=document.createElement("span");cloud.className="weather-particle";cloud.textContent="☁️";cloud.style.cssText=`left:${i*62+8}px;top:${18+(i%2)*38}px;font-size:${30+(i%3)*10}px;opacity:.22;animation:chatCloudDrift ${7+i}s ease-in-out infinite`;layer.appendChild(cloud);}
+          const shade=document.createElement("div");shade.style.cssText="position:absolute;inset:0;height:100vh;background:linear-gradient(180deg,rgba(100,116,139,.10),transparent);pointer-events:none";layer.appendChild(shade);
+        } else if (weatherCanvas === "night") {
+          for(let i=0;i<18;i++){const star=document.createElement("span");star.className="weather-particle";star.textContent="✦";star.style.cssText=`left:${Math.random()*width}px;top:${20+Math.random()*380}px;color:#c4b5fd;font-size:${8+Math.random()*9}px;opacity:.4;animation:chatSunRay ${2+Math.random()*3}s ease-in-out infinite`;layer.appendChild(star);}
+          const moon=document.createElement("span");moon.textContent="🌙";moon.style.cssText="position:absolute;right:14px;top:12px;font-size:36px;opacity:.25";layer.appendChild(moon);
+        } else if (weatherCanvas === "lowbat") {
+          const shade=document.createElement("div");shade.style.cssText="position:absolute;inset:0;height:100vh;background:linear-gradient(180deg,rgba(127,29,29,.18),rgba(2,6,23,.08));animation:chatBatteryDrain 2s ease-in-out infinite";layer.appendChild(shade);
+          const warning=document.createElement("div");warning.textContent="🪫  Battery almost empty…";warning.style.cssText="position:absolute;top:12px;left:50%;transform:translateX(-50%);padding:7px 12px;border-radius:999px;background:rgba(127,29,29,.55);border:1px solid rgba(248,113,113,.4);font-size:11px;color:#fecaca;white-space:nowrap;animation:chatBatteryDrain 1.8s infinite";layer.appendChild(warning);
+        }
+      }
       function applyWeatherCanvas(w) {
         weatherCanvas = w || "sunny";
         localStorage.setItem(WEATHER_KEY, weatherCanvas);
         const shell = document.getElementById("appShell");
-        if (shell) {
-          shell.classList.remove(...WEATHER_CLASSES);
-          shell.classList.add("weather-" + weatherCanvas);
-        }
+        if (shell) { shell.classList.remove(...WEATHER_CLASSES); shell.classList.add("weather-" + weatherCanvas); }
         document.querySelectorAll(".weather-chip").forEach((chip) => {
           const active = chip.getAttribute("data-weather") === weatherCanvas;
-          chip.classList.toggle("ring-1", active);
-          chip.classList.toggle("ring-white/60", active);
-          chip.classList.toggle("bg-white/[0.14]", active);
+          chip.classList.toggle("ring-1", active); chip.classList.toggle("ring-white/60", active); chip.classList.toggle("bg-white/[0.14]", active);
         });
+        renderChatWeatherEffect();
       }
-
-      function setWeatherCanvas(w) {
-        applyWeatherCanvas(w);
-        if (weatherRef) weatherRef.set(weatherCanvas);
-      }
+      function setWeatherCanvas(w) { applyWeatherCanvas(w); if (weatherRef) weatherRef.set(weatherCanvas); }
 
       function renderSharedStatusBanner() {
         const banner = document.getElementById("sharedStatusBanner");
@@ -5993,19 +6074,46 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
             card.appendChild(box);
           }
 
-          if (u.sender === senderRole) {
-            const seenBy = u.seenBy || {};
-            const seenRows = Object.entries(seenBy);
-            const seen = document.createElement("div");
-            seen.className = "flex items-center justify-end gap-1 text-[10px] text-sky-300 pt-1 border-t border-white/10";
-            const eye = document.createElement("span"); eye.textContent = "◉";
-            const detail = document.createElement("span");
-            const partnerSeen = seenBy[getPartnerName()];
-            detail.textContent = partnerSeen ? getChatName(getPartnerName()) + " seen · " + formatSeenAge(partnerSeen) : "0 views";
-            seen.append(eye, detail); card.appendChild(seen);
-          }
+          const seenBy = u.seenBy || {};
+          const seen = document.createElement("div");
+          seen.className = "flex items-center justify-between gap-2 text-[10px] text-sky-300 pt-2 border-t border-white/10";
+          const eye = document.createElement("button"); eye.type="button"; eye.className="status-action-btn";
+          const partnerSeen = seenBy[getPartnerName()];
+          eye.textContent = `👁 ${Object.keys(seenBy).length} · Details`;
+          eye.addEventListener("click",()=>openStatusInsights(id));
+          const seenText=document.createElement("span"); seenText.textContent=partnerSeen ? getChatName(getPartnerName())+" seen · "+formatSeenAge(partnerSeen) : (u.sender===senderRole?"Not viewed yet":"Seen status");
+          seen.append(eye,seenText); card.appendChild(seen);
+
+          const reactions=document.createElement("div"); reactions.className="flex flex-wrap items-center gap-1.5";
+          const reactionMap=u.reactions||{};
+          const reactionEmoji=value=>typeof value==="string"?value:(value&&value.emoji)||"";
+          ["❤️","🥰","😍","🔥","👏"].forEach(emoji=>{const b=document.createElement("button");b.type="button";b.className="status-action-btn";const active=reactionEmoji(reactionMap[senderRole])===emoji;const count=Object.values(reactionMap).filter(x=>reactionEmoji(x)===emoji).length;b.textContent=emoji+(count?" "+count:"");if(active)b.style.background="rgba(244,63,94,.28)";b.addEventListener("click",()=>setStatusReaction(id,emoji));reactions.appendChild(b);});
+          const love=document.createElement("button");love.type="button";love.className="status-action-btn";love.textContent="💗 Love";love.addEventListener("click",()=>setStatusReaction(id,"💗"));reactions.appendChild(love);
+          card.appendChild(reactions);
+          const replyList=document.createElement("div");replyList.className="space-y-1";
+          Object.values(u.replies||{}).sort((a,b)=>(a.ts||0)-(b.ts||0)).forEach(reply=>{const line=document.createElement("div");line.className="status-reply";const who=document.createElement("strong");who.textContent=getChatName(reply.sender)+" · ";const msg=document.createElement("span");msg.textContent=reply.text||"";const when=document.createElement("small");when.className="block text-[9px] text-slate-500 mt-1";when.textContent=reply.time||"";line.append(who,msg,when);replyList.appendChild(line);});
+          card.appendChild(replyList);
+          const replyRow=document.createElement("div");replyRow.className="flex gap-2";const replyInput=document.createElement("input");replyInput.maxLength=240;replyInput.placeholder="Reply to this status…";replyInput.className="min-w-0 flex-1 rounded-xl bg-slate-950/70 border border-white/10 px-3 py-2 text-xs text-white";const replyBtn=document.createElement("button");replyBtn.type="button";replyBtn.className="status-action-btn";replyBtn.textContent="Reply";replyBtn.addEventListener("click",()=>{const val=replyInput.value.trim();if(val)replyToStatus(id,val);});replyInput.addEventListener("keydown",ev=>{if(ev.key==="Enter"){ev.preventDefault();replyBtn.click();}});replyRow.append(replyInput,replyBtn);card.appendChild(replyRow);
           list.appendChild(card);
         });
+      }
+
+      function setStatusReaction(id, emoji) {
+        const u=richUpdatesMap[id]; if(!u)return; const next={...(u.reactions||{})}; const old=next[senderRole]; const oldEmoji=typeof old==="string"?old:(old&&old.emoji); if(oldEmoji===emoji)delete next[senderRole];else next[senderRole]={emoji,ts:Date.now()}; u.reactions=next;
+        if(richUpdatesRef)richUpdatesRef.child(id).child("reactions").set(next).catch(err=>showDbError("Status reaction error: "+err.message));else localStorage.setItem(RICH_UPDATES_STORAGE,JSON.stringify(richUpdatesMap)); renderRichUpdatesFeed();
+      }
+      function replyToStatus(id, value) {
+        const u=richUpdatesMap[id]; if(!u)return; const key="r_"+Date.now()+"_"+Math.random().toString(36).slice(2,7); const now=new Date(); const reply={sender:senderRole,text:value,ts:Date.now(),time:now.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"})};
+        if(richUpdatesRef)richUpdatesRef.child(id).child("replies").child(key).set(reply).catch(err=>showDbError("Status reply error: "+err.message));else{u.replies=u.replies||{};u.replies[key]=reply;localStorage.setItem(RICH_UPDATES_STORAGE,JSON.stringify(richUpdatesMap));renderRichUpdatesFeed();}
+      }
+      function openStatusInsights(id) {
+        const u=richUpdatesMap[id]; if(!u)return; let modal=document.getElementById("statusInsightsModal"); if(!modal){modal=document.createElement("div");modal.id="statusInsightsModal";modal.className="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4";modal.innerHTML=`<div class="w-full max-w-sm max-h-[80dvh] overflow-y-auto rounded-3xl border border-white/15 bg-slate-900 p-4 text-white"><div class="flex justify-between items-center mb-3"><strong>👁 Status activity</strong><button type="button" class="status-action-btn" onclick="document.getElementById('statusInsightsModal').classList.add('hidden')">Close</button></div><div id="statusInsightsBody" class="space-y-3 text-xs"></div></div>`;document.body.appendChild(modal);}
+        const body=document.getElementById("statusInsightsBody");body.innerHTML="";
+        const section=(title,rows)=>{const wrap=document.createElement("div");const h=document.createElement("div");h.className="font-bold text-rose-200 mb-1";h.textContent=title;wrap.appendChild(h);if(!rows.length){const empty=document.createElement("p");empty.className="text-slate-500";empty.textContent="No activity yet";wrap.appendChild(empty);}rows.forEach(line=>{const p=document.createElement("p");p.className="py-1 border-b border-white/5 text-slate-200";p.textContent=line;wrap.appendChild(p);});body.appendChild(wrap);};
+        section("Views",Object.entries(u.seenBy||{}).map(([role,ts])=>getChatName(role)+" · "+formatSeenAge(ts)));
+        section("Reactions",Object.entries(u.reactions||{}).map(([role,value])=>{const emoji=typeof value==="string"?value:(value&&value.emoji)||"❤️";const ts=typeof value==="object"&&value?value.ts:null;return getChatName(role)+" gave "+emoji+(ts?" · "+new Date(ts).toLocaleString():"");}));
+        section("Replies",Object.values(u.replies||{}).map(r=>getChatName(r.sender)+": "+r.text+" · "+(r.time||formatSeenAge(r.ts))));
+        modal.classList.remove("hidden");
       }
 
       function playRPS(userChoice) {
@@ -6453,6 +6561,8 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
           document.getElementById("clearChatBtn").textContent = t("clearChat");
           updatePartnerPresenceUI();
           renderMessages();
+          applyFullLanguage();
+          watchLanguageNodes();
         } catch (e) {}
       }
 
@@ -7244,12 +7354,12 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
         { name: "hearts", items: ["💞", "💓", "🩷", "💜", "🫶", "😘"], anim: "chatFxPop", label: "Heart rain" },
       ];
       let lastChatAnimationIndex = -1;
-      function playRandomChatAnimation() {
+      function renderRandomChatAnimationLocal(forcedIndex = null) {
         const layer = document.getElementById("chatFxLayer");
         const box = document.getElementById("messagesBox");
         if (!layer || !box) return;
-        let next = Math.floor(Math.random() * chatAnimationSets.length);
-        if (chatAnimationSets.length > 1 && next === lastChatAnimationIndex) next = (next + 1 + Math.floor(Math.random() * (chatAnimationSets.length - 1))) % chatAnimationSets.length;
+        let next = Number.isInteger(forcedIndex) ? Math.max(0, Math.min(chatAnimationSets.length - 1, forcedIndex)) : Math.floor(Math.random() * chatAnimationSets.length);
+        if (!Number.isInteger(forcedIndex) && chatAnimationSets.length > 1 && next === lastChatAnimationIndex) next = (next + 1 + Math.floor(Math.random() * (chatAnimationSets.length - 1))) % chatAnimationSets.length;
         lastChatAnimationIndex = next;
         const set = chatAnimationSets[next];
         layer.innerHTML = "";
@@ -7270,6 +7380,13 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
         }
         if (typeof showToast === "function") showToast(set.label, "✨");
         window.setTimeout(() => { if (layer) layer.innerHTML = ""; }, 4800);
+      }
+      function playRandomChatAnimation() {
+        let index = Math.floor(Math.random() * chatAnimationSets.length);
+        if (chatAnimationSets.length > 1 && index === lastChatAnimationIndex) index = (index + 1) % chatAnimationSets.length;
+        lastChatAnimationIndex = index;
+        renderRandomChatAnimationLocal(index);
+        if (chatAnimationRef) chatAnimationRef.push({sender:senderRole, ts:Date.now(), index}).catch(err=>showDbError("Animation sync error: "+err.message));
       }
 
       const QUICK_REACTION_EMOJIS = ["❤️", "😂", "😮", "😢", "🔥", "👍", "🥰", "👏"];
@@ -7992,6 +8109,13 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
               (err) => showDbError("Firebase error: " + err.message),
             );
 
+            chatAnimationRef = db.ref("rooms/" + ROOM_ID + "/chatAnimations");
+            chatAnimationRef.off();
+            chatAnimationRef.limitToLast(1).on("child_added", snap => {
+              const event=snap.val();
+              if(event && event.sender!==senderRole && Date.now()-(event.ts||0)<12000 && Number.isInteger(event.index)) renderRandomChatAnimationLocal(event.index);
+            });
+
             burstRef = db.ref("rooms/" + ROOM_ID + "/loveBurst");
             burstRef.off();
             burstRef.on("value", (snap) => {
@@ -8125,6 +8249,8 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
         syncFocusSettingsUI();
         syncVanishSettingsUI();
         changeLanguage(currentLang);
+        applyFullLanguage();
+        watchLanguageNodes();
         highlightMoodChips();
         refreshProfileAvatars();
         saveGameStats();
