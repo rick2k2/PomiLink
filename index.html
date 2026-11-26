@@ -13,7 +13,7 @@
       content="black-translucent"
     />
     <meta name="apple-mobile-web-app-title" content="PomiLink" />
-    <title>PomiLink</title>
+    <title>PomiLink v12.0 - Couple Features</title>
     <!-- Single-file GitHub Pages build. Firebase background push requires separate same-origin SW + deployed Cloud Function. -->
 
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -2786,6 +2786,11 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
             </button>
           </div>
 
+          <div class="grid grid-cols-2 gap-1 p-1 rounded-2xl bg-slate-950/60 border border-white/10 mt-1">
+            <button type="button" id="tabGameLudo" onclick="switchPomiGame('ludo')" class="py-2 px-2 rounded-xl border border-transparent text-[11px] font-medium text-slate-400">🎲 Online Ludo</button>
+            <button type="button" id="tabGameTruth" onclick="switchPomiGame('truth')" class="py-2 px-2 rounded-xl border border-transparent text-[11px] font-medium text-slate-400">💗 Truth or Dare</button>
+          </div>
+
           <div id="gamePanelTTT" class="space-y-2.5 pt-1">
             <div class="grid grid-cols-3 gap-1">
               <button
@@ -2967,6 +2972,29 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
               Best Score: 0
             </p>
           </div>
+
+      <!-- Online Ludo Panel -->
+      <div id="gamePanelLudo" class="hidden space-y-3 pt-2">
+        <div class="flex items-center justify-between text-xs text-slate-200"><span>🎲 Rick vs Pomi · Online 2 Players</span><span id="ludoTurnBadge" class="text-amber-300 font-bold">Loading…</span></div>
+        <div class="rounded-2xl border border-white/10 bg-slate-950/70 p-2 space-y-2">
+          <div class="grid grid-cols-4 gap-1" id="ludoBoard" aria-label="Ludo race board"></div>
+          <div class="grid grid-cols-2 gap-2 text-[11px]"><div class="rounded-xl bg-rose-500/15 border border-rose-400/30 p-2 text-rose-100">❤️ Pomi <span id="ludoPomiTokens" class="font-bold">4 in base</span></div><div class="rounded-xl bg-sky-500/15 border border-sky-400/30 p-2 text-sky-100">💙 Rick <span id="ludoRickTokens" class="font-bold">4 in base</span></div></div>
+        </div>
+        <div class="flex items-center justify-center gap-3"><div id="ludoDiceFace" class="w-14 h-14 rounded-2xl bg-white text-slate-900 text-4xl font-black flex items-center justify-center shadow-lg">⚀</div><button type="button" id="ludoRollBtn" onclick="rollOnlineLudo()" class="px-5 py-3 rounded-xl bg-gradient-to-r from-rose-500 to-indigo-500 text-sm font-bold text-white">Roll Dice</button></div>
+        <p id="ludoStatus" class="text-center text-xs text-rose-100 min-h-[20px]">Waiting for game sync…</p>
+        <div class="grid grid-cols-2 gap-2"><button type="button" onclick="resetOnlineLudo()" class="py-2 rounded-xl bg-white/[0.08] border border-white/10 text-xs text-white">New Ludo Game</button><button type="button" onclick="switchPomiGame('ttt')" class="py-2 rounded-xl bg-white/[0.05] border border-white/10 text-xs text-slate-200">Back to Games</button></div>
+        <p class="text-[10px] text-slate-400 text-center">Rule: 6 বের হলে গুটি নামবে। ঠিক ৫৭ ঘরে পৌঁছালে গুটি Home হবে।</p>
+      </div>
+
+      <!-- Truth or Dare Panel -->
+      <div id="gamePanelTruth" class="hidden space-y-3 pt-2 text-center">
+        <div class="text-3xl">💗 🎯 💗</div>
+        <p class="text-xs text-slate-300">Rick & Pomi · Shared Truth or Dare</p>
+        <div class="grid grid-cols-2 gap-2"><button type="button" onclick="playTruthDare('truth')" class="py-4 rounded-2xl bg-sky-500/20 border border-sky-300/40 text-sm font-bold text-sky-100">💬 TRUTH</button><button type="button" onclick="playTruthDare('dare')" class="py-4 rounded-2xl bg-rose-500/20 border border-rose-300/40 text-sm font-bold text-rose-100">🔥 DARE</button></div>
+        <div id="truthDareCard" class="min-h-[130px] rounded-2xl border border-fuchsia-300/20 bg-gradient-to-br from-fuchsia-500/15 to-indigo-500/15 p-4 flex flex-col items-center justify-center gap-2"><span class="text-2xl">💌</span><p class="text-sm text-white font-semibold">Choose Truth or Dare to begin!</p></div>
+        <div class="grid grid-cols-2 gap-2"><button type="button" onclick="markTruthDareDone()" class="py-2 rounded-xl bg-emerald-500/20 border border-emerald-400/30 text-xs font-semibold text-emerald-100">✅ Done!</button><button type="button" onclick="switchPomiGame('ttt')" class="py-2 rounded-xl bg-white/[0.05] border border-white/10 text-xs text-slate-200">Back to Games</button></div>
+        <p class="text-[10px] text-slate-400">দুজনের স্ক্রিনেই একই Truth / Dare prompt দেখা যাবে। চাইলে Skip করতে পারবে।</p>
+      </div>
         </div>
       </div>
 
@@ -3063,6 +3091,72 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
       </div>
 
       <!-- Settings Modal -->
+      <div id="coupleFeaturesModal" class="hidden fixed inset-0 z-[75] bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="w-full max-w-md glass-modal border border-fuchsia-300/20 rounded-3xl p-4 space-y-3 max-h-[90dvh] overflow-y-auto chat-scroll">
+          <div class="flex items-center justify-between"><div><h3 class="text-sm font-bold text-white">💞 Couple Corner</h3><p class="text-[11px] text-fuchsia-200">Rick & Pomi — shared fun space</p></div><button onclick="closeModal('coupleFeaturesModal')" class="px-3 py-1.5 rounded-xl bg-white/10 text-xs">Close</button></div>
+          <section class="rounded-2xl border border-white/10 bg-white/[.04] p-3 space-y-2">
+            <h4 class="text-sm font-bold text-white">🧠 Couple Quiz Battle</h4><p id="coupleQuizStatus" class="text-[11px] text-slate-300">Start a shared 10-question match. Both devices answer the same question.</p>
+            <div class="flex justify-between text-xs text-rose-200"><span id="coupleQuizScore">Rick 0 · Pomi 0</span><span id="coupleQuizProgress">Ready</span></div>
+            <div id="coupleQuizQuestion" class="text-sm font-semibold text-white p-3 rounded-xl bg-slate-950/60">Waiting for a new battle…</div><div id="coupleQuizOptions" class="grid grid-cols-2 gap-2"></div>
+            <div class="flex gap-2"><button onclick="startCoupleQuizBattle()" class="flex-1 py-2 rounded-xl bg-rose-500/25 border border-rose-300/30 text-xs font-bold">⚔️ Start / Restart</button><button onclick="nextCoupleQuizBattle()" class="flex-1 py-2 rounded-xl bg-white/10 text-xs">Next question</button></div><p id="coupleQuizAnswers" class="text-[11px] text-amber-200"></p>
+          </section>
+          <section class="rounded-2xl border border-white/10 bg-white/[.04] p-3 space-y-2">
+            <h4 class="text-sm font-bold text-white">🎁 Virtual Gift Shop</h4><p class="text-[11px] text-slate-400">Send a little gift to your partner. Gifts appear on both devices.</p>
+            <div class="grid grid-cols-4 gap-2">
+              <button onclick="sendCoupleGift('🌹','Rose')" class="rounded-xl bg-white/[.06] p-2 text-2xl">🌹<small class="block text-[10px]">Rose</small></button><button onclick="sendCoupleGift('💐','Bouquet')" class="rounded-xl bg-white/[.06] p-2 text-2xl">💐<small class="block text-[10px]">Bouquet</small></button><button onclick="sendCoupleGift('💍','Ring')" class="rounded-xl bg-white/[.06] p-2 text-2xl">💍<small class="block text-[10px]">Ring</small></button><button onclick="sendCoupleGift('🧸','Teddy')" class="rounded-xl bg-white/[.06] p-2 text-2xl">🧸<small class="block text-[10px]">Teddy</small></button>
+              <button onclick="sendCoupleGift('🍫','Chocolate')" class="rounded-xl bg-white/[.06] p-2 text-2xl">🍫<small class="block text-[10px]">Choco</small></button><button onclick="sendCoupleGift('❤️','Heart')" class="rounded-xl bg-white/[.06] p-2 text-2xl">❤️<small class="block text-[10px]">Heart</small></button><button onclick="sendCoupleGift('💌','Love Letter')" class="rounded-xl bg-white/[.06] p-2 text-2xl">💌<small class="block text-[10px]">Letter</small></button><button onclick="sendCoupleGift('👑','Crown')" class="rounded-xl bg-white/[.06] p-2 text-2xl">👑<small class="block text-[10px]">Crown</small></button>
+            </div><div id="coupleGiftFeed" class="space-y-1 max-h-28 overflow-y-auto text-xs text-slate-200"></div>
+          </section>
+          <section class="rounded-2xl border border-white/10 bg-white/[.04] p-3 space-y-2">
+            <h4 class="text-sm font-bold text-white">🖥️ Screen Share</h4><p class="text-[11px] text-slate-400">Share your screen with your partner. Browser permission is required; best on desktop Chrome/Edge. Network/TURN restrictions may prevent connection.</p>
+            <video id="coupleRemoteScreen" autoplay playsinline class="hidden w-full rounded-xl bg-black"></video><p id="coupleScreenStatus" class="text-[11px] text-amber-200">Not connected</p>
+            <div class="grid grid-cols-2 gap-2"><button onclick="startCoupleScreenShare()" class="py-2 rounded-xl bg-indigo-500/25 border border-indigo-300/30 text-xs font-bold">Start sharing</button><button onclick="stopCoupleScreenShare()" class="py-2 rounded-xl bg-white/10 text-xs">Stop / Hang up</button></div>
+          </section>
+        </div>
+      </div>
+
+      <!-- Phase 2: Call, Gallery, Calendar, Listen Together, Story -->
+      <div id="couplePhase2Modal" class="hidden fixed inset-0 z-[76] bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-3">
+        <div class="w-full max-w-md glass-modal border border-pink-300/20 rounded-3xl p-4 space-y-3 max-h-[92dvh] overflow-y-auto chat-scroll">
+          <div class="flex items-center justify-between"><div><h3 class="text-sm font-bold text-white">💗 Our Together Space</h3><p class="text-[11px] text-pink-200">Rick & Pomi — Phase 2</p></div><button onclick="closeModal('couplePhase2Modal')" class="px-3 py-1.5 rounded-xl bg-white/10 text-xs">Close</button></div>
+          <section class="rounded-2xl border border-white/10 bg-white/[.04] p-3 space-y-2">
+            <h4 class="text-sm font-bold text-white">📞 Voice & Video Call</h4><div class="grid grid-cols-2 gap-2"><button onclick="startCoupleCall(false)" class="py-2 rounded-xl bg-emerald-500/20 border border-emerald-300/30 text-xs font-bold">📞 Voice Call</button><button onclick="startCoupleCall(true)" class="py-2 rounded-xl bg-pink-500/20 border border-pink-300/30 text-xs font-bold">🎥 Video Call</button></div>
+            <div class="grid grid-cols-2 gap-2"><video id="coupleLocalCallVideo" autoplay muted playsinline class="w-full rounded-xl bg-black aspect-video"></video><video id="coupleRemoteCallVideo" autoplay playsinline class="w-full rounded-xl bg-black aspect-video"></video></div><p id="coupleCallStatus" class="text-[11px] text-amber-200">Not in a call</p><button onclick="endCoupleCall()" class="w-full py-2 rounded-xl bg-red-500/20 border border-red-300/30 text-xs font-bold">End Call</button>
+          </section>
+          <section class="rounded-2xl border border-white/10 bg-white/[.04] p-3 space-y-2"><h4 class="text-sm font-bold text-white">🖼️ Couple Photo Gallery</h4><input id="coupleGalleryFile" type="file" accept="image/*" class="block w-full text-xs text-slate-300"/><input id="coupleGalleryCaption" maxlength="100" placeholder="Write a little memory…" class="w-full rounded-xl bg-slate-950/70 border border-white/15 px-3 py-2 text-xs text-white"/><button onclick="uploadCouplePhoto()" class="w-full py-2 rounded-xl bg-fuchsia-500/20 border border-fuchsia-300/30 text-xs font-bold">Add Photo</button><div id="coupleGalleryGrid" class="grid grid-cols-2 gap-2"></div><p class="text-[10px] text-slate-400">Photos are compressed and stored in the shared Firebase database. Keep uploads small.</p></section>
+          <section class="rounded-2xl border border-white/10 bg-white/[.04] p-3 space-y-2"><h4 class="text-sm font-bold text-white">📅 Shared Calendar</h4><input id="coupleEventTitle" maxlength="80" placeholder="Event / special day" class="w-full rounded-xl bg-slate-950/70 border border-white/15 px-3 py-2 text-xs text-white"/><div class="grid grid-cols-2 gap-2"><input id="coupleEventDate" type="date" class="min-w-0 rounded-xl bg-slate-950/70 border border-white/15 px-2 py-2 text-xs text-white"/><input id="coupleEventTime" type="time" class="min-w-0 rounded-xl bg-slate-950/70 border border-white/15 px-2 py-2 text-xs text-white"/></div><button onclick="addCoupleCalendarEvent()" class="w-full py-2 rounded-xl bg-sky-500/20 border border-sky-300/30 text-xs font-bold">Add to Calendar</button><div id="coupleCalendarList" class="space-y-2"></div></section>
+          <section class="rounded-2xl border border-white/10 bg-white/[.04] p-3 space-y-2"><h4 class="text-sm font-bold text-white">🎧 Listen Together</h4><input id="coupleListenUrl" type="url" placeholder="Direct audio URL (.mp3, .ogg, .wav)" class="w-full rounded-xl bg-slate-950/70 border border-white/15 px-3 py-2 text-xs text-white"/><button onclick="loadCoupleListenUrl()" class="w-full py-2 rounded-xl bg-violet-500/20 border border-violet-300/30 text-xs font-bold">Load shared audio</button><audio id="coupleListenAudio" controls class="w-full"></audio><p id="coupleListenStatus" class="text-[10px] text-slate-400">Both people need access to the same audio URL. Browser may ask for a tap before playback.</p></section>
+          <section class="rounded-2xl border border-white/10 bg-white/[.04] p-3 space-y-2"><h4 class="text-sm font-bold text-white">💌 Our Story Timeline</h4><input id="coupleStoryTitle" maxlength="80" placeholder="Memory title" class="w-full rounded-xl bg-slate-950/70 border border-white/15 px-3 py-2 text-xs text-white"/><div class="grid grid-cols-2 gap-2"><input id="coupleStoryDate" type="date" class="min-w-0 rounded-xl bg-slate-950/70 border border-white/15 px-2 py-2 text-xs text-white"/><input id="coupleStoryEmoji" maxlength="4" value="💗" placeholder="Emoji" class="min-w-0 rounded-xl bg-slate-950/70 border border-white/15 px-2 py-2 text-xs text-white"/></div><textarea id="coupleStoryBody" maxlength="500" rows="2" placeholder="What happened that day?" class="w-full rounded-xl bg-slate-950/70 border border-white/15 px-3 py-2 text-xs text-white"></textarea><button onclick="addCoupleStoryMoment()" class="w-full py-2 rounded-xl bg-rose-500/20 border border-rose-300/30 text-xs font-bold">Save this memory</button><div id="coupleStoryTimeline" class="space-y-2"></div></section>
+        </div>
+      </div>
+      <div id="coupleSpaceModal" class="hidden fixed inset-0 z-[60] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="w-full max-w-md glass-modal border border-rose-300/20 rounded-3xl p-4 space-y-3 max-h-[88dvh] overflow-y-auto chat-scroll">
+          <div class="flex items-center justify-between border-b border-white/10 pb-2">
+            <div><h3 class="font-display font-bold text-sm text-white">💞 Our Couple Space</h3><p class="text-[11px] text-rose-200">A little shared place for two</p></div>
+            <button type="button" onclick="closeModal('coupleSpaceModal')" class="px-3 py-1.5 rounded-xl bg-white/[0.07] text-xs text-slate-200">Close</button>
+          </div>
+          <section class="rounded-2xl border border-white/10 bg-white/[0.04] p-3 space-y-2">
+            <h4 class="text-xs font-bold text-white">📅 Our Special Day</h4>
+            <p class="text-[11px] text-slate-400">Choose your anniversary date. It syncs to both devices.</p>
+            <div class="flex gap-2"><input id="coupleAnniversaryDate" type="date" class="min-w-0 flex-1 rounded-xl bg-slate-950/70 border border-white/15 px-3 py-2 text-xs text-white"><button onclick="saveCoupleAnniversary()" class="px-3 rounded-xl bg-rose-500/20 border border-rose-300/30 text-xs font-bold text-rose-100">Save</button></div>
+            <p id="coupleCountdownText" class="text-sm font-bold text-rose-200">Set your special date</p>
+          </section>
+          <section class="rounded-2xl border border-white/10 bg-white/[0.04] p-3 space-y-2">
+            <h4 class="text-xs font-bold text-white">😊 How are we feeling?</h4>
+            <p class="text-[11px] text-slate-400">Share your mood with each other.</p>
+            <div class="grid grid-cols-5 gap-1"><button onclick="setCoupleMood('🥰','Loved')" class="rounded-xl bg-white/[0.06] py-2 text-lg">🥰</button><button onclick="setCoupleMood('😊','Happy')" class="rounded-xl bg-white/[0.06] py-2 text-lg">😊</button><button onclick="setCoupleMood('😴','Sleepy')" class="rounded-xl bg-white/[0.06] py-2 text-lg">😴</button><button onclick="setCoupleMood('😔','Sad')" class="rounded-xl bg-white/[0.06] py-2 text-lg">😔</button><button onclick="setCoupleMood('😡','Upset')" class="rounded-xl bg-white/[0.06] py-2 text-lg">😡</button></div>
+            <div id="coupleMoodSummary" class="text-[11px] text-slate-300">No moods shared yet.</div>
+          </section>
+          <section class="rounded-2xl border border-white/10 bg-white/[0.04] p-3 space-y-2">
+            <h4 class="text-xs font-bold text-white">📖 Our Shared Diary</h4>
+            <textarea id="coupleDiaryInput" rows="3" maxlength="1000" placeholder="Write a memory, a little note, or something you want to remember..." class="w-full rounded-xl bg-slate-950/70 border border-white/15 px-3 py-2 text-xs text-white"></textarea>
+            <button onclick="addCoupleDiaryEntry()" class="w-full py-2 rounded-xl bg-gradient-to-r from-rose-500/30 to-violet-500/30 border border-rose-300/30 text-xs font-bold text-white">Save to Our Diary</button>
+            <div id="coupleDiaryList" class="space-y-2"><p class="text-[11px] text-slate-500">No diary entries yet.</p></div>
+          </section>
+          <p class="text-[10px] text-slate-500">Shared using the same private PomiLink room. Both devices need Firebase read/write access.</p>
+        </div>
+      </div>
+
       <div
         id="settingsModal"
         class="hidden fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-md flex items-center justify-center p-4"
@@ -3085,6 +3179,10 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
 
           <button type="button" onclick="openSocialHub()" class="w-full py-3 px-3.5 rounded-2xl bg-sky-500/10 hover:bg-sky-500/20 border border-sky-400/25 text-xs font-bold text-sky-100 text-left flex items-center justify-between">
             <span>🌐 Social Apps</span><span>Open ↗</span>
+          </button>
+
+          <button type="button" onclick="openCoupleSpace()" class="w-full py-3 px-3.5 rounded-2xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-300/25 text-xs font-bold text-rose-100 text-left flex items-center justify-between">
+            <span>💞 Couple Space</span><span>Diary · Mood · Countdown ↗</span>
           </button>
 
           <button type="button" onclick="toggleDeveloperDetails()" class="w-full py-3 px-3.5 rounded-2xl bg-gradient-to-r from-violet-500/20 to-rose-500/20 hover:brightness-110 border border-violet-300/30 text-xs font-bold text-white text-left flex items-center justify-between">
@@ -3305,6 +3403,8 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
           >
             🎮 Pomi Mini Games
           </button>
+          <button type="button" onclick="openModal('couplePhase2Modal'); initCouplePhase2();" class="w-full py-2.5 px-3.5 rounded-2xl bg-pink-500/15 hover:bg-pink-500/25 border border-pink-400/30 text-xs font-semibold text-pink-100 text-left transition">💗 Voice/Video · Gallery · Calendar · Listen · Our Story</button>
+          <button type="button" onclick="openModal('coupleFeaturesModal'); initCoupleFeatures();" class="w-full py-2.5 px-3.5 rounded-2xl bg-fuchsia-500/15 hover:bg-fuchsia-500/25 border border-fuchsia-400/30 text-xs font-semibold text-fuchsia-100 text-left transition">💞 Couple Quiz Battle · Gift Shop · Screen Share</button>
           <button type="button" onclick="openUserProfile(senderRole)" class="w-full py-2.5 px-3.5 rounded-2xl bg-violet-500/15 hover:bg-violet-500/20 border border-violet-400/30 text-xs font-semibold text-violet-200 text-left transition">👤 My Profile</button>
           <button
             type="button"
@@ -4440,6 +4540,11 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
       let statusRef = null;
       let richUpdatesRef = null;
       let tttOnlineRef = null;
+      let ludoOnlineRef = null;
+      let truthDareRef = null;
+      let ludoState = null;
+      let truthDareState = null;
+      let applyingRemoteLudo = false;
       let rickAutoReplyRef = null;
       let weatherRef = null;
       let petAppearanceRef = null;
@@ -4928,12 +5033,16 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
           quiz: document.getElementById("gamePanelQuiz"),
           rps: document.getElementById("gamePanelRPS"),
           heart: document.getElementById("gamePanelHeart"),
+          ludo: document.getElementById("gamePanelLudo"),
+          truth: document.getElementById("gamePanelTruth"),
         };
         const tabs = {
           ttt: document.getElementById("tabGameTTT"),
           quiz: document.getElementById("tabGameQuiz"),
           rps: document.getElementById("tabGameRPS"),
           heart: document.getElementById("tabGameHeart"),
+          ludo: document.getElementById("tabGameLudo"),
+          truth: document.getElementById("tabGameTruth"),
         };
 
         Object.keys(panels).forEach((k) => {
@@ -4947,6 +5056,8 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
         });
 
         if (tab === "quiz") { if (!quizRound.length) restartQuizGame(); else renderQuizQuestion(); setQuizLanguage(quizLanguage); }
+        if (tab === "ludo") renderOnlineLudo();
+        if (tab === "truth") renderTruthDare();
         if (tab !== "heart") stopHeartCatchTimers();
         saveGameStats();
       }
@@ -5039,12 +5150,11 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
           return "Draw match! 🤝";
         }
         const turnName = tttTurn === "P" ? "Pomi (X)" : "Rick (O)";
-        const isMyTurn =
-          (senderRole === "Pomi" && tttTurn === "P") ||
-          (senderRole === "Rick" && tttTurn === "O");
+        const myMark = senderRole === "Pomi" ? "P" : "O";
+        const isMyTurn = tttTurn === myMark;
         return isMyTurn
-          ? `Your turn (${turnName})`
-          : `Waiting for ${turnName}...`;
+          ? `Your turn — ${senderRole} (${myMark === "P" ? "X" : "O"})`
+          : `You are ${senderRole} (${myMark === "P" ? "X" : "O"}) · Waiting for ${turnName}`;
       }
 
       function finalizeTTTOutcome(res, syncRemote = true) {
@@ -5074,26 +5184,69 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
       }
 
       function handleTTTMove(idx) {
-        if (tttOver || tttBoard[idx]) return;
+        // In online mode the Firebase transaction is authoritative; local state may be stale.
+        if (tttMode !== "online" && (tttOver || tttBoard[idx])) return;
         const statusEl = document.getElementById("tttStatus");
 
         if (tttMode === "online") {
           const myMark = senderRole === "Pomi" ? "P" : "O";
-          if (tttTurn !== myMark) {
-            if (statusEl)
-              statusEl.textContent = `Wait! It's ${tttTurn === "P" ? "Pomi" : "Rick"}'s turn`;
-            return;
+          if (!tttOnlineRef) {
+            if (statusEl) statusEl.textContent = "Connecting to online game… please wait";
+            ensureFirebaseConnected();
+            if (db) tttOnlineRef = db.ref("rooms/" + ROOM_ID + "/tttOnline");
+            if (!tttOnlineRef) return;
           }
-          tttBoard[idx] = myMark;
-          const res = checkTTTResult(tttBoard);
-          if (res) {
-            finalizeTTTOutcome(res, true);
-            return;
-          }
-          tttTurn = tttTurn === "P" ? "O" : "P";
-          renderTTTBoard();
-          if (statusEl) statusEl.textContent = getOnlineTTTStatusText();
-          syncOnlineTTTToFirebase();
+          if (statusEl) statusEl.textContent = "Sending your move…";
+          // Use a Firebase transaction so two phones cannot overwrite each other's move.
+          tttOnlineRef.transaction((current) => {
+            const state = current && typeof current === "object" ? current : {
+              board: Array(9).fill(null), turn: "P", over: false,
+              winCombo: null, pomiWins: gameStats.tttPomiWins || 0,
+              rickWins: gameStats.tttRickWins || 0
+            };
+            const board = Array.isArray(state.board) && state.board.length === 9
+              ? state.board.map(c => c === "P" || c === "O" ? c : null)
+              : Array(9).fill(null);
+            const turn = state.turn === "O" ? "O" : "P";
+            if (state.over || turn !== myMark || board[idx]) return;
+            board[idx] = myMark;
+            const result = checkTTTResult(board);
+            const next = {
+              board,
+              turn: result ? turn : (turn === "P" ? "O" : "P"),
+              over: Boolean(result),
+              winCombo: result ? result.line : null,
+              pomiWins: Number(state.pomiWins) || 0,
+              rickWins: Number(state.rickWins) || 0,
+              updatedBy: senderRole,
+              ts: Date.now()
+            };
+            if (result && result.winner === "P") next.pomiWins += 1;
+            if (result && result.winner === "O") next.rickWins += 1;
+            return next;
+          }, (error, committed, snapshot) => {
+            if (error) {
+              if (statusEl) statusEl.textContent = "Online sync failed: " + error.message;
+              showDbError("Tic-Tac-Toe sync error: " + error.message);
+              return;
+            }
+            if (!committed) {
+              if (statusEl) statusEl.textContent = "Not your turn, or this cell is already taken.";
+              return;
+            }
+            const state = snapshot && snapshot.val();
+            if (state) {
+              tttBoard = Array.isArray(state.board) ? state.board : Array(9).fill(null);
+              tttTurn = state.turn === "O" ? "O" : "P";
+              tttOver = Boolean(state.over);
+              tttWinCombo = Array.isArray(state.winCombo) ? state.winCombo : null;
+              gameStats.tttPomiWins = Number(state.pomiWins) || 0;
+              gameStats.tttRickWins = Number(state.rickWins) || 0;
+              saveGameStats();
+              renderTTTBoard();
+              if (statusEl) statusEl.textContent = getOnlineTTTStatusText();
+            }
+          }, false);
           return;
         }
 
@@ -5175,21 +5328,130 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
           gameStats.tttBotWins = 0;
           gameStats.tttRickWins = 0;
         }
-        tttBoard = Array(9).fill(null);
-        tttWinCombo = null;
-        tttTurn = "P";
-        tttOver = false;
-        const statusEl = document.getElementById("tttStatus");
-        if (statusEl) {
-          if (tttMode === "online")
-            statusEl.textContent = getOnlineTTTStatusText();
-          else if (tttMode === "2p") statusEl.textContent = "Pomi turn (X)";
-          else statusEl.textContent = "Your turn (X)";
+        if (tttMode === "online") {
+          ensureFirebaseConnected();
+          if (!db) { showDbError("Tic-Tac-Toe is waiting for Firebase connection."); return; }
+          tttOnlineRef = db.ref("rooms/" + ROOM_ID + "/tttOnline");
+          const statusEl = document.getElementById("tttStatus");
+          if (statusEl) statusEl.textContent = "Starting a new shared round…";
+          tttOnlineRef.transaction((current) => ({
+            board: Array(9).fill(null), turn: "P", over: false, winCombo: null,
+            pomiWins: resetScores ? 0 : Number(current && current.pomiWins) || 0,
+            rickWins: resetScores ? 0 : Number(current && current.rickWins) || 0,
+            updatedBy: senderRole, ts: Date.now()
+          }), (error, committed, snapshot) => {
+            if (error) { if (statusEl) statusEl.textContent = "Online reset failed: " + error.message; showDbError("Tic-Tac-Toe reset error: " + error.message); return; }
+            const g = snapshot && snapshot.val();
+            if (committed && g) {
+              tttBoard = Array(9).fill(null); tttTurn = "P"; tttOver = false; tttWinCombo = null;
+              gameStats.tttPomiWins = Number(g.pomiWins) || 0; gameStats.tttRickWins = Number(g.rickWins) || 0;
+              saveGameStats(); renderTTTBoard(); if (statusEl) statusEl.textContent = getOnlineTTTStatusText();
+            }
+          }, false);
+          return;
         }
-        saveGameStats();
-        renderTTTBoard();
-        if (tttMode === "online") syncOnlineTTTToFirebase();
+        tttBoard = Array(9).fill(null); tttWinCombo = null; tttTurn = "P"; tttOver = false;
+        const statusEl = document.getElementById("tttStatus");
+        if (statusEl) statusEl.textContent = tttMode === "2p" ? "Pomi turn (X)" : "Your turn (X)";
+        saveGameStats(); renderTTTBoard();
       }
+
+      // Online Ludo (2-player shared Firebase game; four tokens each)
+      const LUDO_TRACK = 52, LUDO_FINISH = 57;
+      function freshLudoState(){return {tokens:{P:[-1,-1,-1,-1],R:[-1,-1,-1,-1]},turn:"P",dice:0,rolled:false,winner:null,updatedAt:Date.now(),updatedBy:senderRole};}
+      function saveLudoState(){if(ludoOnlineRef && ludoState && !applyingRemoteLudo) ludoOnlineRef.set({...ludoState,updatedAt:Date.now(),updatedBy:senderRole}).catch(e=>showDbError("Ludo sync error: "+e.message));}
+      function ludoPlayerKey(){return senderRole==="Pomi"?"P":"R";}
+      function ludoCanMove(key,pos,dice){return pos===-1?dice===6:(pos<LUDO_FINISH && pos+dice<=LUDO_FINISH);}
+      function ludoGlobalPos(key,pos){return pos<0||pos>=LUDO_FINISH?-1:(pos+(key==="P"?0:26))%LUDO_TRACK;}
+      function renderOnlineLudo(){
+        if(!ludoState) ludoState=freshLudoState();
+        const board=document.getElementById("ludoBoard");if(!board)return;
+        board.innerHTML="";
+        for(let i=0;i<LUDO_TRACK;i++){
+          const cell=document.createElement("div");cell.className="min-h-[31px] rounded-lg border border-white/10 bg-white/[0.045] flex flex-col items-center justify-center text-[9px] text-slate-400 relative";
+          const p=ludoState.tokens.P.map((v,n)=>({v,n})).filter(x=>ludoGlobalPos("P",x.v)===i);
+          const r=ludoState.tokens.R.map((v,n)=>({v,n})).filter(x=>ludoGlobalPos("R",x.v)===i);
+          if(i===0||i===26)cell.classList.add("ring-1",i===0?"ring-rose-400":"ring-sky-400");
+          const marks=[...p.map(x=>`<span class="text-rose-300 font-black">●${x.n+1}</span>`),...r.map(x=>`<span class="text-sky-300 font-black">●${x.n+1}</span>`)];
+          cell.innerHTML=marks.length?marks.join(""):String(i+1);board.appendChild(cell);
+        }
+        const count=(k)=>ludoState.tokens[k].filter(v=>v===-1).length;
+        const p=document.getElementById("ludoPomiTokens"),r=document.getElementById("ludoRickTokens");if(p)p.textContent=`${count("P")} in base · ${ludoState.tokens.P.filter(v=>v===57).length} home`;if(r)r.textContent=`${count("R")} in base · ${ludoState.tokens.R.filter(v=>v===57).length} home`;
+        const turn=document.getElementById("ludoTurnBadge"),roll=document.getElementById("ludoRollBtn"),dice=document.getElementById("ludoDiceFace"),status=document.getElementById("ludoStatus");
+        const mine=ludoPlayerKey()===ludoState.turn;
+        if(turn)turn.textContent=ludoState.winner?`${ludoState.winner==="P"?"Pomi":"Rick"} Wins!`:mine?"Your Turn":"Partner's Turn";
+        if(roll)roll.disabled=!!ludoState.winner||!mine||ludoState.rolled;
+        if(roll)roll.classList.toggle("opacity-40",roll.disabled);
+        if(dice)dice.textContent=ludoState.dice?String(ludoState.dice):"⚀";
+        if(status)status.textContent=ludoState.winner?`🎉 ${ludoState.winner==="P"?"Pomi":"Rick"} won the Ludo match!`:!mine?`Waiting for ${ludoState.turn==="P"?"Pomi":"Rick"}…`:ludoState.rolled?`You rolled ${ludoState.dice}. Tap a highlighted token number below to move.`:"Your turn — roll the dice!";
+        const old=document.getElementById("ludoTokenChoices");if(old)old.remove();
+        if(mine&&ludoState.rolled&&!ludoState.winner){const wrap=document.createElement("div");wrap.id="ludoTokenChoices";wrap.className="grid grid-cols-4 gap-2 mt-2";const key=ludoState.turn;let possible=[];ludoState.tokens[key].forEach((v,i)=>{if(ludoCanMove(key,v,ludoState.dice))possible.push(i);});possible.forEach(i=>{const b=document.createElement("button");b.className="py-2 rounded-xl border text-xs font-bold "+(key==="P"?"bg-rose-500/20 border-rose-300/40 text-rose-100":"bg-sky-500/20 border-sky-300/40 text-sky-100");b.textContent=`Move ${i+1}`;b.onclick=()=>moveOnlineLudoToken(i);wrap.appendChild(b);});if(!possible.length){const b=document.createElement("button");b.className="col-span-4 py-2 rounded-xl bg-white/10 text-xs text-white";b.textContent="No valid move · Pass turn";b.onclick=passLudoTurn;wrap.appendChild(b);}board.parentElement.appendChild(wrap);}
+      }
+      function updateOnlineLudo(mutator, actionLabel) {
+        ensureFirebaseConnected();
+        if (!db) { showDbError("Ludo is waiting for Firebase connection."); return; }
+        if (!ludoOnlineRef) ludoOnlineRef = db.ref("rooms/" + ROOM_ID + "/ludoOnline");
+        const status = document.getElementById("ludoStatus");
+        ludoOnlineRef.transaction((current) => {
+          const base = current && current.tokens && current.tokens.P && current.tokens.R
+            ? current : freshLudoState();
+          const next = JSON.parse(JSON.stringify(base));
+          if (!mutator(next)) return;
+          next.updatedAt = Date.now(); next.updatedBy = senderRole;
+          return next;
+        }, (error, committed, snapshot) => {
+          if (error) { if (status) status.textContent = actionLabel + " failed: " + error.message; showDbError("Ludo sync error: " + error.message); return; }
+          if (!committed) { if (status) status.textContent = "Not your turn or move is not valid."; return; }
+          const latest = snapshot && snapshot.val();
+          if (latest) { ludoState = latest; renderOnlineLudo(); }
+        }, false);
+      }
+      function rollOnlineLudo(){
+        const key = ludoPlayerKey();
+        updateOnlineLudo(state => {
+          if (state.winner || state.turn !== key || state.rolled) return false;
+          state.dice = 1 + Math.floor(Math.random() * 6); state.rolled = true; return true;
+        }, "Dice roll");
+      }
+      function moveOnlineLudoToken(index){
+        const key = ludoPlayerKey();
+        updateOnlineLudo(state => {
+          if (state.winner || state.turn !== key || !state.rolled) return false;
+          const pos = state.tokens[key][index], dice = Number(state.dice) || 0;
+          if (!ludoCanMove(key, pos, dice)) return false;
+          const nextPos = pos === -1 ? 0 : pos + dice;
+          state.tokens[key][index] = nextPos;
+          if (nextPos < LUDO_FINISH) {
+            const landing = ludoGlobalPos(key, nextPos);
+            if (![0,13,26,39].includes(landing)) {
+              const other = key === "P" ? "R" : "P";
+              state.tokens[other] = state.tokens[other].map(v => ludoGlobalPos(other,v) === landing ? -1 : v);
+            }
+          }
+          if (state.tokens[key].every(v => v === LUDO_FINISH)) state.winner = key;
+          const extra = dice === 6; state.rolled = false;
+          if (!extra && !state.winner) state.turn = key === "P" ? "R" : "P";
+          return true;
+        }, "Token move");
+      }
+      function passLudoTurn(){
+        const key = ludoPlayerKey();
+        updateOnlineLudo(state => {
+          if (state.winner || state.turn !== key || !state.rolled) return false;
+          state.rolled = false; state.dice = 0; state.turn = key === "P" ? "R" : "P"; return true;
+        }, "Pass turn");
+      }
+      function resetOnlineLudo(){
+        if(!confirm("Start a new Ludo game for both of you?"))return;
+        updateOnlineLudo(state => { const fresh=freshLudoState(); state.tokens=fresh.tokens; state.turn=fresh.turn; state.dice=0; state.rolled=false; state.winner=null; return true; }, "New game");
+      }
+
+      // Shared Truth or Dare prompts
+      const TRUTH_PROMPTS=["আমার কোন অভ্যাসটা তোমার সবচেয়ে ভালো লাগে?","আমাদের প্রথম দেখা/কথার কোন স্মৃতি মনে আছে?","আমাকে নিয়ে তোমার সবচেয়ে মিষ্টি স্বপ্ন কী?","কোন মুহূর্তে আমাকে সবচেয়ে বেশি মিস করো?","আমার জন্য করা সবচেয়ে সুন্দর কাজ কোনটি?","আমাদের একসঙ্গে কোথায় ঘুরতে যেতে ইচ্ছে করে?","আমার কোন কথায় তুমি সবচেয়ে বেশি হাসো?","আমার কাছে কোন কথা বলতে লজ্জা পাও?"];
+      const DARE_PROMPTS=["আমাকে ২০ সেকেন্ডের একটি মিষ্টি ভয়েস মেসেজ পাঠাও।","আমার জন্য তিনটি ভালোবাসার শব্দ লেখো।","আমাদের প্রিয় একটি স্মৃতি নিয়ে ছোট্ট গল্প বলো।","একটি মজার সেলফি পাঠাও (ইচ্ছা হলে)।","আমাকে একটি নতুন Cute Nickname দাও।","আমার জন্য ৪ লাইনের ছোট্ট কবিতা লেখো।","এক মিনিটে আমার ৩টি ভালো দিক বলো।","আমাদের পরের দেখা হলে কী করবে বলো।"];
+      function renderTruthDare(){const card=document.getElementById("truthDareCard");if(!card)return;const g=truthDareState;if(!g){card.innerHTML='<span class="text-2xl">💌</span><p class="text-sm text-white font-semibold">Choose Truth or Dare to begin!</p>';return;}card.innerHTML=`<span class="text-xs font-bold tracking-widest ${g.kind==="truth"?"text-sky-200":"text-rose-200"}">${g.kind==="truth"?"💬 TRUTH":"🔥 DARE"} · ${g.by||"Rick"}</span><p class="text-sm leading-relaxed text-white font-semibold"></p><span class="text-[10px] text-slate-300">${g.doneBy?"Completed ✓":"Waiting for your answer…"}</span>`;card.querySelector("p").textContent=g.prompt||"";}
+      function playTruthDare(kind){const list=kind==="truth"?TRUTH_PROMPTS:DARE_PROMPTS;const prompt=list[Math.floor(Math.random()*list.length)];truthDareState={kind,prompt,by:senderRole,doneBy:"",ts:Date.now()};if(truthDareRef)truthDareRef.set(truthDareState).catch(e=>showDbError("Truth or Dare sync error: "+e.message));renderTruthDare();}
+      function markTruthDareDone(){if(!truthDareState)return;truthDareState={...truthDareState,doneBy:senderRole,doneAt:Date.now()};if(truthDareRef)truthDareRef.set(truthDareState).catch(e=>showDbError("Truth or Dare sync error: "+e.message));renderTruthDare();}
 
       // Quiz Game Logic
       const QUIZ_BANK = [
@@ -5222,6 +5484,42 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
       function answerQuizOption(choiceIdx,btnEl){if(quizLocked||quizIdx>=quizRound.length)return;quizLocked=true;const item=quizRound[quizIdx],correct=choiceIdx===item.ans,fb=document.getElementById("quizFeedbackText"),buttons=document.querySelectorAll("#quizOptionsBox button");if(correct){quizScore++;btnEl.className="w-full py-3 px-3 rounded-xl bg-emerald-500/30 border border-emerald-400 text-left text-sm font-bold text-emerald-100";if(fb)fb.textContent=quizLanguage==="bn"?"✅ একদম ঠিক!":quizLanguage==="hi"?"✅ बिल्कुल सही!":"✅ Correct!";}else{quizWrong++;btnEl.className="w-full py-3 px-3 rounded-xl bg-rose-500/30 border border-rose-400 text-left text-sm font-bold text-rose-100";if(buttons[item.ans])buttons[item.ans].className="w-full py-3 px-3 rounded-xl bg-emerald-500/25 border border-emerald-400/70 text-left text-sm font-semibold text-emerald-100";if(fb)fb.textContent=quizLanguage==="bn"?`❌ সঠিক উত্তর: ${item[quizLanguage].opts[item.ans]}`:quizLanguage==="hi"?`❌ सही जवाब: ${item[quizLanguage].opts[item.ans]}`:`❌ Correct answer: ${item[quizLanguage].opts[item.ans]}`;}const next=document.getElementById("quizNextBtn");if(next)next.disabled=false;const summary=document.getElementById("quizRoundSummary");if(summary)summary.textContent=`✓ ${quizScore}  ·  ✗ ${quizWrong}`;}
       function nextQuizQuestion(){if(!quizLocked)return;quizIdx++;renderQuizQuestion();}
       function restartQuizGame(){let pool=QUIZ_BANK.filter(q=>!quizPrevious.includes(q));if(pool.length<10)pool=QUIZ_BANK.slice();quizRound=pool.sort(()=>Math.random()-.5).slice(0,10);quizPrevious=quizRound.slice();quizIdx=0;quizScore=0;quizWrong=0;quizLocked=false;renderQuizQuestion();}
+
+      // Couple Corner: Firebase-backed quiz battle, virtual gifts and WebRTC screen sharing.
+      let coupleFeatureRefs = {}, coupleQuizBattle = null, coupleQuizApplying = false;
+      let coupleGiftItems = [], coupleScreenPc = null, coupleScreenStream = null, coupleScreenRole = "";
+      function initCoupleFeatures(){
+        try { ensureFirebaseConnected(); if(!db) throw new Error("Firebase unavailable");
+          const base=db.ref("rooms/"+ROOM_ID+"/coupleFeatures");
+          coupleFeatureRefs.quiz=base.child("quizBattle"); coupleFeatureRefs.gifts=base.child("gifts"); coupleFeatureRefs.screen=base.child("screenShare");
+          coupleFeatureRefs.quiz.off(); coupleFeatureRefs.quiz.on("value",snap=>{coupleQuizBattle=snap.val()||null;renderCoupleQuizBattle();});
+          coupleFeatureRefs.gifts.off(); coupleFeatureRefs.gifts.limitToLast(12).on("value",snap=>{coupleGiftItems=Object.values(snap.val()||{}).filter(Boolean).sort((a,b)=>(b.ts||0)-(a.ts||0));renderCoupleGiftFeed();});
+          initCoupleScreenSignaling();
+        } catch(e){showToast("Couple Corner needs Firebase connection", "⚠️");}
+      }
+      function renderCoupleQuizBattle(){
+        const b=coupleQuizBattle, q=document.getElementById("coupleQuizQuestion"), opts=document.getElementById("coupleQuizOptions"); if(!q||!opts)return;
+        if(!b){q.textContent="Waiting for a new battle…";opts.innerHTML="";return;}
+        const lang=quizLanguage||"en", item=(QUIZ_BANK||[])[b.qids?.[b.index]??-1];
+        if(!item){q.textContent="Battle finished or unavailable.";opts.innerHTML="";return;}
+        const data=item[lang]||item.en; q.textContent=data.q; const scores=b.scores||{};
+        document.getElementById("coupleQuizScore").textContent=`Rick ${scores.Rick||0} · Pomi ${scores.Pomi||0}`;
+        document.getElementById("coupleQuizProgress").textContent=`${Math.min((b.index||0)+1,10)} / 10`;
+        const answers=b.answers?.[b.index]||{}; document.getElementById("coupleQuizAnswers").textContent=`Rick: ${answers.Rick==null?"…":(answers.Rick===item.ans?"✓":"✗")}   ·   Pomi: ${answers.Pomi==null?"…":(answers.Pomi===item.ans?"✓":"✗")}`;
+        opts.innerHTML=""; data.opts.forEach((op,i)=>{const bt=document.createElement("button");bt.className="p-2 rounded-xl border border-white/10 bg-white/[.06] text-xs text-white";bt.textContent=String.fromCharCode(65+i)+". "+op;bt.disabled=answers[senderRole]!=null||b.index>=10;bt.onclick=()=>answerCoupleQuiz(i);opts.appendChild(bt);});
+        if(b.index>=10){q.textContent=`🏁 Battle over! Rick ${scores.Rick||0} — Pomi ${scores.Pomi||0}`;opts.innerHTML="";}
+      }
+      function startCoupleQuizBattle(){try{ensureFirebaseConnected();if(!db)throw 0;const ids=Array.from({length:Math.min(10,QUIZ_BANK.length)},(_,i)=>i).sort(()=>Math.random()-.5);coupleFeatureRefs.quiz.set({qids:ids,index:0,scores:{Rick:0,Pomi:0},answers:{},startedBy:senderRole,startedAt:Date.now()});}catch(e){showToast("Could not start quiz battle","⚠️");}}
+      function answerCoupleQuiz(choice){const b=coupleQuizBattle;if(!b||b.index>=10||!coupleFeatureRefs.quiz)return;const item=QUIZ_BANK[b.qids[b.index]];coupleFeatureRefs.quiz.child("answers/"+b.index+"/"+senderRole).transaction(v=>v==null?choice:v,(err,committed)=>{if(err)showDbError(err.message);if(committed&&choice===item.ans)coupleFeatureRefs.quiz.child("scores/"+senderRole).transaction(v=>(v||0)+1);});}
+      function nextCoupleQuizBattle(){const b=coupleQuizBattle;if(!b||!coupleFeatureRefs.quiz)return;const a=b.answers?.[b.index]||{};if(a.Rick==null||a.Pomi==null){showToast("Both players must answer first","⏳");return;}coupleFeatureRefs.quiz.child("index").transaction(v=>Math.min(10,(v||0)+1));}
+      function sendCoupleGift(emoji,name){try{ensureFirebaseConnected();if(!db)throw 0;coupleFeatureRefs.gifts= db.ref("rooms/"+ROOM_ID+"/coupleFeatures/gifts");coupleFeatureRefs.gifts.push({emoji,name,by:senderRole,to:senderRole==="Rick"?"Pomi":"Rick",ts:Date.now()});showToast(name+" sent with love!",emoji);}catch(e){showToast("Gift could not be sent","⚠️");}}
+      function renderCoupleGiftFeed(){const el=document.getElementById("coupleGiftFeed");if(!el)return;el.innerHTML="";coupleGiftItems.forEach(g=>{const d=document.createElement("div");d.className="rounded-lg bg-white/[.05] px-2 py-1";d.textContent=`${g.emoji} ${g.by} sent ${g.name} to ${g.to}`;el.appendChild(d);});}
+      function initCoupleScreenSignaling(){if(!coupleFeatureRefs.screen)return;const ref=coupleFeatureRefs.screen;ref.child("offer").on("value",async snap=>{const offer=snap.val();if(!offer||offer.from===senderRole||coupleScreenRole==="caller")return;try{await ensureCouplePeer();await coupleScreenPc.setRemoteDescription(new RTCSessionDescription(offer));const ans=await coupleScreenPc.createAnswer();await coupleScreenPc.setLocalDescription(ans);await ref.child("answer").set({type:ans.type,sdp:ans.sdp,from:senderRole});ref.child("offerCandidates").on("child_added",s=>{if(s.val())coupleScreenPc.addIceCandidate(new RTCIceCandidate(s.val())).catch(()=>{});});document.getElementById("coupleScreenStatus").textContent="Connecting to partner screen…";}catch(e){showToast("Screen share connection failed: "+e.message,"⚠️");}});
+        ref.child("answer").on("value",async snap=>{const a=snap.val();if(a&&a.from!==senderRole&&coupleScreenRole==="caller"&&coupleScreenPc&&coupleScreenPc.signalingState==="have-local-offer"){await coupleScreenPc.setRemoteDescription(new RTCSessionDescription(a)).catch(()=>{});ref.child("answerCandidates").on("child_added",s=>{if(s.val())coupleScreenPc.addIceCandidate(new RTCIceCandidate(s.val())).catch(()=>{});});}});
+      }
+      async function ensureCouplePeer(){if(coupleScreenPc)return coupleScreenPc;coupleScreenPc=new RTCPeerConnection({iceServers:[{urls:"stun:stun.l.google.com:19302"}]});coupleScreenPc.ontrack=e=>{const v=document.getElementById("coupleRemoteScreen");v.srcObject=e.streams[0];v.classList.remove("hidden");document.getElementById("coupleScreenStatus").textContent="Partner is sharing their screen";};coupleScreenPc.onicecandidate=e=>{if(e.candidate&&coupleFeatureRefs.screen){const key=coupleScreenRole==="caller"?"offerCandidates":"answerCandidates";coupleFeatureRefs.screen.child(key).push(e.candidate.toJSON());}};coupleScreenPc.onconnectionstatechange=()=>{const el=document.getElementById("coupleScreenStatus");if(el)el.textContent="Screen share: "+coupleScreenPc.connectionState;};return coupleScreenPc;}
+      async function startCoupleScreenShare(){try{if(!navigator.mediaDevices?.getDisplayMedia)throw new Error("Screen sharing is not supported here. Use desktop Chrome/Edge over HTTPS.");ensureFirebaseConnected();if(!db)throw new Error("Firebase unavailable");coupleFeatureRefs.screen=db.ref("rooms/"+ROOM_ID+"/coupleFeatures/screenShare");coupleScreenRole="caller";coupleScreenStream=await navigator.mediaDevices.getDisplayMedia({video:true,audio:false});await ensureCouplePeer();coupleScreenStream.getTracks().forEach(t=>{coupleScreenPc.addTrack(t,coupleScreenStream);t.onended=stopCoupleScreenShare;});const offer=await coupleScreenPc.createOffer();await coupleScreenPc.setLocalDescription(offer);await coupleFeatureRefs.screen.child("offerCandidates").remove();await coupleFeatureRefs.screen.child("answerCandidates").remove();await coupleFeatureRefs.screen.child("answer").remove();await coupleFeatureRefs.screen.child("offer").set({type:offer.type,sdp:offer.sdp,from:senderRole,ts:Date.now()});document.getElementById("coupleScreenStatus").textContent="Sharing your screen…";}catch(e){showToast(e.message||"Could not start screen share","⚠️");}}
+      async function stopCoupleScreenShare(){try{if(coupleScreenStream)coupleScreenStream.getTracks().forEach(t=>t.stop());if(coupleScreenPc)coupleScreenPc.close();coupleScreenStream=null;coupleScreenPc=null;coupleScreenRole="";const v=document.getElementById("coupleRemoteScreen");if(v){v.srcObject=null;v.classList.add("hidden");}if(coupleFeatureRefs.screen)await coupleFeatureRefs.screen.remove();const st=document.getElementById("coupleScreenStatus");if(st)st.textContent="Screen share stopped";}catch(e){showToast("Could not stop screen share","⚠️");}}
 
       // Rick-Only Offline Auto-Reply Logic
       function syncRickAutoReplyUI() {
@@ -8013,7 +8311,11 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
             tttOnlineRef.off();
             tttOnlineRef.on("value", (snap) => {
               const g = snap.val();
-              if (!g || tttMode !== "online") return;
+              if (!g) {
+                // First client to connect seeds the shared game only when the node is empty.
+                tttOnlineRef.transaction(current => current || ({ board: Array(9).fill(null), turn: "P", over: false, winCombo: null, pomiWins: 0, rickWins: 0, updatedBy: senderRole, ts: Date.now() }), null, false);
+                return;
+              }
               if (Array.isArray(g.board) && g.board.length === 9) {
                 tttBoard = g.board.map((c) =>
                   c === "P" || c === "O" ? c : null,
@@ -8029,8 +8331,15 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
               saveGameStats();
               renderTTTBoard();
               const statusEl = document.getElementById("tttStatus");
-              if (statusEl) statusEl.textContent = getOnlineTTTStatusText();
-            });
+              if (statusEl && tttMode === "online") statusEl.textContent = getOnlineTTTStatusText();
+            }, (err) => showDbError("Tic-Tac-Toe read error: " + err.message));
+
+            // Shared Online Ludo and Truth-or-Dare state
+            ludoOnlineRef = db.ref("rooms/" + ROOM_ID + "/ludoOnline");
+            ludoOnlineRef.off();
+            ludoOnlineRef.on("value", snap => { const remote=snap.val(); if(remote && remote.tokens && remote.tokens.P && remote.tokens.R){ applyingRemoteLudo=true; ludoState=remote; renderOnlineLudo(); applyingRemoteLudo=false; } else if(!remote){ ludoState=freshLudoState(); saveLudoState(); renderOnlineLudo(); } }, err=>showDbError("Ludo sync error: "+err.message));
+            truthDareRef = db.ref("rooms/" + ROOM_ID + "/truthDare");
+            truthDareRef.on("value", snap => { truthDareState=snap.val()||null; renderTruthDare(); }, err=>showDbError("Truth or Dare sync error: "+err.message));
 
             // Rich Updates (Text, Image, Video, Voice Status) Sync
             richUpdatesRef = db.ref("rooms/" + ROOM_ID + "/richUpdates");
@@ -8081,6 +8390,40 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
         updatePartnerHeaderUI();
         messagesMap = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
         renderMessages();
+      }
+
+      // Couple Space: shared diary, anniversary countdown and mood.
+      let coupleSpaceRef = null;
+      let coupleSpaceData = { anniversary: "", moods: {}, diary: {} };
+      let applyingCoupleSpaceRemote = false;
+      function openCoupleSpace() {
+        closeModal("settingsModal");
+        openModal("coupleSpaceModal");
+        renderCoupleSpace();
+        if (!coupleSpaceRef) {
+          try { ensureFirebaseConnected(); if (db) { coupleSpaceRef = db.ref("rooms/" + ROOM_ID + "/coupleSpace"); coupleSpaceRef.off(); coupleSpaceRef.on("value", snap => { const v=snap.val()||{}; applyingCoupleSpaceRemote=true; coupleSpaceData={anniversary:v.anniversary||"",moods:v.moods||{},diary:v.diary||{}}; renderCoupleSpace(); applyingCoupleSpaceRemote=false; }, err=>showDbError("Couple Space sync error: "+err.message)); } } catch(e) { showDbError("Couple Space connection error: "+e.message); }
+        }
+      }
+      function saveCoupleSpaceField(path, value) {
+        try { ensureFirebaseConnected(); if (!db) throw new Error("Firebase is not connected"); const ref=db.ref("rooms/"+ROOM_ID+"/coupleSpace/"+path); return ref.set(value).catch(err=>showDbError("Couple Space save error: "+err.message)); } catch(e) { showDbError("Couple Space is available only when Firebase is connected."); }
+      }
+      function saveCoupleAnniversary() {
+        const el=document.getElementById("coupleAnniversaryDate"); const value=el&&el.value||""; if(!value){showToast("Please choose a date", "📅");return;} coupleSpaceData.anniversary=value; renderCoupleSpace(); saveCoupleSpaceField("anniversary",value); showToast("Special date saved", "❤️");
+      }
+      function setCoupleMood(emoji,label) {
+        const mood={emoji,label,ts:Date.now()}; coupleSpaceData.moods=coupleSpaceData.moods||{}; coupleSpaceData.moods[senderRole]=mood; renderCoupleSpace(); saveCoupleSpaceField("moods/"+senderRole,mood);
+      }
+      function addCoupleDiaryEntry() {
+        const el=document.getElementById("coupleDiaryInput"); const body=(el&&el.value||"").trim(); if(!body)return; const id="d"+Date.now()+Math.random().toString(36).slice(2,7); const entry={id,body,sender:senderRole,ts:Date.now()}; coupleSpaceData.diary=coupleSpaceData.diary||{}; coupleSpaceData.diary[id]=entry; if(el)el.value=""; renderCoupleSpace(); saveCoupleSpaceField("diary/"+id,entry); showToast("Saved in Our Diary", "📖");
+      }
+      function deleteCoupleDiaryEntry(id) {
+        if(!confirm("Delete this diary entry for both devices?"))return; if(coupleSpaceData.diary)delete coupleSpaceData.diary[id]; renderCoupleSpace(); saveCoupleSpaceField("diary/"+id,null);
+      }
+      function renderCoupleSpace() {
+        const dateEl=document.getElementById("coupleAnniversaryDate"); if(dateEl && coupleSpaceData.anniversary && dateEl.value!==coupleSpaceData.anniversary)dateEl.value=coupleSpaceData.anniversary;
+        const count=document.getElementById("coupleCountdownText"); if(count){if(!coupleSpaceData.anniversary)count.textContent="Set your special date";else{const now=new Date();now.setHours(0,0,0,0);const d=new Date(coupleSpaceData.anniversary+"T00:00:00");const diff=Math.round((d-now)/86400000);count.textContent=diff>0?diff+" days until your special day 💗":diff===0?"Today is your special day! 💗":Math.abs(diff)+" days since your special day 💗";}}
+        const moods=document.getElementById("coupleMoodSummary"); if(moods){const entries=["Rick","Pomi"].filter(k=>coupleSpaceData.moods&&coupleSpaceData.moods[k]).map(k=>{const m=coupleSpaceData.moods[k];return (k===senderRole?"You":k)+": "+(m.emoji||"")+" "+(m.label||"");});moods.textContent=entries.length?entries.join("  ·  "):"No moods shared yet.";}
+        const list=document.getElementById("coupleDiaryList"); if(list){const entries=Object.values(coupleSpaceData.diary||{}).filter(x=>x&&x.id&&x.body).sort((a,b)=>(b.ts||0)-(a.ts||0));list.innerHTML=entries.length?entries.map(x=>`<article class="rounded-xl bg-slate-950/50 border border-white/10 p-2.5"><div class="flex justify-between gap-2"><span class="text-[10px] text-rose-200">${escapeHtml(x.sender||"") } · ${new Date(x.ts||Date.now()).toLocaleString()}</span><button onclick="deleteCoupleDiaryEntry('${String(x.id).replace(/[^a-zA-Z0-9_-]/g,'')}')" class="text-[10px] text-slate-400">Delete</button></div><p class="text-xs text-slate-200 whitespace-pre-wrap mt-1">${escapeHtml(x.body)}</p></article>`).join(""):"<p class='text-[11px] text-slate-500'>No diary entries yet.</p>";}
       }
 
       try {
@@ -9296,7 +9639,37 @@ body.love-screen-shake { animation:pomiLoveScreenShake .62s ease-in-out; }
       syncDoggyUI();
       syncPetLabelsAndUI();
       startSplashSequence();
-    </script>
+    
+      // PomiLink Phase 2 shared couple features (Firebase Realtime Database + WebRTC)
+      const couplePhase2Refs={};
+      let coupleCallPc=null,coupleCallStream=null,coupleCallRole='',coupleCallMode='audio',coupleCallRemoteCandidates=[];
+      let coupleGalleryItems=[],coupleCalendarItems=[],coupleStoryItems=[],coupleListenApplying=false;
+      function initCouplePhase2(){
+        try{ensureFirebaseConnected();if(!db)throw new Error('Firebase unavailable');
+          const base=db.ref('rooms/'+ROOM_ID+'/coupleFeatures');
+          couplePhase2Refs.call=base.child('voiceVideoCall');couplePhase2Refs.gallery=base.child('photoGallery');couplePhase2Refs.calendar=base.child('sharedCalendar');couplePhase2Refs.listen=base.child('listenTogether');couplePhase2Refs.story=base.child('storyTimeline');
+          ['gallery','calendar','story'].forEach(k=>couplePhase2Refs[k].off());
+          couplePhase2Refs.gallery.limitToLast(30).on('value',snap=>{coupleGalleryItems=Object.values(snap.val()||{}).filter(Boolean).sort((a,b)=>(b.ts||0)-(a.ts||0));renderCoupleGallery();});
+          couplePhase2Refs.calendar.on('value',snap=>{coupleCalendarItems=Object.entries(snap.val()||{}).filter(([,v])=>!!v).map(([id,v])=>({...v,id})).sort((a,b)=>(a.date||'').localeCompare(b.date||''));renderCoupleCalendar();});
+          couplePhase2Refs.story.on('value',snap=>{coupleStoryItems=Object.values(snap.val()||{}).filter(Boolean).sort((a,b)=>(a.date||'').localeCompare(b.date||''));renderCoupleStory();});
+          initCoupleCallSignaling();initCoupleListenTogether();
+        }catch(e){showToast('Together Space needs an active Firebase connection','⚠️');}
+      }
+      function escapeCoupleText(v){return String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+      async function uploadCouplePhoto(){try{if(!couplePhase2Refs.gallery)initCouplePhase2();const f=document.getElementById('coupleGalleryFile')?.files?.[0];if(!f||!f.type.startsWith('image/'))throw new Error('Choose an image first');if(f.size>12*1024*1024)throw new Error('Image must be under 12 MB');const data=await new Promise((resolve,reject)=>{const im=new Image(),u=URL.createObjectURL(f);im.onload=()=>{const c=document.createElement('canvas'),scale=Math.min(1,1000/im.width,1000/im.height);c.width=Math.round(im.width*scale);c.height=Math.round(im.height*scale);c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);resolve(c.toDataURL('image/jpeg',.72));};im.onerror=reject;im.src=u;});if(data.length>850000)throw new Error('Image still too large; choose a smaller photo');await couplePhase2Refs.gallery.push({data,caption:document.getElementById('coupleGalleryCaption').value.trim(),sender:senderRole,ts:Date.now()});document.getElementById('coupleGalleryFile').value='';document.getElementById('coupleGalleryCaption').value='';showToast('Photo added to your shared gallery','💗');}catch(e){showToast(e.message||'Photo upload failed','⚠️');}}
+      function renderCoupleGallery(){const el=document.getElementById('coupleGalleryGrid');if(!el)return;el.innerHTML=coupleGalleryItems.map(x=>`<figure class="rounded-xl overflow-hidden bg-black/30 border border-white/10"><img src="${x.data}" alt="Couple memory" loading="lazy" class="w-full aspect-square object-cover"><figcaption class="p-2 text-[10px] text-slate-200">${escapeCoupleText(x.caption)}<span class="block text-slate-400">${escapeCoupleText(x.sender)} · ${new Date(x.ts||Date.now()).toLocaleDateString()}</span></figcaption></figure>`).join('')||'<p class="text-xs text-slate-400 col-span-2">Your shared memories will appear here.</p>';}
+      async function addCoupleCalendarEvent(){try{if(!couplePhase2Refs.calendar)initCouplePhase2();const title=document.getElementById('coupleEventTitle').value.trim(),date=document.getElementById('coupleEventDate').value,time=document.getElementById('coupleEventTime').value;if(!title||!date)throw new Error('Enter an event name and date');await couplePhase2Refs.calendar.push({title,date,time,sender:senderRole,ts:Date.now()});document.getElementById('coupleEventTitle').value='';showToast('Event added to shared calendar','📅');}catch(e){showToast(e.message||'Could not save event','⚠️');}}
+      function renderCoupleCalendar(){const el=document.getElementById('coupleCalendarList');if(!el)return;el.innerHTML=coupleCalendarItems.map(x=>`<div class="flex items-center justify-between gap-2 rounded-xl bg-slate-950/50 border border-white/10 p-2"><div class="min-w-0"><div class="text-xs font-semibold text-white">${escapeCoupleText(x.title)}</div><div class="text-[10px] text-slate-400">${escapeCoupleText(x.date)} ${escapeCoupleText(x.time||'')} · ${escapeCoupleText(x.sender)}</div></div><button onclick="deleteCoupleItem('calendar','${x.id||''}')" class="text-[10px] text-rose-300">Delete</button></div>`).join('')||'<p class="text-xs text-slate-400">No events yet.</p>';}
+      async function addCoupleStoryMoment(){try{if(!couplePhase2Refs.story)initCouplePhase2();const title=document.getElementById('coupleStoryTitle').value.trim(),date=document.getElementById('coupleStoryDate').value,body=document.getElementById('coupleStoryBody').value.trim(),emoji=document.getElementById('coupleStoryEmoji').value.trim()||'💗';if(!title||!date)throw new Error('Add a title and date');await couplePhase2Refs.story.push({title,date,body,emoji,sender:senderRole,ts:Date.now()});document.getElementById('coupleStoryTitle').value='';document.getElementById('coupleStoryBody').value='';showToast('Memory added to Our Story','💌');}catch(e){showToast(e.message||'Could not save memory','⚠️');}}
+      function renderCoupleStory(){const el=document.getElementById('coupleStoryTimeline');if(!el)return;el.innerHTML=coupleStoryItems.map(x=>`<article class="relative ml-2 border-l-2 border-pink-400/40 pl-3 pb-2"><div class="text-lg">${escapeCoupleText(x.emoji||'💗')}</div><div class="text-xs font-bold text-white">${escapeCoupleText(x.title)}</div><div class="text-[10px] text-pink-200">${escapeCoupleText(x.date)} · ${escapeCoupleText(x.sender)}</div><p class="text-[11px] text-slate-300">${escapeCoupleText(x.body)}</p></article>`).join('')||'<p class="text-xs text-slate-400">Your story starts with the first memory you add.</p>';}
+      async function deleteCoupleItem(kind,id){try{const ref=kind==='calendar'?couplePhase2Refs.calendar:couplePhase2Refs.story;if(!id)return;await ref.child(id).remove();}catch(e){showToast('Could not delete item','⚠️');}}
+      function initCoupleCallSignaling(){const ref=couplePhase2Refs.call;if(!ref)return;ref.child('offer').on('value',async snap=>{const o=snap.val();if(!o||o.from===senderRole||coupleCallRole==='caller')return;try{if(coupleCallPc)return;coupleCallRole='callee';coupleCallMode=o.video?'video':'audio';coupleCallPc=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]});coupleCallPc.ontrack=e=>{const v=document.getElementById('coupleRemoteCallVideo');v.srcObject=e.streams[0];};coupleCallPc.onicecandidate=e=>{if(e.candidate)ref.child('answerCandidates').push(e.candidate.toJSON());};coupleCallStream=await navigator.mediaDevices.getUserMedia({audio:true,video:coupleCallMode==='video'});coupleCallStream.getTracks().forEach(t=>coupleCallPc.addTrack(t,coupleCallStream));await coupleCallPc.setRemoteDescription(new RTCSessionDescription(o));const a=await coupleCallPc.createAnswer();await coupleCallPc.setLocalDescription(a);await ref.child('answer').set({type:a.type,sdp:a.sdp,from:senderRole});ref.child('offerCandidates').on('child_added',s=>{if(s.val())coupleCallPc?.addIceCandidate(new RTCIceCandidate(s.val())).catch(()=>{});});document.getElementById('coupleLocalCallVideo').srcObject=coupleCallStream;document.getElementById('coupleCallStatus').textContent='Connected / waiting for partner media';}catch(e){showToast('Could not answer call: '+e.message,'⚠️');}});ref.child('answer').on('value',async snap=>{const a=snap.val();if(!a||a.from===senderRole||coupleCallRole!=='caller'||!coupleCallPc||coupleCallPc.signalingState!=='have-local-offer')return;await coupleCallPc.setRemoteDescription(new RTCSessionDescription(a)).catch(()=>{});ref.child('answerCandidates').on('child_added',s=>{if(s.val())coupleCallPc?.addIceCandidate(new RTCIceCandidate(s.val())).catch(()=>{});});});}
+      async function startCoupleCall(video){try{if(!couplePhase2Refs.call)initCouplePhase2();if(!navigator.mediaDevices?.getUserMedia)throw new Error('Use HTTPS and allow camera/microphone');await endCoupleCall(false);coupleCallRole='caller';coupleCallMode=video?'video':'audio';coupleCallStream=await navigator.mediaDevices.getUserMedia({audio:true,video:!!video});document.getElementById('coupleLocalCallVideo').srcObject=coupleCallStream;coupleCallPc=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]});const ref=couplePhase2Refs.call;coupleCallPc.ontrack=e=>{document.getElementById('coupleRemoteCallVideo').srcObject=e.streams[0];};coupleCallPc.onicecandidate=e=>{if(e.candidate)ref.child('offerCandidates').push(e.candidate.toJSON());};coupleCallStream.getTracks().forEach(t=>coupleCallPc.addTrack(t,coupleCallStream));await ref.child('offerCandidates').remove();await ref.child('answerCandidates').remove();await ref.child('answer').remove();const offer=await coupleCallPc.createOffer();await coupleCallPc.setLocalDescription(offer);await ref.child('offer').set({type:offer.type,sdp:offer.sdp,from:senderRole,video:!!video,ts:Date.now()});document.getElementById('coupleCallStatus').textContent='Calling partner…';}catch(e){showToast(e.message||'Could not start call','⚠️');}}
+      async function endCoupleCall(clearSignal=true){try{if(coupleCallStream)coupleCallStream.getTracks().forEach(t=>t.stop());if(coupleCallPc)coupleCallPc.close();coupleCallStream=null;coupleCallPc=null;coupleCallRole='';['coupleLocalCallVideo','coupleRemoteCallVideo'].forEach(id=>{const v=document.getElementById(id);if(v)v.srcObject=null;});const st=document.getElementById('coupleCallStatus');if(st)st.textContent='Call ended';if(clearSignal&&couplePhase2Refs.call)await couplePhase2Refs.call.remove();}catch(e){showToast('Could not end call cleanly','⚠️');}}
+      function initCoupleListenTogether(){const ref=couplePhase2Refs.listen;if(!ref)return;ref.on('value',snap=>{const d=snap.val();if(!d)return;const a=document.getElementById('coupleListenAudio');if(!a)return;coupleListenApplying=true;if(d.url&&a.src!==d.url){a.src=d.url;a.load();}if(d.sender!==senderRole&&Number.isFinite(d.time)&&Math.abs(a.currentTime-d.time)>2)a.currentTime=d.time;if(d.sender!==senderRole&&d.playing)a.play().catch(()=>{document.getElementById('coupleListenStatus').textContent='Tap Play to allow audio playback';});if(d.sender!==senderRole&&!d.playing)a.pause();coupleListenApplying=false;});const a=document.getElementById('coupleListenAudio');if(a&&!a.dataset.syncBound){a.dataset.syncBound='1';['play','pause','seeked'].forEach(ev=>a.addEventListener(ev,()=>{if(coupleListenApplying||!couplePhase2Refs.listen)return;couplePhase2Refs.listen.set({url:a.currentSrc||a.src,time:a.currentTime,playing:!a.paused,sender:senderRole,ts:Date.now()});}));a.addEventListener('timeupdate',()=>{if(!coupleListenApplying&&!a.paused&&Math.floor(a.currentTime)%5===0)couplePhase2Refs.listen.update({time:a.currentTime,sender:senderRole,ts:Date.now()});});}}
+      function loadCoupleListenUrl(){try{if(!couplePhase2Refs.listen)initCouplePhase2();const url=document.getElementById('coupleListenUrl').value.trim();if(!/^https:\/\//i.test(url))throw new Error('Enter a secure https audio URL');const a=document.getElementById('coupleListenAudio');a.src=url;a.load();couplePhase2Refs.listen.set({url,time:0,playing:false,sender:senderRole,ts:Date.now()});document.getElementById('coupleListenStatus').textContent='Loaded. Press Play; partner needs access to this same audio file.';}catch(e){showToast(e.message||'Could not load audio','⚠️');}}
+
+</script>
 
   
     <div id="reminderModal" class="hidden fixed inset-0 z-[90] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
